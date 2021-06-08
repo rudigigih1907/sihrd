@@ -43,4 +43,4 @@ Gunakan IP itu di adminer:
 | Server        | 172.17.0.1:6033 |
 | Username      | root            |
 | Password      | password_kamu   |
-| Database      | siadmin         |
+| Database      | nama_repo       |
