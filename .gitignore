@@ -35,4 +35,7 @@ tests/_support/_generated
 #ignore certbot
 .docker/nginx/certbot
 
+#
+.env
+
 # yii2
