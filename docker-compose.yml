@@ -1,0 +1,92 @@
+version: "3"
+
+# Services
+services:
+
+  # Web Server
+  nginx:
+    image:  "${REGISTRY_HOST}/sihrd-nginx"
+    build:
+      context:  "./.docker/nginx"
+      dockerfile: "Dockerfile"
+    container_name: sihrd-nginx
+    ports:
+      - "${WEB_SERVER_PORT}:80"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.docker/nginx/ssl/:/etc/nginx/ssl/
+    depends_on:
+      - php
+    networks:
+      - sihrd-network
+
+  # Adminer Service
+  adminer:
+    image:  "${REGISTRY_HOST}/sihrd-adminer"
+    build:
+      context:  "./.docker/adminer/"
+      dockerfile:  "Dockerfile"
+    container_name: sihrd-adminer
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_DB_HOST: mysql
+      ADMINER_DEFAULT_DB_NAME: adminer
+      ADMINER_DESIGN: nette
+      ADMINER_PLUGINS: tables-filter tinymce
+    ports:
+      - "${ADMINER_PORT}:8080"
+
+  # Database Service
+  db:
+    image:  "${REGISTRY_HOST}/sihrd-db"
+    build:
+      context:  "./.docker/mysql/"
+      dockerfile:  "Dockerfile"
+    container_name: sihrd-db
+    tty: false
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - sihrd-volumes:/var/lib/mysql/
+      - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./.docker/mysql/mysql-files:/var/lib/mysql-files
+    networks:
+      - sihrd-network
+    ports:
+      - ${DB_PORT}:3306
+
+  # PHP App Service
+  php:
+    image:  "${REGISTRY_HOST}/sihrd-php"
+    build:
+      context:  "."
+      dockerfile: "./.docker/php/Dockerfile"
+    container_name: sihrd-php
+    tty: true
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html
+      - "./README.md:/var/www/html/README.md"
+    networks:
+      - sihrd-network
+    depends_on:
+      - db
+
+# Docker Networks
+networks:
+  sihrd-network:
+    driver: bridge
+
+# Docker Volumes
+volumes:
+  sihrd-volumes:
+    driver: local
