@@ -1,5 +1,25 @@
 # Catatan 
 
+Untuk menggunakan app ini,
+Kamu harus punya docker-compose yang sudah terinstall di mesin kamu. Jika belum, cara installnya adalah sebagai berikut:
+
+```text
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+Lalu jalankan perintah berikut pada folder root app:
+```text
+docker-compose up -d --build
+```
+
+Jika user aktif belum diset ke group docker, gunakan ``sudo``
+
+Jangan lupa untuk melakukan setting environment variable nya dengan cara
+meng-copy .env-example ke file baru bernama ``.env``. Kemudian
+sesuaikan dengan mesin kamu.
+
+
 #### Mengakses adminer di localhost
 
 Jika di server, tinggal akses IP_SERVER:6033 misal 10.60.36.60:6033.
@@ -29,10 +49,9 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         TX packets 130039  bytes 181650020 (181.6 MB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-# Lihat inet nya, => 172.17.0.1 
+# Lihat alamat inet nya, => 172.17.0.1 
 
 ```
-
 
 Gunakan IP itu di adminer:
 
