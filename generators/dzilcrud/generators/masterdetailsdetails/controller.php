@@ -362,7 +362,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 if($status['code']){
                     Yii::$app->session->setFlash('info',
                             FAS::icon(FAS::_THUMBS_UP) .  "
-                            <?= $modelClass ?> successfully updated. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                            <?= $modelClass ?> berhasil di update. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
                         );
                         return $this->redirect(['index', 'page' => $page]);
                 }

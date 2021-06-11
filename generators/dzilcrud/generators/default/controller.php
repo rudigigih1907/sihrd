@@ -110,7 +110,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
             Yii::$app->session->setFlash('success',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                <?= $modelClass ?> successfully created. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                <?= $modelClass ?> successfully created. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -134,7 +134,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if($model->load(Yii::$app->request->post()) && $model->save()){
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                <?= $modelClass ?> successfully updated. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                <?= $modelClass ?> berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }

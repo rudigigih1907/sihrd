@@ -15,6 +15,7 @@ class ActionColumn extends \yii\grid\ActionColumn {
     public $contentOptions = [
         'class' => 'text-nowrap text-center'
     ];
+
     /**
      * Initializes the default button rendering callbacks.
      */

@@ -74,6 +74,12 @@ $config = [
                 'tableOptions' => [
                     'class' => 'card-table table'
                 ],
+                'headerRowOptions' => [
+                    'class' => 'text-nowrap'
+                ],
+                'rowOptions' => [
+                    'class' => 'text-nowrap'
+                ],
                 'layout' =>
                     '<div class="table-responsive">' .
                     '<div class="card-body p-0">' .
@@ -89,7 +95,7 @@ $config = [
                     'class' => 'card-table table'
                 ],
             ],
-            yii\data\Pagination::class => ['pageSize' => 5],
+            yii\data\Pagination::class => ['pageSize' => 10],
             yii\widgets\LinkPager::class => yii\bootstrap4\LinkPager::class,
             kartik\grid\GridView::class => [
                 'tableOptions' => [
@@ -97,7 +103,6 @@ $config = [
                 ],
                 // 'layout' => "{items}\n <div class='d-flex justify-content-between'>{pager}{summary}</div>",
                 'panel' =>false,
-
                 'layout' =>
                     '<div class="table-responsive">' .
                     '<div class="card-body p-0">' .
