@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FAS;
 /* @var $searchModel app\models\search\StatusPerkawinanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Status Perkawinans';
+$this->title = 'Status Perkawinan';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

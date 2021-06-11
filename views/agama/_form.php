@@ -23,7 +23,8 @@ use rmrevin\yii\fontawesome\FAS;
         </div>
 
         <div class="card-footer">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-between">
+                <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE). ' Close', ['index'], ['class' => 'btn btn-secondary']) ?>
                 <?= Html::submitButton( FAS::icon(FAS::_SAVE). ' Save', ['class' =>'btn btn-primary' ]) ?>
             </div>
         </div>

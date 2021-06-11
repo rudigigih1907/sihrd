@@ -69,7 +69,7 @@ class AgamaController extends Controller
 
             Yii::$app->session->setFlash('success',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                Agama successfully created. ". Html::a('Click Here If you want to see the detail', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                Agama successfully created. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -93,7 +93,7 @@ class AgamaController extends Controller
         if($model->load(Yii::$app->request->post()) && $model->save()){
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                Agama successfully updated. ". Html::a('Click Here If you want to see the detail', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                Agama berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }
