@@ -2,17 +2,15 @@
 
 namespace app\models;
 
-use app\traits\TraitMapIDToNama;
 use Yii;
-use \app\models\base\StatusPerkawinan as BaseStatusPerkawinan;
+use \app\models\base\AlamatKaryawan as BaseAlamatKaryawan;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "status_perkawinan".
+ * This is the model class for table "alamat_karyawan".
  */
-class StatusPerkawinan extends BaseStatusPerkawinan
+class AlamatKaryawan extends BaseAlamatKaryawan
 {
-    use TraitMapIDToNama;
 
     public function behaviors()
     {

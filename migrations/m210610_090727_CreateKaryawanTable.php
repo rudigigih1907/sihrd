@@ -22,7 +22,7 @@ class m210610_090727_CreateKaryawanTable extends Migration {
             'tempat_lahir' => $this->string(),
             'tanggal_lahir' => $this->date(),
 
-            'status_kewarganegaraan' => "ENUM('WNI', 'WNA') DEFAULT 'WNI'",
+            'status_kewarganegaraan' => "ENUM('WNI', 'WNA') DEFAULT 'WNI' NOT NULL",
             'nomor_kartu_tanda_penduduk' => $this->string()->comment("Nomor KTP"),
             'nomor_kartu_keluarga' => $this->string()->comment("Nomor KK"),
 

@@ -69,7 +69,7 @@ class AgamaController extends Controller
 
             Yii::$app->session->setFlash('success',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                Agama successfully created. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                Agama : " . $model->nama . " berhasil ditambahkan. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -93,7 +93,7 @@ class AgamaController extends Controller
         if($model->load(Yii::$app->request->post()) && $model->save()){
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                Agama berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                Agama : " . $model->nama . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }
@@ -113,8 +113,12 @@ class AgamaController extends Controller
     * @throws \Throwable
     */
     public function actionDelete($id, $page = null){
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', FAS::icon(FAS::_SAD_CRY) . " Agama successfully deleted.");
+        $model = $this->findModel($id);
+        $oldLabel =  $model->nama;
+
+        $model->delete();
+
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Agama : " . $oldLabel. " successfully deleted.");
         return $this->redirect(['index', 'page' => $page]);
     }
 

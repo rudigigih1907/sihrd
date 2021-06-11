@@ -36,6 +36,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
+ * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
  * @property \app\models\StatusPerkawinan $statusPerkawinan
  * @property string $aliasModel
@@ -148,6 +149,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAlamatKaryawans()
+    {
+        return $this->hasMany(\app\models\AlamatKaryawan::className(), ['karyawan_id' => 'id']);
     }
 
     /**

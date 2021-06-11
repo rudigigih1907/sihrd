@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\traits\TraitMapIDToNama;
 use Yii;
 use \app\models\base\Agama as BaseAgama;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,8 @@ use yii\helpers\ArrayHelper;
  */
 class Agama extends BaseAgama
 {
+
+    use TraitMapIDToNama;
 
     public function behaviors()
     {

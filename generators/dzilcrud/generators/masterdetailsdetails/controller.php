@@ -389,9 +389,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * @throws StaleObjectException
      */
     public function actionDelete(<?= $actionParams ?>, $page = null){
-        $this->findModel(<?= $actionParams ?>)->delete();
+        $model = $this->findModel(<?= $actionParams ?>);
+        $oldLabel =  <?=  '$model->' . $labelID ?>;
 
-        Yii::$app->session->setFlash('success', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> successfully deleted.");
+        $model->delete();
+
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> : " . $oldLabel. " successfully deleted.");
         return $this->redirect(['index', 'page' => $page]);
     }
 

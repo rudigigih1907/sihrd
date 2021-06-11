@@ -23,6 +23,9 @@ $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
 $actionParamComments = $generator->generateActionParamComments();
+$labelID =
+    !isset($generator->labelID) ? $generator->getNameAttribute() :
+    empty($generator->labelID) ? $generator->getNameAttribute() : $generator->labelID;
 
 echo "<?php\n";
 ?>
@@ -110,7 +113,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
             Yii::$app->session->setFlash('success',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                <?= $modelClass ?> successfully created. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil ditambahkan. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -134,7 +137,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if($model->load(Yii::$app->request->post()) && $model->save()){
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                <?= $modelClass ?> berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }
@@ -154,8 +157,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     * @throws \Throwable
     */
     public function actionDelete(<?= $actionParams ?>, $page = null){
-        $this->findModel(<?= $actionParams ?>)->delete();
-        Yii::$app->session->setFlash('success', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> successfully deleted.");
+        $model = $this->findModel(<?= $actionParams ?>);
+        $oldLabel =  <?=  '$model->' . $labelID ?>;
+
+        $model->delete();
+
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> : " . $oldLabel. " successfully deleted.");
         return $this->redirect(['index', 'page' => $page]);
     }
 

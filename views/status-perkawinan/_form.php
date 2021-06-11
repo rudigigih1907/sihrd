@@ -18,7 +18,7 @@ use rmrevin\yii\fontawesome\FAS;
     ]); ?>
 
         <div class="card-body">
-                <?= $form->field($model, 'tipe')->dropDownList([ 'TIDAK KAWIN' => 'TIDAK KAWIN', 'KAWIN' => 'KAWIN', 'PTKP Digabung' => 'PTKP Digabung', ], ['prompt' => '']) ?>
+                <?= $form->field($model, 'tipe')->dropDownList([ 'TIDAK KAWIN' => 'TIDAK KAWIN', 'KAWIN' => 'KAWIN', 'PTKP Digabung' => 'PTKP Digabung', ], ['autofocus' => 'autofocus']) ?>
     <?= $form->field($model, 'kode')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'keterangan')->textarea(['rows' => 6]) ?>

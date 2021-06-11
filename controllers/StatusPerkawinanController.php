@@ -69,7 +69,7 @@ class StatusPerkawinanController extends Controller
 
             Yii::$app->session->setFlash('success',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                StatusPerkawinan successfully created. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                StatusPerkawinan : " . $model->kode . " berhasil ditambahkan. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -93,7 +93,7 @@ class StatusPerkawinanController extends Controller
         if($model->load(Yii::$app->request->post()) && $model->save()){
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) .  "
-                StatusPerkawinan berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
+                StatusPerkawinan : " . $model->kode . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }

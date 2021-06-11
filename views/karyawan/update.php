@@ -1,9 +1,8 @@
 <?php
 
-use yii\helpers\Html;
-
 /* @var $this yii\web\View */
 /* @var $model app\models\Karyawan */
+/* @var $modelsDetail app\models\AlamatKaryawan */
 
 $this->title = 'Update Karyawan: ' . $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Karyawan', 'url' => ['index']];
@@ -13,7 +12,8 @@ $this->params['breadcrumbs'][] = 'Update';
 <div class="karyawan-update">
 
     <?= $this->render('_form', [
-    'model' => $model,
+        'model' => $model,
+        'modelsDetail' => $modelsDetail,
     ]) ?>
 
 </div>

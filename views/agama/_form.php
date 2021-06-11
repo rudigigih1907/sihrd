@@ -18,7 +18,10 @@ use rmrevin\yii\fontawesome\FAS;
     ]); ?>
 
         <div class="card-body">
-                <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'nama')->textInput([
+                    'maxlength' => true,
+                    'autofocus'=> 'autofocus'
+                ]) ?>
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
         </div>
 

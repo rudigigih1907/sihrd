@@ -5,7 +5,7 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator \app\generators\dzilajaxcrud\generators\Generator */
+/* @var $generator \app\generators\dzilcrud\generators\Generator */
 
 /* @var $model \yii\db\ActiveRecord */
 $model = new $generator->modelClass();
@@ -39,14 +39,18 @@ use rmrevin\yii\fontawesome\FAS;
 
         <div class="table-responsive">
             <div class="card-body">
-                <?php foreach ($generator->getColumnNames() as $attribute) {
+                <?php foreach ($generator->getColumnNames() as $key => $attribute) {
 
                     if (in_array($attribute, ['created_at', 'updated_at', 'created_by', 'updated_by'])) {
                         continue;
                     }
 
                     if (in_array($attribute, $safeAttributes)) {
-                        echo "<?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+                        if($key == 1){
+                            echo "    <?= " . $generator->generateActiveFieldAutoFocus($attribute) . " ?>\n";
+                        }else{
+                            echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+                        }
                     }
                 } ?>
 
@@ -75,8 +79,8 @@ use rmrevin\yii\fontawesome\FAS;
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Titles</th>
-                        <th scope="col" style="width: 2px">Actions</th>
+                        <th scope="col">Attribute</th>
+                        <th scope="col" style="width: 2px">Aksi</th>
                     </tr>
                     </thead>
 
@@ -116,7 +120,7 @@ use rmrevin\yii\fontawesome\FAS;
                     <tfoot>
                     <tr>
                         <td colspan="3">
-                            <?= "<?php echo " ?>Html::button('<span class="fa fa-plus"></span> Add', [
+                            <?= "<?php echo " ?>Html::button('<span class="fa fa-plus"></span> Tambah', [
                             'class' => 'add-item btn btn-success float-right',
                             ]); ?>
 
@@ -130,8 +134,8 @@ use rmrevin\yii\fontawesome\FAS;
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
-                    <?= "<?= " ?>Html::submitButton( FAS::icon(FAS::_SAVE). <?= $generator->generateString(' Save') ?>,
-                    ['class' =>'btn btn-primary' ]) ?>
+                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_WINDOW_CLOSE). <?= $generator->generateString(' Tutup') ?>, ['index'], ['class' => 'btn btn-secondary']) ?>
+                    <?= "<?= " ?>Html::submitButton( FAS::icon(FAS::_SAVE). <?= $generator->generateString(' Simpan') ?>, ['class' =>'btn btn-primary' ]) ?>
                 </div>
             </div>
         </div>

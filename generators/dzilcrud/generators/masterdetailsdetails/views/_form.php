@@ -5,7 +5,7 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator \app\generators\dzilajaxcrud\generators\Generator */
+/* @var $generator \app\generators\dzilcrud\generators\Generator */
 
 /* @var $model \yii\db\ActiveRecord */
 $model = new $generator->modelClass();
@@ -39,14 +39,19 @@ use rmrevin\yii\fontawesome\FAS;
     ]); ?>
         <div class="table-responsive">
             <div class="card-body">
-    <?php foreach ($generator->getColumnNames() as $attribute) {
+    <?php foreach ($generator->getColumnNames() as $key => $attribute) {
 
         if (in_array($attribute, ['created_at', 'updated_at', 'created_by', 'updated_by'])) {
             continue;
         }
 
         if (in_array($attribute, $safeAttributes)) {
-            echo "<?php echo " . $generator->generateActiveField($attribute) . "; ?>\n\t";
+            if($key == 1){
+                echo "    <?= " . $generator->generateActiveFieldAutoFocus($attribute) . " ?>\n";
+            }else{
+                echo "<?php echo " . $generator->generateActiveField($attribute) . "; ?>\n\t";
+            }
+
         }
     } ?>
 

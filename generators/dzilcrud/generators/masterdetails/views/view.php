@@ -9,6 +9,7 @@ use yii\helpers\StringHelper;
 /* @var $generator yii\gii\generators\crud\Generator */
 
 $urlParams = $generator->generateUrlParams();
+$labelID = empty($generator->labelID) ? $generator->getNameAttribute() : $generator->labelID;
 
 echo "<?php\n";
 ?>
@@ -17,11 +18,12 @@ use yii\widgets\DetailView;
 use app\widgets\Table;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
+use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
-$this->title = $model-><?= $generator->getNameAttribute() ?>;
+$this->title = $model-><?= $labelID ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -33,11 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="d-flex justify-content-start">
 
                 <div class="mr-auto">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Back') ?>, Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
+                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Kembali') ?>, Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
                 </div>
 
                 <div class="mx-1">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Create More') ?>, ['create'], ['class' => 'btn btn-primary']) ?>
+                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Buat Lagi') ?>, ['create'], ['class' => 'btn btn-primary']) ?>
                 </div>
 
                 <div class="mr-1">
@@ -50,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= "<?php " ?>
                 if(Helper::checkRoute('delete')) :
-                echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Delete') ?>, ['delete', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], [
+                echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Hapus') ?>, ['delete', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], [
                 'class' => 'btn btn-danger',
                 'data' => [
                 'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
@@ -66,80 +68,86 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $blameable = ['created_by', 'updated_by',] ?>
     <?php $details = lcfirst(Inflector::camelize(Inflector::pluralize(StringHelper::basename($modelsDetail))));  ?>
 
-    <div class="card-body">
-        <?= "<?php try { echo "?>Tabs::widget([
-                    'encodeLabels' => false,
-                    'options' => [
-                        'class' => 'nav nav-tabs'
-                    ],
-                    'tabContentOptions' => [
-                        'style' => [
-                            'padding-top' => '12px'
-                        ]
-                    ],
-                    'items' => [
+
+    <?= "<?php try { echo "?>Tabs::widget([
+                'encodeLabels' => false,
+                'navType' => 'nav-tabs justify-content-start border-0',
+                'tabContentOptions' => [
+                    'class' => 'p-0'
+                ],
+                'items' => [
+                    [
+                        'active' => true,
+                        'headerOptions' => [
+                            'class' => 'pl-3'
+                        ],
+                        'label' => FAS::icon(FAS::_YIN_YANG) . ' <?= Inflector::camel2words(StringHelper::basename($generator->modelClass)) ?>',
+                        'content' =>
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    <?php
+                                    if (($tableSchema = $generator->getTableSchema()) === false) {
+                                        foreach ($generator->getColumnNames() as $name) {
+
+                                            if ($name == 'id') {
+                                                continue;
+                                            }
+
+                                            echo "            '" . $name . "',\n";
+                                        }
+                                    } else {
+                                        foreach ($generator->getTableSchema()->columns as $column) {
+
+                                            if( $column->name == 'id'){
+                                                continue;
+                                            }
+                                            $format = $generator->generateColumnFormat($column);
+
+                                            if(in_array($column->name, $timestamp)){
+                                                echo "           [
+                                                    'attribute' => '" . $column->name . "',\n" .
+                                                    "                    'format' => 'datetime'," .
+                                                    "            \n           ],\n";
+                                                continue;
+                                            }
+
+                                            if(in_array($column->name, $blameable)){
+                                                echo "           [
+                                                    'attribute' => '" . $column->name . "',\n" .
+                                                    "                    'value' => function(\$model){ return \app\models\User::findOne(\$model->$column->name)->username ?? null; }" .
+                                                    "            \n           ],\n";
+                                                continue;
+                                            }
+
+                                            echo "'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                                        }
+                                    } ?>
+                                ],
+                            ]) ,
+
+                        ],
                         [
-                            'active' => true,
-                            'label' => FAS::icon(FAS::_YIN_YANG) . ' Master',
+                            'label' => '<?= Inflector::camel2words(StringHelper::basename($modelsDetail)) ?>',
                             'content' =>
-                                DetailView::widget([
-                                    'model' => $model,
-                                    'attributes' => [
-                                        <?php
-                                        if (($tableSchema = $generator->getTableSchema()) === false) {
-                                            foreach ($generator->getColumnNames() as $name) {
 
-                                                if ($name == 'id') {
-                                                    continue;
-                                                }
-
-                                                echo "            '" . $name . "',\n";
-                                            }
-                                        } else {
-                                            foreach ($generator->getTableSchema()->columns as $column) {
-
-                                                if( $column->name == 'id'){
-                                                    continue;
-                                                }
-                                                $format = $generator->generateColumnFormat($column);
-
-                                                if(in_array($column->name, $timestamp)){
-                                                    echo "           [
-                                                        'attribute' => '" . $column->name . "',\n" .
-                                                        "                    'format' => 'datetime'," .
-                                                        "            \n           ],\n";
-                                                    continue;
-                                                }
-
-                                                if(in_array($column->name, $blameable)){
-                                                    echo "           [
-                                                        'attribute' => '" . $column->name . "',\n" .
-                                                        "                    'value' => function(\$model){ return \app\models\User::findOne(\$model->$column->name)->username ?? null; }" .
-                                                        "            \n           ],\n";
-                                                    continue;
-                                                }
-
-                                                echo "'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-                                            }
-                                        } ?>
-                                    ],
-                                ]) ,
-
-                            ],
-                            [
-                                'label' => 'Details',
-                                'content' =>
+                                !empty( $model-><?= $details?>) ?
                                     Table::widget([
                                         'data' => $model-><?= $details . "\n"?>
                                     ])
-                                ,
-                            ],
+                                :
+
+                                    Html::tag("p", '<?= Inflector::camel2words(StringHelper::basename($modelsDetail)) ?> tidak tersedia', [
+                                        'class' => 'text-warning font-weight-bold p-3'
+                                    ])
+                            ,
                         ],
-                    ]);
-                } catch (Exception $e) {
-                    echo $e->getMessage();
-                }
-        ?>
-    </div>
+                    ],
+                ]);
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+    ?>
+
     </div>
 </div>
