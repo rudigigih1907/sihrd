@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FAS;
 /* @var $searchModel app\models\search\KaryawanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Karyawans';
+$this->title = 'Karyawan';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).' Create Karyawan', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).' Tambah Karyawan', ['create'], ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php try { 

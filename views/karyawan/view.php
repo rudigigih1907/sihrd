@@ -26,11 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="d-flex justify-content-start">
 
                         <div class="mr-auto">
-                            <?= Html::a(FAS::icon(FAS::_ARROW_LEFT) . ' Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
+                            <?= Html::a(FAS::icon(FAS::_ARROW_LEFT) . ' Kembali', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
                         </div>
 
                         <div class="mx-1">
-                            <?= Html::a(FAS::icon(FAS::_PLUS) . ' Create More', ['create'], ['class' => 'btn btn-primary']) ?>
+                            <?= Html::a(FAS::icon(FAS::_PLUS) . ' Buat Lagi', ['create'], ['class' => 'btn btn-primary']) ?>
                         </div>
 
                         <div class="mr-1">
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
 
                         <?php if (Helper::checkRoute('delete')) :
-                            echo Html::a(FAS::icon(FAS::_TRASH) . ' Delete', ['delete', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], [
+                            echo Html::a(FAS::icon(FAS::_TRASH) . ' Hapus', ['delete', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], [
                                 'class' => 'btn btn-danger',
                                 'data' => [
                                     'confirm' => 'Are you sure you want to delete this item?',

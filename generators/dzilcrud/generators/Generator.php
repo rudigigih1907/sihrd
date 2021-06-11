@@ -33,6 +33,7 @@ class Generator extends \yii\gii\Generator {
     public $searchModelClass = '';
     public $modelsClassDetail;
     public $modelsClassDetailDetail;
+    public $labelID;
 
     /**
      * @inheritdoc
@@ -65,7 +66,7 @@ class Generator extends \yii\gii\Generator {
             [['modelClass'], 'validateModelClass'],
             [['enableI18N'], 'boolean'],
             [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
-            [['modelsClassDetail', 'modelsClassDetailDetail', 'viewPath'], 'safe'],
+            [['modelsClassDetail', 'modelsClassDetailDetail', 'viewPath', 'labelID'], 'safe'],
         ]);
     }
 
@@ -81,6 +82,7 @@ class Generator extends \yii\gii\Generator {
             'searchModelClass' => 'Search Model Class',
             'modelsClassDetail' => 'Master -> Details',
             'modelsClassDetailDetail' => 'Master -> Details -> Details',
+            'labelID' => 'Label Untuk Page; Defaultnya adalah ID',
         ]);
     }
 
@@ -105,6 +107,7 @@ class Generator extends \yii\gii\Generator {
                 qualified namespaced class name, e.g., <code>app\models\PostSearch</code>.',
             'modelsClassDetail' => 'Form Master -> Detail',
             'modelsClassDetailDetail' => 'Form Master -> Detail -> Detail',
+            'labelID' => 'Label Untuk Page; Defaultnya adalah ID',
         ]);
     }
 

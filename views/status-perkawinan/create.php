@@ -3,8 +3,8 @@
 /* @var $model app\models\StatusPerkawinan */
 use yii\helpers\Html;
 
-$this->title = 'Create Status Perkawinan';
-$this->params['breadcrumbs'][] = ['label' => 'Status Perkawinans', 'url' => ['index']];
+$this->title = 'Tambah Status Perkawinan';
+$this->params['breadcrumbs'][] = ['label' => 'Status Perkawinan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

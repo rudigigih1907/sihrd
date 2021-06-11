@@ -48,8 +48,8 @@ use rmrevin\yii\fontawesome\FAS;
 
         <div class="card-footer">
             <div class="d-flex justify-content-between">
-                <?= "<?= " ?>Html::a(FAS::icon(FAS::_WINDOW_CLOSE). <?= $generator->generateString(' Close') ?>, ['index'], ['class' => 'btn btn-secondary']) ?>
-                <?= "<?= " ?>Html::submitButton( FAS::icon(FAS::_SAVE). <?= $generator->generateString(' Save') ?>, ['class' =>'btn btn-primary' ]) ?>
+                <?= "<?= " ?>Html::a(FAS::icon(FAS::_WINDOW_CLOSE). <?= $generator->generateString(' Tutup') ?>, ['index'], ['class' => 'btn btn-secondary']) ?>
+                <?= "<?= " ?>Html::submitButton( FAS::icon(FAS::_SAVE). <?= $generator->generateString(' Simpan') ?>, ['class' =>'btn btn-primary' ]) ?>
             </div>
         </div>
 

@@ -159,7 +159,7 @@ return [
                     ],
                     'direction' => ButtonDropdown::DIRECTION_LEFT,
                     'encodeLabel' => false,
-                    'label' => ' More',
+                    'label' => ' Aksi',
                     'dropdown' => [
                         'encodeLabels' => false,
                         'items' => $items,

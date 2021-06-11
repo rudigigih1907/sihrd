@@ -7,6 +7,7 @@ use yii\helpers\StringHelper;
 /* @var $generator yii\gii\generators\crud\Generator */
 
 $urlParams = $generator->generateUrlParams();
+$labelID = empty($generator->labelID) ? $generator->getNameAttribute() : $generator->labelID;
 
 echo "<?php\n";
 ?>
@@ -20,8 +21,8 @@ use mdm\admin\components\Helper;
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
 
-$this->title = $model-><?= $generator->getNameAttribute() ?>;
-$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
+$this->title = $model-><?= $labelID ?>;
+$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
@@ -30,12 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="d-flex justify-content-start">
 
                 <div class="mr-auto">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Back') ?>,
+                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Kembali') ?>,
                     Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
                 </div>
 
                 <div class="mx-1">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Create More') ?>,
+                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Buat Lagi') ?>,
                     ['create'], ['class' => 'btn btn-primary']) ?>
                 </div>
 
@@ -52,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= "<?php " ?>
                 if(Helper::checkRoute('delete')) :
-                echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Delete') ?>,
+                echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Hapus') ?>,
                 ['delete', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], [
                 'class' => 'btn btn-danger',
                 'data' => [

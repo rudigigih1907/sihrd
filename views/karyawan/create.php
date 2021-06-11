@@ -3,8 +3,8 @@
 /* @var $model app\models\Karyawan */
 use yii\helpers\Html;
 
-$this->title = 'Create Karyawan';
-$this->params['breadcrumbs'][] = ['label' => 'Karyawans', 'url' => ['index']];
+$this->title = 'Tambah Karyawan';
+$this->params['breadcrumbs'][] = ['label' => 'Karyawan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

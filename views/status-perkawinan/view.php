@@ -9,8 +9,8 @@ use mdm\admin\components\Helper;
 /* @var $model app\models\StatusPerkawinan */
 
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Status Perkawinans', 'url' => ['index']];
+$this->title = $model->kode;
+$this->params['breadcrumbs'][] = ['label' => 'Status Perkawinan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="status-perkawinan-view">
@@ -19,12 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="d-flex justify-content-start">
 
                 <div class="mr-auto">
-                    <?= Html::a(FAS::icon(FAS::_ARROW_LEFT). ' Back',
+                    <?= Html::a(FAS::icon(FAS::_ARROW_LEFT). ' Kembali',
                     Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
                 </div>
 
                 <div class="mx-1">
-                    <?= Html::a(FAS::icon(FAS::_PLUS). ' Create More',
+                    <?= Html::a(FAS::icon(FAS::_PLUS). ' Buat Lagi',
                     ['create'], ['class' => 'btn btn-primary']) ?>
                 </div>
 
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <?php                 if(Helper::checkRoute('delete')) :
-                echo Html::a(FAS::icon(FAS::_TRASH). ' Delete',
+                echo Html::a(FAS::icon(FAS::_TRASH). ' Hapus',
                 ['delete', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], [
                 'class' => 'btn btn-danger',
                 'data' => [
