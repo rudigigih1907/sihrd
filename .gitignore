@@ -41,4 +41,3 @@ tests/_support/_generated
 # yii2
 /web/index.php
 /web/index.test.php
-/web/assets/*
