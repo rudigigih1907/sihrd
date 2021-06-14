@@ -119,6 +119,7 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['user-default']
         ],
         'db' => $db,
         'cache' => [
