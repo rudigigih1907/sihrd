@@ -128,6 +128,22 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'formatter' => [
+            'class' => 'app\components\MyFormatter',
+            'defaultTimeZone' => 'Asia/Jakarta',
+            'dateFormat' => 'php:d-m-Y',
+            'datetimeFormat' => 'php:d-m-Y, H:i',
+            'timeFormat' => 'php:H:i:s',
+            'thousandSeparator' => ",",
+            'decimalSeparator' => '.',
+
+            'currencyCode' => "Rp.",
+            'numberFormatterOptions' => [
+                NumberFormatter::MIN_FRACTION_DIGITS => 0,
+                NumberFormatter::MAX_FRACTION_DIGITS => 2,
+            ],
+            'nullDisplay' => '',
+        ],
         'i18n' => [
             'translations' => [
                 '*' => [

@@ -29,6 +29,7 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'tanggal_lahir',
+        'format' => 'date'
     ],
     // [
         // 'class'=>'\yii\grid\DataColumn',
