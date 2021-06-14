@@ -17,34 +17,127 @@ use yii\helpers\Html;
     <div class="card shadow">
         <?php $form = ActiveForm::begin([
             'id' => 'dynamic-form',
-            'type' => ActiveForm::TYPE_HORIZONTAL,
-            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]
+            /*'type' => ActiveForm::TYPE_HORIZONTAL,
+            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]*/
         ]); ?>
 
         <div class="table-responsive">
             <div class="card-body">
-                <?= $form->field($model, 'nomor_induk_karyawan')->textInput([
-                    'maxlength' => true,
-                    'autofocus' => 'autofocus'
-                ]) ?>
-                <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'nama_panggilan')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'tempat_lahir')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'tanggal_lahir')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
-                <?= $form->field($model, 'status_kewarganegaraan')->dropDownList(['WNI' => 'WNI', 'WNA' => 'WNA',]) ?>
-                <?= $form->field($model, 'nomor_kartu_tanda_penduduk')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'nomor_kartu_keluarga')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'nomor_pokok_wajib_pajak')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'nomor_kitas_atau_sejenisnya')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'jenis_kelamin')->dropDownList(['Laki - Laki' => 'Laki - Laki', 'Perempuan' => 'Perempuan',]) ?>
-                <?= $form->field($model, 'agama_id')->dropDownList(\app\models\Agama::mapIDToNama()) ?>
-                <?= $form->field($model, 'status_perkawinan_id')->dropDownList(\app\models\StatusPerkawinan::mapIDToNama()) ?>
-                <?= $form->field($model, 'nama_ayah')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'nama_ibu')->textInput(['maxlength' => true]) ?>
-                <?= $form->field($model, 'pendidikan_terakhir')->dropDownList(['SD' => 'SD', 'SMP' => 'SMP', 'SMA' => 'SMA', 'S1' => 'S1', 'S2' => 'S2', 'S3' => 'S3',]) ?>
-                <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
-                <?= $form->field($model, 'tanggal_berhenti_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
-                <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nomor_induk_karyawan')->textInput([
+                            'maxlength' => true,
+                            'autofocus' => 'autofocus'
+                        ]) ?>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nama_panggilan')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'tempat_lahir')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'tanggal_lahir')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'status_kewarganegaraan')->dropDownList(['WNI' => 'WNI', 'WNA' => 'WNA',]) ?>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nomor_kartu_tanda_penduduk')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nomor_kartu_keluarga')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nomor_pokok_wajib_pajak')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nomor_kitas_atau_sejenisnya')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'jenis_kelamin')->dropDownList(['Laki - Laki' => 'Laki - Laki', 'Perempuan' => 'Perempuan',]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'agama_id')->dropDownList(\app\models\Agama::mapIDToNama()) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'status_perkawinan_id')->dropDownList(\app\models\StatusPerkawinan::mapIDToNama()) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nama_ayah')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'nama_ibu')->textInput(['maxlength' => true]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'pendidikan_terakhir')->dropDownList(['SD' => 'SD', 'SMP' => 'SMP', 'SMA' => 'SMA', 'S1' => 'S1', 'S2' => 'S2', 'S3' => 'S3',]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'tanggal_berhenti_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+
+                    </div>
+                </div>
+
+
 
                 <?php
                 DynamicFormWidget::begin([
@@ -88,21 +181,86 @@ use yii\helpers\Html;
 
                             <td>
 
-                                <?php echo $form->field($modelDetail, "[{$i}]type")->dropDownList(\app\models\AlamatKaryawan::optsType()); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]atas_nama"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]jalan"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]block"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]nomor"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]rt"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]rw"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]kecamatan"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]kelurahan"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]kabupaten"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]propinsi"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]kode_pos"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]nomor_telepon"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]email"); ?>
-                                <?php echo $form->field($modelDetail, "[{$i}]keterangan"); ?>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+
+                                        <?php echo $form->field($modelDetail, "[{$i}]type")->dropDownList(\app\models\AlamatKaryawan::optsType()); ?>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <?php echo $form->field($modelDetail, "[{$i}]atas_nama"); ?>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12">
+                                        <?php echo $form->field($modelDetail, "[{$i}]jalan")->textarea([
+                                                'rows'=> '4'
+                                        ]); ?>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]block"); ?>
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]nomor"); ?>
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]rt"); ?>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]rw"); ?>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]kecamatan"); ?>
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]kelurahan"); ?>
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]kabupaten"); ?>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]propinsi"); ?>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]kode_pos"); ?>
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]nomor_telepon"); ?>
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]email"); ?>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
+                                        <?php echo $form->field($modelDetail, "[{$i}]keterangan"); ?>
+                                    </div>
+                                </div>
+
                             </td>
 
                             <td>
