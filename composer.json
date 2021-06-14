@@ -23,7 +23,9 @@
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-grid": "dev-master",
         "schmunk42/yii2-giiant": "@stable",
-        "hscstudio/yii2-mimin": "~1.1.5"
+        "hscstudio/yii2-mimin": "~1.1.5",
+        "kartik-v/yii2-datecontrol": "@dev",
+        "wbraganca/yii2-dynamicform": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -35,7 +37,8 @@
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-yii2": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0"
+        "codeception/module-asserts": "^1.0.0",
+        "insolita/yii2-migration-generator": "~3.1"
     },
     "config": {
         "process-timeout": 1800,
