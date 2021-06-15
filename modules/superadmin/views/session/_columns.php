@@ -1,6 +1,7 @@
 <?php
 
 use app\models\User;
+use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
@@ -27,6 +28,7 @@ return [
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'user_id',
+        'filter' => ArrayHelper::map(User::find()->select('id, username')->asArray()->all(), 'id', 'username'),
         'value' => function ($model) {
             $user = User::findOne($model->user_id);
             return empty($user) ? "Guest" : $user->username;
