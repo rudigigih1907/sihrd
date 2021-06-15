@@ -1,9 +1,9 @@
 <?php
 
+use mdm\admin\components\Helper;
+use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use rmrevin\yii\fontawesome\FAS;
-use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\StrukturOrganisasi */
@@ -56,27 +56,36 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-                   'parent_id',
-           'tipe',
-           'nama',
-           'alias',
-           'kode',
-           [
-                    'attribute' => 'created_at',
-                    'format' => 'datetime',            
-           ],
-           [
-                    'attribute' => 'updated_at',
-                    'format' => 'datetime',            
-           ],
-           [
-                    'attribute' => 'created_by',
-                    'value' => function($model){ return app\models\User::findOne($model->created_by)->username; }            
-           ],
-           [
-                    'attribute' => 'updated_by',
-                    'value' => function($model){ return app\models\User::findOne($model->updated_by)->username; }            
-           ],
+            [
+                'attribute' => 'parent_id',
+                'value' => function ($model) {
+                    return $model->parent->nama;
+                }
+            ],
+            'tipe',
+            'nama',
+            //'alias',
+            'kode',
+            [
+                'attribute' => 'created_at',
+                'format' => 'datetime',
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'datetime',
+            ],
+            [
+                'attribute' => 'created_by',
+                'value' => function ($model) {
+                    return app\models\User::findOne($model->created_by)->username;
+                }
+            ],
+            [
+                'attribute' => 'updated_by',
+                'value' => function ($model) {
+                    return app\models\User::findOne($model->updated_by)->username;
+                }
+            ],
         ],
         ]) ?>
 

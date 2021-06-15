@@ -22,10 +22,10 @@ return [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'nama',
     ],
-    [
-        'class'=>'\yii\grid\DataColumn',
-        'attribute'=>'alias',
-    ],
+//    [
+//        'class'=>'\yii\grid\DataColumn',
+//        'attribute'=>'alias',
+//    ],
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'kode',
