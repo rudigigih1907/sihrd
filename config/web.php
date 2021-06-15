@@ -179,7 +179,7 @@ $config = [
         'session' => [
 
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name' => 'raya_maudy_azzahra_binti_ahmad_fadly_dzil_jalal',
             'timeout' => 86400, // 1 Day
             'class' => 'yii\web\DbSession',
             'writeCallback' => function($session){
@@ -302,6 +302,7 @@ $config = [
     ],
     'name' => 'SIHRD',
     'params' => $params,
+    'timeZone' => 'Asia/Jakarta',
 ];
 
 if (YII_ENV_DEV) {
