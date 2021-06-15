@@ -49,4 +49,14 @@ class Karyawan extends BaseKaryawan
         );
     }
 
+
+    /**
+     * @return int|string
+     */
+    public function getCountKaryawanStrukturOrganisasis()
+    {
+        return $this->hasMany(\app\models\KaryawanStrukturOrganisasi::className(), ['karyawan_id' => 'id'])
+            ->count();
+    }
+
 }

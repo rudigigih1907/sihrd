@@ -1,4 +1,8 @@
 <?php
+
+use app\models\Karyawan;
+use rmrevin\yii\fontawesome\FAS;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 return [
@@ -6,17 +10,17 @@ return [
     [
         'class' => 'yii\grid\SerialColumn',
     ],
-        // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'id',
+    // [
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'id',
     // ],
     [
-        'class'=>'\yii\grid\DataColumn',
-        'attribute'=>'nomor_induk_karyawan',
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'nomor_induk_karyawan',
     ],
     [
-        'class'=>'\yii\grid\DataColumn',
-        'attribute'=>'nama',
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'nama',
     ],
     [
         'class'=>'\yii\grid\DataColumn',
@@ -80,33 +84,51 @@ return [
         // 'attribute'=>'tanggal_mulai_bekerja',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'tanggal_berhenti_bekerja',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'tanggal_berhenti_bekerja',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'alasan_berhenti_bekerja',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'alasan_berhenti_bekerja',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'created_at',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'created_at',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'updated_at',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'updated_at',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'created_by',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'created_by',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'updated_by',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'updated_by',
     // ],
+
+    [
+        'class' => '\yii\grid\DataColumn',
+        'label' => 'Total Jabatan',
+        'headerOptions' => [
+            'class' => 'text-right'
+        ],
+        'contentOptions' => [
+            'class' => 'text-right'
+        ],
+        'format' => 'raw',
+        'value' => function ($model) {
+            /** @var Karyawan $model */
+            return empty($model->countKaryawanStrukturOrganisasis)
+                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-danger'])
+                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
+        }
+    ],
     [
         'class' => 'yii\grid\ActionColumn',
-        'urlCreator' => function($action, $model, $key, $index) {
-            return \yii\helpers\Url::to([
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([
                 $action,
                 'id' => $model->id,
                 'page' => Yii::$app->request->getQueryParam('page', null)

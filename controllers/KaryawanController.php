@@ -2,33 +2,33 @@
 
 namespace app\controllers;
 
-use Exception;
-use Yii;
-use app\models\Karyawan;
-use app\models\search\KaryawanSearch;
 use app\models\AlamatKaryawan;
+use app\models\Karyawan;
+use app\models\KaryawanStrukturOrganisasi;
+use app\models\search\KaryawanSearch;
 use app\models\Tabular;
-use yii\helpers\Html;
-
+use Exception;
+use rmrevin\yii\fontawesome\FAS;
 use Throwable;
+use Yii;
+use yii\bootstrap4\ActiveForm;
 use yii\db\StaleObjectException;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use rmrevin\yii\fontawesome\FAS;
+use yii\web\Response;
 
 /**
  * KaryawanController implements the CRUD actions for Karyawan model.
  */
-class KaryawanController extends Controller
-{
+class KaryawanController extends Controller {
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -56,10 +56,11 @@ class KaryawanController extends Controller
     /**
      * Displays a single Karyawan model.
      * @param integer $id
+     * @param null $page
      * @return mixed
-     * @throws HttpException
+     * @throws NotFoundHttpException
      */
-    public function actionView($id){
+    public function actionView($id, $page = null) {
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -214,15 +215,84 @@ class KaryawanController extends Controller
      * @throws Throwable
      * @throws StaleObjectException
      */
-    public function actionDelete($id, $page = null){
+    public function actionDelete($id, $page = null) {
 
         $model = $this->findModel($id);
-        $oldLabel =  $model->nama;
+        $oldLabel = $model->nama;
 
         $model->delete();
 
-        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Karyawan : " . $oldLabel. " successfully deleted.");
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Karyawan : " . $oldLabel . " successfully deleted.");
         return $this->redirect(['index', 'page' => $page]);
+    }
+
+    /**
+     * @param $id
+     * @param null $page
+     * @return array|string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionManageJabatan($id, $page = null) {
+
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        $models = empty($model->karyawanStrukturOrganisasis) ?
+            [new KaryawanStrukturOrganisasi()] :
+            $model->karyawanStrukturOrganisasis;
+
+        if ($request->isPost && $request->post('ajax') !== null) {
+
+            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+            $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
+            Tabular::loadMultiple($models, $request->post());
+
+            $deletedID = array_filter(array_diff($oldTransactionIds,
+                    array_filter(ArrayHelper::map($models, 'id', 'id')))
+            );
+
+            if (Tabular::validateMultiple($models)) {
+
+                $transaction = Yii::$app->db->beginTransaction();
+
+                try{
+                    $flag = true;
+                    if(!empty($deletedID)){
+                        $number  = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
+                        if($number <= 0){
+                            $flag = false;
+                        }
+                    }
+
+                    foreach ($models as $single) {
+                        $flag = $single->save(false) && $flag;
+
+                        if ($flag === false) {
+                            break;
+                        }
+                    }
+
+                    if ($flag) {
+                        $transaction->commit();
+                    }else{
+                        $transaction->rollBack();
+                    }
+                }catch (\yii\db\Exception $e) {
+                    $transaction->rollBack();
+                }
+
+                return $this->redirect(['karyawan/view', 'id' => $id]);
+            }
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validateMultiple($models);
+        }
+
+        return $this->render('_form_manage_jabatan', [
+            'model' => $model,
+            'models' => $models,
+        ]);
+
     }
 
     /**
@@ -232,11 +302,11 @@ class KaryawanController extends Controller
      * @return Karyawan the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id){
-                    if (($model = Karyawan::findOne($id)) !== null) {
-                return $model;
-            } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
-            }
+    protected function findModel($id) {
+        if (($model = Karyawan::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

@@ -51,6 +51,18 @@ class StrukturOrganisasi extends BaseStrukturOrganisasi {
         ", [':id' => $id])->queryAll();
     }
 
+    public static function mapIDToNamaKhususJabatanSaja() {
+        return ArrayHelper::map(self::find()
+            ->select([
+                'id',
+                'nama' => 'CONCAT(kode, " = ", nama)'
+            ])
+            ->where([
+                'tipe' => self::TIPE_JABATAN
+            ])
+            ->asArray()->all(), 'id', 'nama');
+    }
+
     public function behaviors() {
         return ArrayHelper::merge(
             parent::behaviors(),

@@ -39,6 +39,7 @@ use yii\behaviors\TimestampBehavior;
  * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
  * @property \app\models\StatusPerkawinan $statusPerkawinan
+ * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
  * @property string $aliasModel
  */
 abstract class Karyawan extends \yii\db\ActiveRecord
@@ -173,6 +174,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function getStatusPerkawinan()
     {
         return $this->hasOne(\app\models\StatusPerkawinan::className(), ['id' => 'status_perkawinan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKaryawanStrukturOrganisasis()
+    {
+        return $this->hasMany(\app\models\KaryawanStrukturOrganisasi::className(), ['karyawan_id' => 'id']);
     }
 
 
