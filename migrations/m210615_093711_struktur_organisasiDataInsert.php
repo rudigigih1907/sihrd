@@ -14,6 +14,8 @@ class m210615_093711_struktur_organisasiDataInsert extends Migration
 
     public function safeUp()
     {
+        $this->execute("set foreign_key_checks=0");
+        $this->truncateTable('{{%struktur_organisasi}}');
         $this->batchInsert('{{%struktur_organisasi}}',
                            ["id", "parent_id", "tipe", "nama", "alias", "kode", "created_at", "updated_at", "created_by", "updated_by"],
                             [
@@ -343,6 +345,7 @@ class m210615_093711_struktur_organisasiDataInsert extends Migration
     ],
 ]
         );
+        $this->execute("set foreign_key_checks=1");
     }
 
     public function safeDown()
