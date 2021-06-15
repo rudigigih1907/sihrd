@@ -176,6 +176,19 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'BDJXVhHOg0ZurNKLqJ2a_keyCpeT4DRv',
         ],
+        'session' => [
+
+            // this is the name of the session cookie used for login on the backend
+            'name' => 'advanced-backend',
+            'timeout' => 86400, // 1 Day
+            'class' => 'yii\web\DbSession',
+            'writeCallback' => function($session){
+                return [
+                    'user_id' => Yii::$app->user->id,
+                    'last_write' => time(),
+                ];
+            }
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
