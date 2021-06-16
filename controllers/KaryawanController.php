@@ -295,6 +295,31 @@ class KaryawanController extends Controller {
 
     }
 
+    public function actionHitungJumlahRecord($kriteria = Karyawan::SEMUA) {
+        $data = Karyawan::find();
+
+        switch ($kriteria):
+
+            case Karyawan::TIDAK_AKTIF:
+                $data->where([
+                    "IS NOT", 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+
+            case Karyawan::AKTIF:
+                $data->where([
+                    "IS", 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+
+            default :
+                break;
+        endswitch;
+
+        $total = $data->asArray()->count();
+        return $total . ' ' . $kriteria ;
+    }
+
     /**
      * Finds the Karyawan model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

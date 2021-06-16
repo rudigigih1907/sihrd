@@ -13,6 +13,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * StrukturOrganisasiController implements the CRUD actions for StrukturOrganisasi model.
@@ -245,6 +246,39 @@ class StrukturOrganisasiController extends Controller {
         Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " StrukturOrganisasi : " . $oldLabel . " successfully deleted.");
         return $this->redirect(['struktur-organisasi/index-diagram', 'parent_id' => $root_id]);
 
+    }
+
+    public function actionHitungJumlahRecord($type = null) {
+        $data = StrukturOrganisasi::find();
+
+        switch ($type) :
+            case StrukturOrganisasi::TIPE_GROUP:
+                $data->where([
+                    'tipe' => StrukturOrganisasi::TIPE_GROUP
+                ]);
+                break;
+            case StrukturOrganisasi::TIPE_PERUSAHAAN:
+                $data->where([
+                    'tipe' => StrukturOrganisasi::TIPE_PERUSAHAAN
+                ]);
+                break;
+            default:
+                break;
+        endswitch;
+
+        $total = $data->asArray()->count();
+        return $total . ' ' . $type;
+    }
+
+    /**
+     * Mencari data Group Perusahaan
+     * @return StrukturOrganisasi|array|null
+     */
+    public function actionFindGroup(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return StrukturOrganisasi::find()->select('nama')->where([
+            'tipe' => StrukturOrganisasi::TIPE_GROUP
+        ])->one();
     }
 
     /**

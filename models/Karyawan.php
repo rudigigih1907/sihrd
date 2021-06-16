@@ -12,6 +12,10 @@ use yii\helpers\ArrayHelper;
 class Karyawan extends BaseKaryawan
 {
 
+    const AKTIF = 'AKTIF';
+    const TIDAK_AKTIF = 'TIDAK AKTIF';
+    const SEMUA = 'SEMUA';
+
     public function behaviors()
     {
         return ArrayHelper::merge(
