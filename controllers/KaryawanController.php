@@ -300,6 +300,7 @@ class KaryawanController extends Controller {
 
         switch ($kriteria):
 
+
             case Karyawan::TIDAK_AKTIF:
                 $data->where([
                     "IS NOT", 'tanggal_berhenti_bekerja', NULL

@@ -32,50 +32,8 @@ AppAsset::register($this);
     <div id="layoutSidenav">
 
         <?php
-        $callback = function ($item) {
 
-            $data = eval($item['data']);
-
-            if (isset($data['module'])) {
-                return isset($data['controller'])
-                    ?
-                    [
-                        'label' => $item['name'],
-                        'url' => [$item['route']],
-                        'items' => $item['children'],
-                        'active' =>
-                            Yii::$app->controller->module->id == $data['module'] &&
-                            Yii::$app->controller->id == $data['controller']
-                    ]
-                    :
-                    [
-                        'label' => $item['name'],
-                        'url' => is_null($item['route']) ? "#" : [$item['route']],
-                        'items' => $item['children'],
-                        'active' => null
-                    ];
-
-
-            }
-
-            return isset($data['controller'])
-                ?
-                [
-                    'label' => $item['name'],
-                    'url' => [$item['route']],
-                    'items' => $item['children'],
-                    'active' => Yii::$app->controller->id == $data['controller']
-                ]
-                :
-                [
-                    'label' => $item['name'],
-                    'url' => is_null($item['route']) ? "#" : [$item['route']],
-                    'items' => $item['children'],
-                    'active' => null
-                ];
-        };
-        $items = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);
-        echo $this->render('_sidebar', ['items' => $items])
+        echo $this->render('_sidebar')
         ?>
 
         <div id="layoutSidenav_content">

@@ -1,7 +1,11 @@
 <?php
-use yii\helpers\Html;
-use yii\grid\GridView;
+
 use rmrevin\yii\fontawesome\FAS;
+use yii\bootstrap4\ButtonDropdown;
+use yii\bootstrap4\ButtonToolbar;
+use yii\bootstrap4\Dropdown;
+use yii\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\KaryawanSearch */
@@ -15,19 +19,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).' Tambah Karyawan', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?php echo
+            ButtonToolbar::widget([
+                'options' => [
+                    'class' => 'btn-toolbar',
+                ],
+                'buttonGroups' => [
+                    [
+                        'buttons' => [
+                            Html::a(FAS::icon(FAS::_PLUS_CIRCLE) . ' Tambah', ['create'], ['class' => 'btn btn-primary']),
+
+                            ButtonDropdown::widget([
+                                'label' => FAS::icon(FAS::_FILE) . ' Report',
+                                'buttonOptions' => [
+                                    'class' => ['btn btn-success'],
+                                    'type' => 'button',
+                                ],
+                                'encodeLabel' => false,
+                                'dropdown' => [
+                                    'items' => [
+
+                                            [
+                                            'label' => FAS::icon(FAS::_FILE) . ' Input Absen',
+                                            'url' => ['report-stock-by'],
+                                        ],
+
+                                    ],
+                                    'encodeLabels' => false,
+                                ],
+                            ]),
+                        ],
+                    ]
+                ],
+            ])
+            ?>
         </div>
-    <?php try { 
+        <?php try {
             echo GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => require(__DIR__.'/_columns.php'),
-                        'headerRowOptions' => [
-                            'class' => 'text-nowrap'
-                        ]
-                    ]);
-            }catch(Exception $e){
-                echo $e->getMessage();
-            }?>
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => require(__DIR__ . '/_columns.php'),
+                'headerRowOptions' => [
+                    'class' => 'text-nowrap'
+                ]
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }?>
     </div>
 </div>

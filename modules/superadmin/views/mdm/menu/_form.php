@@ -84,10 +84,10 @@ $js = <<<JS
         if(mode === 'module'){
             module = stringSplit[0];
             controller = stringSplit[1];
-            stringTemplate  = "return[" + "'module' => '" + module + "', 'controller' => '" + controller + "'];";
+            stringTemplate  = "return[" + "'module' => '" + module + "', 'controller' => '" + controller + "', 'icon' => 'circle'];";
         }else{
             controller = stringSplit[0];
-            stringTemplate  = "return[" + "'controller' => '" + controller + "'];";
+            stringTemplate  = "return[" + "'controller' => '" + controller + "', 'icon' => 'circle'];";
         }
         
         jQuery('#menu-data').val(stringTemplate);

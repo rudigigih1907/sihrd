@@ -1,8 +1,56 @@
 <?php
 
-
 use app\widgets\SideMenu;
+use mdm\admin\components\MenuHelper;
 use yii\bootstrap4\Html;
+
+$callback = function ($item) {
+
+    $data = eval($item['data']);
+
+    if (isset($data['module'])) {
+        return isset($data['controller'])
+            ?
+            [
+                'label' => $item['name'],
+                'url' => [$item['route']],
+                'items' => $item['children'],
+                'icon' => $data['icon'],
+                'active' =>
+                    Yii::$app->controller->module->id == $data['module'] &&
+                    Yii::$app->controller->id == $data['controller']
+            ]
+            :
+            [
+                'label' => $item['name'],
+                'url' => is_null($item['route']) ? "#" : [$item['route']],
+                'items' => $item['children'],
+                'icon' => $data['icon'],
+                'active' => null
+            ];
+
+
+    }
+
+    return isset($data['controller'])
+        ?
+        [
+            'label' => $item['name'],
+            'url' => [$item['route']],
+            'items' => $item['children'],
+            'icon' => $data['icon'],
+            'active' => Yii::$app->controller->id == $data['controller']
+        ]
+        :
+        [
+            'label' => $item['name'],
+            'url' => is_null($item['route']) ? "#" : [$item['route']],
+            'items' => $item['children'],
+            'icon' => $data['icon'],
+            'active' => null
+        ];
+};
+$items = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);
 
 $isGuest = Yii::$app->user->isGuest;
 ?>

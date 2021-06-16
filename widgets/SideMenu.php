@@ -11,13 +11,15 @@ use yii\widgets\Menu;
 
 class SideMenu extends Menu {
 
-    public $nonCollapsedLink = '<a class="nav-link {active}" href="{url}">{label}</a>';
+    public $icon = "circle";
+
+    public $nonCollapsedLink = '<a class="nav-link {active}" href="{url}">  <div class="sb-nav-link-icon">{icon}</div> {label}</a>';
 
     public $collapsedLink = '<a class="nav-link {active} collapsed" href="{url}" 
                                             data-toggle="collapse" 
                                             data-target="{data-target}" 
                                             aria-expanded= "false"
-                                            aria-controls="{aria-controls}"> {label} 
+                                            aria-controls="{aria-controls}"> <div class="sb-nav-link-icon">{icon}</div> {label} 
                                         </a>';
 
 
@@ -89,6 +91,7 @@ class SideMenu extends Menu {
             if ($i === $n - 1 && $this->lastItemCssClass !== null) {
                 $class[] = $this->lastItemCssClass;
             }
+
             Html::addCssClass($options, $class);
 
             $options['aria-expanded'] = false;
@@ -97,12 +100,13 @@ class SideMenu extends Menu {
             if (!empty($item['items'])) {
 
                 $subItems = array_filter(array_column($item['items'],'items'));
-
+                $iconClass = isset($item['icon']) ? $item['icon'] : $this->icon;
                 if(empty($subItems)){
                     $submenuTemplate = ArrayHelper::getValue($item, 'submenuTemplate', $this->submenuTemplateOneLevel);
                     $menu .= strtr($submenuTemplate, [
                         '{id}' => "collapse" . str_replace(" ", "", $item['label']),
                         '{items}' => $this->renderItems($item['items']),
+                        '{icon}' => '<i class=" fas fa-' . $iconClass . '"></i>',
                         '{show}' => in_array(true, ArrayHelper::getColumn($item['items'], 'active')) ? "show" : "",
                     ]);
                 }else{
@@ -110,13 +114,12 @@ class SideMenu extends Menu {
                     $menu .= strtr($submenuTemplate, [
                         '{id}' => "collapse" . str_replace(" ", "", $item['label']),
                         '{items}' => $this->renderItems($item['items']),
+                        '{icon}' => '<i class=" fas fa-' . $iconClass. '"></i>',
                         '{show}' => in_array(true, ArrayHelper::getColumn($item['items'], 'active')) ? "show" : "",
-                        '{data-parent}' => "#sidenavAccordion". str_replace(" ", "", $item['label']),
-                        '{nav-id}' =>  "sidenavAccordion". str_replace(" ", "", $item['label']),
+                        '{data-parent}' => "#sidenavAccordion" . str_replace(" ", "", $item['label']),
+                        '{nav-id}' => "sidenavAccordion" . str_replace(" ", "", $item['label']),
                     ]);
                 }
-
-
             }
 
             $lines[] = Html::tag($tag, $menu, $options);
@@ -134,6 +137,8 @@ class SideMenu extends Menu {
      */
     protected function renderItem($item, $i = 0) {
 
+        $iconClass = isset($item['icon']) ? $item['icon'] : $this->icon;
+
         if (isset($item['url'])) {
 
             // Link As Link to open Collapsed Item (Close div)
@@ -144,6 +149,7 @@ class SideMenu extends Menu {
                 return strtr($template, [
                     '{url}' => Html::encode(Url::to($item['url'])),
                     '{label}' => $item['label'] . '<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>',
+                    '{icon}' => '<i class=" fas fa-' . $iconClass . '"></i>',
                     '{data-target}' => "#collapse" . str_replace(" ", "", $item['label']),
                     '{aria-controls}' => "collapse" . str_replace(" ", "", $item['label']),
                     '{aria-expanded}' => "true",
@@ -156,6 +162,7 @@ class SideMenu extends Menu {
             return strtr($template, [
                 '{url}' => Html::encode(Url::to($item['url'])),
                 '{label}' => $item['label'],
+                '{icon}' => '<i class=" fas fa-' . $iconClass. '"></i>',
                 '{active}' => $item['active'] == 1 ? "active" : "",
             ]);
 
