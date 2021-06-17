@@ -3,11 +3,9 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
-use app\widgets\Alert;
-use mdm\admin\components\MenuHelper;
-use yii\bootstrap4\Breadcrumbs;
 use yii\helpers\Html;
 use yii\web\View;
+
 AppAsset::register($this);
 ?>
 
@@ -31,34 +29,21 @@ AppAsset::register($this);
 
     <div id="layoutSidenav">
 
-        <?php
-
-        echo $this->render('_sidebar')
-        ?>
+        <?= $this->render('_sidebar') ?>
 
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid">
-                    <div class="mt-4">
-                        <div class="d-flex justify-content-between">
-                            <h4><?php echo $this->title ?></h4>
-                            <?php try {
-                                echo Breadcrumbs::widget([
-                                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-                                ]);
-                            } catch (Exception $e) {
-                                echo $e->getMessage();
-                            } ?>
-                        </div>
-                        <?= Alert::widget() ?>
-                        <?= $content ?>
-                    </div>
-                </div>
-            </main>
+
+            <?= $this->render('_content', [
+                    'content' => $content
+            ]) ?>
+
             <?= $this->render('_footer') ?>
+
         </div>
+
     </div>
     <?php $this->endBody() ?>
+
     </body>
 
     </html>

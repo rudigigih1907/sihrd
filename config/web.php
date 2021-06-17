@@ -85,7 +85,7 @@ $config = [
                     '<div class="card-body p-0">' .
                     "{items}" .
                     '</div>' .
-                    '<div class="card-footer py-4">' .
+                    '<div class="card-footer pt-4 pb-2">' .
                     '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
                     '</div>' .
                     '</div>'
@@ -108,7 +108,7 @@ $config = [
                     '<div class="card-body p-0">' .
                     "{items}" .
                     '</div>' .
-                    '<div class="card-footer py-4">' .
+                    '<div class="card-footer pt-4 pb-2">' .
                     '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
                     '</div>' .
                     '</div>'
@@ -133,7 +133,7 @@ $config = [
             'defaultTimeZone' => 'Asia/Jakarta',
             'dateFormat' => 'php:d-m-Y',
             'datetimeFormat' => 'php:d-m-Y, H:i',
-            'timeFormat' => 'php:H:i:s',
+            'timeFormat' => 'php:H:i',
             'thousandSeparator' => ",",
             'decimalSeparator' => '.',
 

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\AlamatKaryawan;
+use app\models\form\ReportExportDataUntukMesinAbsensi;
 use app\models\Karyawan;
 use app\models\KaryawanStrukturOrganisasi;
 use app\models\search\KaryawanSearch;
@@ -227,6 +228,7 @@ class KaryawanController extends Controller {
     }
 
     /**
+     * Manage Jabatan yang diberikan kepada Karyawan
      * @param $id
      * @param null $page
      * @return array|string|Response
@@ -295,6 +297,11 @@ class KaryawanController extends Controller {
 
     }
 
+    /**
+     * Menghitung jumlah record berdasarkan konstanta pada class Karyawan
+     * @param string $kriteria Karyawan::SEMUA; Karyawan::AKTIF; Karyawan::TIDAK_AKTIF
+     * @return string
+     */
     public function actionHitungJumlahRecord($kriteria = Karyawan::SEMUA) {
         $data = Karyawan::find();
 
@@ -318,8 +325,34 @@ class KaryawanController extends Controller {
         endswitch;
 
         $total = $data->asArray()->count();
-        return $total . ' ' . $kriteria ;
+        return $total . ' ' . $kriteria;
     }
+
+    /**
+     * Form export data untuk mesin absensi,
+     * GET  : Form
+     * POST : Form + Result
+     * @param null $page
+     * @return string
+     */
+    public function actionReportExportDataUntukMesinAbsensi($page = null) {
+
+        $model = new ReportExportDataUntukMesinAbsensi();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $data = Karyawan::findAllDenganStatusKeaktifannya($model->statusAktif);
+
+            return $this->render('_result_report_export_data_untuk_mesin_absensi',[
+                'data' => $data
+            ]);
+        }
+        return $this->render("_form_report_export_data_untuk_mesin_absensi", [
+            'model' => $model,
+            'page' => $page
+        ]);
+    }
+
 
     /**
      * Finds the Karyawan model based on its primary key value.

@@ -3,7 +3,6 @@
 use rmrevin\yii\fontawesome\FAS;
 use yii\bootstrap4\ButtonDropdown;
 use yii\bootstrap4\ButtonToolbar;
-use yii\bootstrap4\Dropdown;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
@@ -40,9 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'items' => [
 
                                             [
-                                            'label' => FAS::icon(FAS::_FILE) . ' Input Absen',
-                                            'url' => ['report-stock-by'],
-                                        ],
+                                                'label' => FAS::icon(FAS::_FILE) . ' Data Untuk Mesin Absen',
+                                                'url' => [
+                                                        'report-export-data-untuk-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
+                                                ],
+                                            ],
 
                                     ],
                                     'encodeLabels' => false,

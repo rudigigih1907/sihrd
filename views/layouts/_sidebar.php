@@ -1,5 +1,9 @@
 <?php
 
+/* @var $this View */
+/* @var $content string */
+use yii\web\View;
+
 use app\widgets\SideMenu;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap4\Html;

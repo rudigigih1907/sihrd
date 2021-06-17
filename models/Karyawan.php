@@ -16,6 +16,50 @@ class Karyawan extends BaseKaryawan
     const TIDAK_AKTIF = 'TIDAK AKTIF';
     const SEMUA = 'SEMUA';
 
+    /**
+     * column Status Aktif Karyawan ENUM value labels
+     * @return array
+     */
+    public static function optsStatusAktif()
+    {
+        return [
+            self::AKTIF => 'Aktif',
+            self::TIDAK_AKTIF => 'Tidak Aktif',
+            self::SEMUA => 'Semua',
+        ];
+    }
+
+    /**
+     * @param $statusAktif
+     * @return Karyawan[]|array
+     */
+    public static function findAllDenganStatusKeaktifannya($statusAktif) {
+        $data =  self::find()
+            ->select("
+                id AS PIN,
+                nama,
+                nomor_induk_karyawan AS NIP
+            ")
+        ;
+
+        switch ($statusAktif):
+            case self::TIDAK_AKTIF:
+                $data->where([
+                    "IS NOT", 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            case self::AKTIF:
+                $data->where([
+                    "IS", 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            default:
+                break;
+        endswitch;
+
+        return $data->asArray()->all();
+    }
+
     public function behaviors()
     {
         return ArrayHelper::merge(

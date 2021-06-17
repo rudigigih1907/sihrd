@@ -294,6 +294,7 @@ use yii\helpers\Html;
                 </div>
             </div>
         </div>
-        <?php ActiveForm::end(); ?>     </div>
+        <?php ActiveForm::end(); ?>
+    </div>
 
 </div>

@@ -12,6 +12,13 @@ trait TraitMapIDToNama {
             ->all(), 'id', 'nama');
     }
 
+    public static function mapIDToNamaOrderById() {
+        return ArrayHelper::map(self::find()
+            ->select("id, nama")
+            ->orderBy('id')
+            ->all(), 'id', 'nama');
+    }
+
     public static function mapIDToNamaDenganKode() {
         return ArrayHelper::map(self::find()
             ->select("id, nama, kode")
