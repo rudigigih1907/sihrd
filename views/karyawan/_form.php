@@ -118,22 +118,25 @@ use yii\helpers\Html;
 
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+                        <?= $form->field($model, 'jadwal_kerja_id')->dropDownList(\app\models\JadwalKerja::mapIDToNama(),[
+                                'prompt' => '-'
+                        ]) ?>
 
                     </div>
                     <div class="col-sm-12 col-md-6">
-                        <?= $form->field($model, 'tanggal_berhenti_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+                        <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
 
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
+
+                        <?= $form->field($model, 'tanggal_berhenti_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
 
                     </div>
                     <div class="col-sm-12 col-md-6">
-
+                        <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
                     </div>
                 </div>
 

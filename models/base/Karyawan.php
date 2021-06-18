@@ -31,6 +31,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $tanggal_mulai_bekerja
  * @property string $tanggal_berhenti_bekerja
  * @property integer $alasan_berhenti_bekerja
+ * @property integer $jadwal_kerja_id
+ * @property string $mesin_absensi_password
+ * @property string $mesin_absensi_rfid
+ * @property string $mesin_absensi_previlege
+ * @property string $mesin_absensi_telapak_tangan
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $created_by
@@ -38,6 +43,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
+ * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\StatusPerkawinan $statusPerkawinan
  * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
  * @property string $aliasModel
@@ -90,12 +96,13 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'jenis_kelamin', 'agama_id', 'status_perkawinan_id', 'pendidikan_terakhir'], 'required'],
+            [['nama', 'jenis_kelamin', 'agama_id', 'status_perkawinan_id', 'pendidikan_terakhir', 'jadwal_kerja_id'], 'required'],
             [['tanggal_lahir', 'tanggal_mulai_bekerja', 'tanggal_berhenti_bekerja'], 'safe'],
             [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir'], 'string'],
-            [['agama_id', 'status_perkawinan_id', 'alasan_berhenti_bekerja'], 'integer'],
-            [['nomor_induk_karyawan', 'nama', 'nama_panggilan', 'tempat_lahir', 'nomor_kartu_tanda_penduduk', 'nomor_kartu_keluarga', 'nomor_pokok_wajib_pajak', 'nomor_kitas_atau_sejenisnya', 'nama_ayah', 'nama_ibu'], 'string', 'max' => 255],
+            [['agama_id', 'status_perkawinan_id', 'alasan_berhenti_bekerja', 'jadwal_kerja_id'], 'integer'],
+            [['nomor_induk_karyawan', 'nama', 'nama_panggilan', 'tempat_lahir', 'nomor_kartu_tanda_penduduk', 'nomor_kartu_keluarga', 'nomor_pokok_wajib_pajak', 'nomor_kitas_atau_sejenisnya', 'nama_ayah', 'nama_ibu', 'mesin_absensi_password', 'mesin_absensi_rfid', 'mesin_absensi_previlege', 'mesin_absensi_telapak_tangan'], 'string', 'max' => 255],
             [['agama_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Agama::className(), 'targetAttribute' => ['agama_id' => 'id']],
+            [['jadwal_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerja::className(), 'targetAttribute' => ['jadwal_kerja_id' => 'id']],
             [['status_perkawinan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\StatusPerkawinan::className(), 'targetAttribute' => ['status_perkawinan_id' => 'id']],
             ['status_kewarganegaraan', 'in', 'range' => [
                     self::STATUS_KEWARGANEGARAAN_WNI,
@@ -145,10 +152,15 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             'tanggal_mulai_bekerja' => 'Tanggal Mulai Bekerja',
             'tanggal_berhenti_bekerja' => 'Tanggal Berhenti Bekerja',
             'alasan_berhenti_bekerja' => 'Alasan Berhenti Bekerja',
+            'jadwal_kerja_id' => 'Jadwal Kerja ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'mesin_absensi_password' => 'Mesin Absensi Password',
+            'mesin_absensi_rfid' => 'Mesin Absensi Rfid',
+            'mesin_absensi_previlege' => 'Mesin Absensi Previlege',
+            'mesin_absensi_telapak_tangan' => 'Mesin Absensi Telapak Tangan',
         ];
     }
 
@@ -166,6 +178,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function getAgama()
     {
         return $this->hasOne(\app\models\Agama::className(), ['id' => 'agama_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getJadwalKerja()
+    {
+        return $this->hasOne(\app\models\JadwalKerja::className(), ['id' => 'jadwal_kerja_id']);
     }
 
     /**

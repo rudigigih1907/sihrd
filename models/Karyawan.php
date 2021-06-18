@@ -93,6 +93,7 @@ class Karyawan extends BaseKaryawan
                 'jenis_kelamin' => 'Jenis Kelamin',
                 'agama_id' => 'Agama',
                 'status_perkawinan_id' => 'Status Perkawinan',
+                'jadwal_kerja_id' => 'Jadwal Kerja',
             ]
         );
     }

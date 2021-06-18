@@ -35,6 +35,19 @@ return [
         'attribute'=>'tanggal_lahir',
         'format' => 'date'
     ],
+    [
+        'class'=>'\yii\grid\DataColumn',
+        'attribute'=>'jadwal_kerja_id',
+        'format' => 'raw',
+        'value' => function ($model) {
+            /** @var Karyawan $model */
+            return
+                Html::a($model->jadwalKerja->kode,
+                    ['jadwal-kerja/view', 'id' => $model->jadwalKerja->id],
+                    ['class' => 'text-primary']);
+        }
+
+    ],
     // [
         // 'class'=>'\yii\grid\DataColumn',
         // 'attribute'=>'status_kewarganegaraan',

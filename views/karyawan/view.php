@@ -89,6 +89,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'nama_ayah',
                                     'nama_ibu',
                                     'pendidikan_terakhir',
+                                    [
+                                        'attribute' => 'jadwal_kerja_id',
+                                        'format' => 'raw',
+                                        'value' => function ($model) {
+                                            return
+                                                Html::a($model->jadwalKerja->nama,
+                                                    ['jadwal-kerja/view', 'id' => $model->jadwalKerja->id],
+                                                    ['class' => 'btn btn-link']);
+                                        }
+                                    ],
                                     'tanggal_mulai_bekerja',
                                     'tanggal_berhenti_bekerja',
                                     'alasan_berhenti_bekerja',

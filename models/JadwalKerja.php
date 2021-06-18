@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\traits\TraitMapIDToNama;
 use Yii;
 use \app\models\base\JadwalKerja as BaseJadwalKerja;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,8 @@ use yii\helpers\ArrayHelper;
  */
 class JadwalKerja extends BaseJadwalKerja
 {
+
+    use TraitMapIDToNama;
 
     public function behaviors()
     {
