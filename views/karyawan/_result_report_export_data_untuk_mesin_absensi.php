@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 
 /* @var $data */
+/* @var $statusAktif */
 
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
@@ -25,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?=
             Html::a(FAS::icon(FAS::_FILE_EXCEL) . ' Excel',
-                ['create'],
-                ['class' => 'btn btn-success'])
+                ['karyawan/export-data-untuk-mesin-absensi-berupa-file-excel', 'statusAktif' => $statusAktif ],
+                ['class' => 'btn btn-success', 'target' => '_blank'])
             ?>
         </div>
 

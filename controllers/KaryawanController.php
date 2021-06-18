@@ -13,6 +13,7 @@ use rmrevin\yii\fontawesome\FAS;
 use Throwable;
 use Yii;
 use yii\bootstrap4\ActiveForm;
+use yii\data\ArrayDataProvider;
 use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -21,6 +22,7 @@ use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii2tech\spreadsheet\Spreadsheet;
 
 /**
  * KaryawanController implements the CRUD actions for Karyawan model.
@@ -335,7 +337,7 @@ class KaryawanController extends Controller {
      * @param null $page
      * @return string
      */
-    public function actionReportExportDataUntukMesinAbsensi($page = null) {
+    public function actionFindDataUntukMesinAbsensi($page = null) {
 
         $model = new ReportExportDataUntukMesinAbsensi();
 
@@ -343,14 +345,93 @@ class KaryawanController extends Controller {
 
             $data = Karyawan::findAllDenganStatusKeaktifannya($model->statusAktif);
 
-            return $this->render('_result_report_export_data_untuk_mesin_absensi',[
-                'data' => $data
+            return $this->render('_result_report_export_data_untuk_mesin_absensi', [
+                'data' => $data,
+                'statusAktif' => $model->statusAktif
             ]);
         }
         return $this->render("_form_report_export_data_untuk_mesin_absensi", [
             'model' => $model,
             'page' => $page
         ]);
+    }
+
+    /**
+     * @param $statusAktif
+     * @return Response
+     * @throws HttpException
+     */
+    public function actionExportDataUntukMesinAbsensiBerupaFileExcel($statusAktif) {
+        $data = Karyawan::findDataUntukMesinAbsensi($statusAktif);
+        $error = null;
+        if ($data):
+            try {
+                $exporter = new Spreadsheet([
+                    'dataProvider' => new ArrayDataProvider([
+                        'models' => $data,
+                    ]),
+                    'columns' => [
+                        [
+                            'attribute' => 'pin',
+                            'label' => 'PIN',
+                            'contentOptions' => [
+                                'numberFormat' =>[
+                                    'formatCode' => '@' // Failed
+                                ]
+                            ],
+                           /* 'value' => function($data){
+                                return  (int) filter_var($data['pin'], FILTER_SANITIZE_NUMBER_INT);
+                                // return implode("", preg_match_all('!\d+!', $data['pin'], $matches));
+                            }*/
+                        ],
+                        [
+                            'attribute' => 'nip',
+                            'label' => 'NIP'
+                        ],
+                        'nama',
+                        'alias',
+                        [
+                            'attribute' => 'nomor_telepon',
+                            'label' => 'Nomor Telp'
+                        ],
+                        'tempat_lahir',
+                        'tanggal_lahir',
+                        [
+                            'attribute' => 'pembagian1',
+                            'label' => 'Pembagian 1'
+                        ],
+                        [
+                            'attribute' => 'pembagian2',
+                            'label' => 'Pembagian 2'
+                        ],
+                        [
+                            'attribute' => 'pembagian3',
+                            'label' => 'Pembagian 3'
+                        ],
+                        [
+                            'attribute' => 'jadwal_kerja',
+                            'label' => 'Jadwal'
+                        ],
+                        'password',
+                        [
+                            'attribute' => 'rfid',
+                            'label' => 'RFID'
+                        ],
+                        'privilege',
+                        [
+                            'attribute' => 'tanggal_mulai_bekerja',
+                            'label' => 'Tgl Mulai Kerja'
+                        ],
+
+                    ],
+                ]);
+                return $exporter->send("Import Absensi" . time() . '.xls');
+            } catch (NotFoundHttpException $e) {
+                $error = $e->getMessage();
+            }
+        endif;
+
+        throw new HttpException(400, $error);
     }
 
 

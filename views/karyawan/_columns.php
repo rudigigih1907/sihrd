@@ -73,33 +73,43 @@ return [
         // 'attribute'=>'jenis_kelamin',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'agama_id',
-    // ],
-    // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'status_perkawinan_id',
-    // ],
-    // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'nama_ayah',
-    // ],
-    // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'nama_ibu',
-    // ],
-    // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'pendidikan_terakhir',
-    // ],
-    // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'tanggal_mulai_bekerja',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'agama_id',
     // ],
     // [
     // 'class'=>'\yii\grid\DataColumn',
-    // 'attribute'=>'tanggal_berhenti_bekerja',
+    // 'attribute'=>'status_perkawinan_id',
     // ],
+    // [
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'nama_ayah',
+    // ],
+    // [
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'nama_ibu',
+    // ],
+    // [
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'pendidikan_terakhir',
+    // ],
+    // [
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'tanggal_mulai_bekerja',
+    // ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'label' => 'Aktif ?',
+        'format' => 'raw',
+        'contentOptions' => [
+            'class' => 'text-right'
+        ],
+        'value' => function ($model) {
+            /** @var Karyawan $model */
+            return $model->statusAktifKaryawan !== Karyawan::TIDAK_AKTIF
+                ? Html::tag('span', Karyawan::AKTIF, ['class' => 'badge badge-primary'])
+                : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-danger']);
+        }
+    ],
     // [
     // 'class'=>'\yii\grid\DataColumn',
     // 'attribute'=>'alasan_berhenti_bekerja',
@@ -123,7 +133,7 @@ return [
 
     [
         'class' => '\yii\grid\DataColumn',
-        'label' => 'Total Jabatan',
+        'label' => 'Jabatan',
         'headerOptions' => [
             'class' => 'text-right'
         ],
