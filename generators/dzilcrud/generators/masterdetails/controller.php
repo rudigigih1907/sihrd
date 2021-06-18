@@ -108,7 +108,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * @return mixed
      * @throws HttpException
      */
-    public function actionView(<?= $actionParams ?>){
+    public function actionView(<?= $actionParams ?>, $page = null){
 
         return $this->render('view', [
             'model' => $this->findModel(<?= $actionParams ?>),
@@ -239,7 +239,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 if($status['code']){
                     Yii::$app->session->setFlash('info',
                             FAS::icon(FAS::_THUMBS_UP) .  "
-                            <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                            <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>, 'page' => $page], [ 'class' => 'btn btn-link'])
                     );
                     return $this->redirect(['index', 'page' => $page]);
                 }

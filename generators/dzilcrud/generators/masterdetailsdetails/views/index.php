@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS_CIRCLE).<?= $generator->generateString( ' Create ' .
+            <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS_CIRCLE).<?= $generator->generateString( 'Tambah ' .
                 Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-primary']) ?>
         </div>
 

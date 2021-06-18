@@ -2,30 +2,39 @@
 
 namespace app\controllers;
 
-use app\models\JadwalKerja;
-use app\models\JadwalKerjaDetail;
-use app\models\search\JadwalKerjaSearch;
-use app\models\Tabular;
-use Exception;
-use rmrevin\yii\fontawesome\FAS;
-use Throwable;
 use Yii;
+use app\models\JadwalKerja;
+
+use app\models\search\JadwalKerjaSearch;
+
+use app\models\JadwalKerjaDetail;
+
+use app\models\JadwalKerjaDetailDetail;
+
+use app\models\Tabular;
+
+use Throwable;
+use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use rmrevin\yii\fontawesome\FAS;
 
 /**
  * JadwalKerjaController implements the CRUD actions for JadwalKerja model.
  */
-class JadwalKerjaController extends Controller {
+class JadwalKerjaController extends Controller
+{
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -40,7 +49,8 @@ class JadwalKerjaController extends Controller {
      * Lists all JadwalKerja models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchModel = new JadwalKerjaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -48,7 +58,8 @@ class JadwalKerjaController extends Controller {
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-    }
+}
+
 
     /**
      * Displays a single JadwalKerja model.
@@ -56,25 +67,26 @@ class JadwalKerjaController extends Controller {
      * @return mixed
      * @throws HttpException
      */
-    public function actionView($id) {
-
+    public function actionView($id){
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-
     }
 
     /**
      * Creates a new JadwalKerja model.
      * @return mixed
+     * @throws HttpException
+     * @throws InvalidConfigException
      */
-    public function actionCreate() {
-
+    public function actionCreate()
+    {
         $request = Yii::$app->request;
         $model = new JadwalKerja();
-        $modelsDetail = [new JadwalKerjaDetail()];
+        $modelsDetail = [ new JadwalKerjaDetail() ];
+        $modelsDetailDetail =[[new JadwalKerjaDetailDetail()]];
 
-        if ($model->load($request->post())) {
+        if($model->load($request->post())){
 
             $modelsDetail = Tabular::createMultiple(JadwalKerjaDetail::class);
             Tabular::loadMultiple($modelsDetail, $request->post());
@@ -83,131 +95,254 @@ class JadwalKerjaController extends Controller {
             $isValid = $model->validate();
             $isValid = Tabular::validateMultiple($modelsDetail) && $isValid;
 
-            if ($isValid) {
-                $transaction = JadwalKerja::getDb()->beginTransaction();
-                try {
+            if (isset($_POST['JadwalKerjaDetailDetail'][0][0])) {
+                foreach ($_POST['JadwalKerjaDetailDetail'] as $i => $jadwalKerjaDetailDetails) {
+                    foreach ($jadwalKerjaDetailDetails as $j => $jadwalKerjaDetailDetail) {
+                        $data['JadwalKerjaDetailDetail'] = $jadwalKerjaDetailDetail;
+                        $modelJadwalKerjaDetailDetail = new JadwalKerjaDetailDetail();
+                        $modelJadwalKerjaDetailDetail->load($data);
+                        $modelsDetailDetail[$i][$j] = $modelJadwalKerjaDetailDetail;
+                        $isValid = $modelJadwalKerjaDetailDetail->validate() && $isValid;
+                    }
+                }
+            }
 
+            if($isValid){
+
+                $transaction = JadwalKerja::getDb()->beginTransaction();
+
+                try{
+                    $status = [];
                     if ($flag = $model->save(false)) {
                         foreach ($modelsDetail as $i => $detail) :
+
                             if ($flag === false) {
                                 break;
                             }
+
                             $detail->jadwal_kerja_id = $model->id;
                             if (!($flag = $detail->save(false))) {
                                 break;
                             }
+
+                            if (isset($modelsDetailDetail[$i]) && is_array($modelsDetailDetail[$i])) {
+                                foreach ($modelsDetailDetail[$i] as $j => $modelDetailDetail) {
+                                    $modelDetailDetail->jadwal_kerja_detail_id = $detail->id;
+                                    if (!($flag = $modelDetailDetail->save(false))) {
+                                        break;
+                                    }
+                                }
+                            }
+
                         endforeach;
                     }
 
                     if ($flag) {
                         $transaction->commit();
-                        $status = ['code' => 1, 'message' => 'Commit'];
+                        $status = [
+                            'code' => 1,
+                            'message' => 'Commit'
+                        ];
                     } else {
                         $transaction->rollBack();
-                        $status = ['code' => 0, 'message' => 'Roll Back'];
+                        $status = [
+                            'code' => 0,
+                            'message' => 'Roll Back'
+                        ];
                     }
-
-                } catch (Exception $e) {
+                }catch (\Exception $e){
                     $transaction->rollBack();
-                    $status = ['code' => 0, 'message' => 'Roll Back ' . $e->getMessage(),];
+                    $status = [
+                        'code' => 0,
+                        'message' => 'Roll Back ' . $e->getMessage(),
+                    ];
                 }
 
-                if ($status['code']) {
+                if($status['code']){
                     Yii::$app->session->setFlash('success',
-                        FAS::icon(FAS::_THUMBS_UP) . "
-                        JadwalKerja : " . $model->nama . " berhasil ditambahkan. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
+                        FAS::icon(FAS::_THUMBS_UP) .  "
+                        JadwalKerja : " . $model->nama . " berhasil ditambahkan. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
                     );
                     return $this->redirect(['index']);
                 }
 
-                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja is failed to insert. Info: " . $status['message']);
+                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja is failed to insert. Info: ". $status['message']);
             }
         }
 
         return $this->render('create', [
             'model' => $model,
-            'modelsDetail' => empty($modelsDetail) ? [new JadwalKerjaDetail()] : $modelsDetail,
+            'modelsDetail' => empty($modelsDetail) ? [ new JadwalKerjaDetail() ] : $modelsDetail,
+            'modelsDetailDetail' => empty($modelsDetailDetail) ? [[new JadwalKerjaDetailDetail()]] : $modelsDetailDetail,
         ]);
-
     }
 
     /**
      * Updates an existing JadwalKerja model.
-     * If update is successful, the browser will be redirected to the 'index' page with pagination URL
+     * Only for ajax request will return json object
      * @param integer $id
      * @param null $page
      * @return mixed
      * @throws HttpException
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
-    public function actionUpdate($id, $page = null) {
-
+    public function actionUpdate($id, $page = null){
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-        $modelsDetail = !empty($model->jadwalKerjaDetails) ? $model->jadwalKerjaDetails : [new JadwalKerjaDetail()];
+        $modelsDetail = !empty($model->jadwalKerjaDetails) ?
+            $model->jadwalKerjaDetails :
+            [new JadwalKerjaDetail()];
 
-        if ($model->load($request->post())) {
+        $modelsDetailDetail =[];
+        $oldDetailDetails = [];
 
-            $oldDetailsID = ArrayHelper::map($modelsDetail, 'id', 'id'); # GET ALL ID
+        if (!empty($modelsDetail)) {
 
-            $modelsDetail = Tabular::createMultiple(JadwalKerjaDetail::class, $modelsDetail); # Re-create models, Return as array.
+            foreach ($modelsDetail as $i => $modelDetail) {
+                $jadwalKerjaDetailDetails = $modelDetail->jadwalKerjaDetailDetails;
+                $modelsDetailDetail[$i] = $jadwalKerjaDetailDetails;
+                $oldDetailDetails = ArrayHelper::merge(ArrayHelper::index($jadwalKerjaDetailDetails, 'id'), $oldDetailDetails);
+            }
+        }
 
-            Tabular::loadMultiple($modelsDetail, $request->post()); # Load Post Request into it.
-            $deletedDetailsID = array_diff($oldDetailsID, array_filter(ArrayHelper::map($modelsDetail, 'id', 'id'))); # Search ID that will be deleted
+        if($model->load($request->post())){
 
-            $isValid = $model->validate(); # validate model 1
-            $isValid = Tabular::validateMultiple($modelsDetail) && $isValid; # validate multiple model
+            // reset
+            $modelsDetailDetail = [];
 
-            if ($isValid) {
+            // GET OLD IDs
+            $oldDetailsID = ArrayHelper::map($modelsDetail, 'id', 'id');
+
+            $modelsDetail=Tabular::createMultiple(JadwalKerjaDetail::class, $modelsDetail);
+            Tabular::loadMultiple($modelsDetail, $request->post());
+
+            $deletedDetailsID = array_diff($oldDetailsID,array_filter(
+                    ArrayHelper::map($modelsDetail, 'id', 'id')
+                )
+            );
+
+            //validate models
+            $isValid = $model->validate();
+            $isValid = Tabular::validateMultiple($modelsDetail) && $isValid;
+
+
+            $detailDetailIDs = [];
+            if (isset($_POST['JadwalKerjaDetailDetail'][0][0])) {
+                foreach ($_POST['JadwalKerjaDetailDetail'] as $i => $jadwalKerjaDetailDetails) {
+
+                    $detailDetailIDs = ArrayHelper::merge($detailDetailIDs, array_filter(ArrayHelper::getColumn($jadwalKerjaDetailDetails, 'id')));
+
+                    foreach ($jadwalKerjaDetailDetails as $j => $jadwalKerjaDetailDetail) {
+                        $data['JadwalKerjaDetailDetail'] = $jadwalKerjaDetailDetail;
+
+                        // Difference with actionCreate Here
+                        $modelJadwalKerjaDetailDetail =
+                            (isset($jadwalKerjaDetailDetail['id']) && isset($oldDetailDetails[$jadwalKerjaDetailDetail['id']]))
+                            ? $oldDetailDetails[$jadwalKerjaDetailDetail['id']]
+                            : new JadwalKerjaDetailDetail();
+
+                        $modelJadwalKerjaDetailDetail->load($data);
+                        $modelsDetailDetail[$i][$j] = $modelJadwalKerjaDetailDetail;
+                        $isValid = $modelJadwalKerjaDetailDetail->validate() && $isValid;
+                    }
+                }
+            }
+
+
+            $oldDetailDetailsIDs = ArrayHelper::getColumn($oldDetailDetails, 'id');
+            $deletedDetailDetailsIDs = array_diff($oldDetailDetailsIDs, $detailDetailIDs);
+
+            if($isValid){
+
                 $transaction = JadwalKerja::getDb()->beginTransaction();
-                try {
+
+                try{
+
                     if ($flag = $model->save(false)) {
+
+                        if (!empty($deletedDetailDetailsIDs)) {
+                            JadwalKerjaDetailDetail::deleteAll(['id' => $deletedDetailDetailsIDs]);
+                        }
+
                         if (!empty($deletedDetailsID)) {
                             JadwalKerjaDetail::deleteAll(['id' => $deletedDetailsID]);
                         }
+
+
+
                         foreach ($modelsDetail as $i => $detail) :
+
                             if ($flag === false) {
                                 break;
                             }
+
                             $detail->jadwal_kerja_id = $model->id;
                             if (!($flag = $detail->save(false))) {
                                 break;
                             }
+
+                            if (isset($modelsDetailDetail[$i]) && is_array($modelsDetailDetail[$i])) {
+                                foreach ($modelsDetailDetail[$i] as $j => $modelDetailDetail) {
+                                    $modelDetailDetail->jadwal_kerja_detail_id = $detail->id;
+                                    if (!($flag = $modelDetailDetail->save(false))) {
+                                        break;
+                                    }
+                                }
+                            }
+
                         endforeach;
                     }
 
                     if ($flag) {
                         $transaction->commit();
-                        $status = ['code' => 1, 'message' => 'Commit'];
+                        $status = [
+                            'code' => 1,
+                            'message' => 'Commit'
+                        ];
                     } else {
                         $transaction->rollBack();
-                        $status = ['code' => 0, 'message' => 'Roll Back'];
+                        $status = [
+                            'code' => 0,
+                            'message' => 'Roll Back'
+                        ];
                     }
-                } catch (Exception $e) {
+                }catch (\Exception $e){
                     $transaction->rollBack();
-                    $status = ['code' => 0, 'message' => 'Roll Back ' . $e->getMessage(),];
+                    $status = [
+                        'code' => 0,
+                        'message' => 'Roll Back ' . $e->getMessage(),
+                    ];
                 }
 
-                if ($status['code']) {
-                    Yii::$app->session->setFlash('info',
-                        FAS::icon(FAS::_THUMBS_UP) . "
-                            JadwalKerja : " . $model->nama . " berhasil di update. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
+                if($status['code']){
+                    Yii::$app->session->setFlash('success',
+                        FAS::icon(FAS::_THUMBS_UP) .  "
+                        JadwalKerja : " . $model->nama . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id, 'page' => $page], [ 'class' => 'btn btn-link'])
                     );
-                    return $this->redirect(['index', 'page' => $page]);
+                    return $this->redirect(['index']);
                 }
 
-                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja is failed to updated. Info: " . $status['message']);
+                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja is failed to insert. Info: ". $status['message']);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                    'modelsDetail' => $modelsDetail,
+                    'modelsDetailDetail' => $modelsDetailDetail,
+                ]);
             }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'modelsDetail' => $modelsDetail
+            'modelsDetail' => $modelsDetail,
+            'modelsDetailDetail' => $modelsDetailDetail,
         ]);
     }
 
     /**
      * Delete an existing JadwalKerja model.
+     * Only for ajax request will return json object
      * @param integer $id
      * @return mixed
      * @throws HttpException
@@ -215,102 +350,16 @@ class JadwalKerjaController extends Controller {
      * @throws Throwable
      * @throws StaleObjectException
      */
-    public function actionDelete($id, $page = null) {
-
+    public function actionDelete($id, $page = null){
         $model = $this->findModel($id);
-        $oldLabel = $model->nama;
+        $oldLabel =  $model->nama;
 
         $model->delete();
 
-        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Jadwal Kerja : " . $oldLabel . " successfully deleted.");
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja : " . $oldLabel. " successfully deleted.");
         return $this->redirect(['index', 'page' => $page]);
     }
 
-    /**
-     * Clone an existing JadwalKerja model.
-     * If update is successful, the browser will be redirected to the 'index' page with pagination URL
-     * @param integer $id
-     * @param null $page
-     * @return mixed
-     * @throws HttpException
-     * @throws NotFoundHttpException
-     */
-    public function actionClone($id, $page = null) {
-
-        $request = Yii::$app->request;
-
-        $toBeCloneModel = $this->findModel($id);
-        $toBeCloneModelsDetail = !empty($toBeCloneModel->jadwalKerjaDetails)
-            ? $toBeCloneModel->jadwalKerjaDetails
-            : [new JadwalKerjaDetail()];
-
-        $model = new JadwalKerja();
-        $model->isNewRecord = true;
-
-        $modelsDetail = array_map(function ($element) {
-            return new JadwalKerjaDetail([
-                'attributes' => $element->attributes,
-                'isNewRecord' => true
-            ]);
-        }, $toBeCloneModelsDetail);
-
-        if ($model->load($request->post())) {
-
-            $modelsDetail = Tabular::createMultiple(JadwalKerjaDetail::class);
-            Tabular::loadMultiple($modelsDetail, $request->post());
-
-            //validate models
-            $isValid = $model->validate();
-            $isValid = Tabular::validateMultiple($modelsDetail) && $isValid;
-
-            if ($isValid) {
-
-                $transaction = JadwalKerja::getDb()->beginTransaction();
-                try {
-
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsDetail as $i => $detail) :
-                            if ($flag === false) {
-                                break;
-                            }
-                            $detail->jadwal_kerja_id = $model->id;
-                            if (!($flag = $detail->save(false))) {
-                                break;
-                            }
-                        endforeach;
-                    }
-
-                    if ($flag) {
-                        $transaction->commit();
-                        $status = ['code' => 1, 'message' => 'Commit'];
-                    } else {
-                        $transaction->rollBack();
-                        $status = ['code' => 0, 'message' => 'Roll Back'];
-                    }
-
-                } catch (Exception $e) {
-                    $transaction->rollBack();
-                    $status = ['code' => 0, 'message' => 'Roll Back ' . $e->getMessage(),];
-                }
-
-                if ($status['code']) {
-                    Yii::$app->session->setFlash('success',
-                        FAS::icon(FAS::_THUMBS_UP) . "
-                        Jadwal Kerja : " . $toBeCloneModel->nama . " berhasil di clone menjadi " . $model->nama . " " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
-                    );
-                    return $this->redirect(['index']);
-                }
-
-                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Jadwal Kerja is failed to insert. Info: " . $status['message']);
-            }
-        }
-
-        return $this->render('clone', [
-            'model' => $model,
-            'modelsDetail' => $modelsDetail,
-            'toBeCloneModel' => $toBeCloneModel
-        ]);
-    }
 
     /**
      * Finds the JadwalKerja model based on its primary key value.
@@ -319,7 +368,7 @@ class JadwalKerjaController extends Controller {
      * @return JadwalKerja the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
+    protected function findModel($id){
         if (($model = JadwalKerja::findOne($id)) !== null) {
             return $model;
         } else {

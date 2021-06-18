@@ -26,7 +26,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
- * @property \app\models\JadwalKerjaDetail[] $jadwalKerjaDetails
+ * @property \app\models\JadwalKerjaDetailDetail[] $jadwalKerjaDetailDetails
  * @property string $aliasModel
  */
 abstract class JamKerja extends \yii\db\ActiveRecord
@@ -127,9 +127,9 @@ abstract class JamKerja extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getJadwalKerjaDetails()
+    public function getJadwalKerjaDetailDetails()
     {
-        return $this->hasMany(\app\models\JadwalKerjaDetail::className(), ['jam_kerja_id' => 'id']);
+        return $this->hasMany(\app\models\JadwalKerjaDetailDetail::className(), ['jam_kerja_id' => 'id']);
     }
 
 

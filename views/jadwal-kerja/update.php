@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $model app\models\JadwalKerja */
 /* @var $modelsDetail app\models\JadwalKerjaDetail */
+/* @var $modelsDetailDetail app\models\JadwalKerjaDetailDetail */
 
 $this->title = 'Update Jadwal Kerja: ' . $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Jadwal Kerja', 'url' => ['index']];
@@ -14,6 +15,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <?= $this->render('_form', [
         'model' => $model,
         'modelsDetail' => $modelsDetail,
+        'modelsDetailDetail' => $modelsDetailDetail,
     ]) ?>
 
 </div>

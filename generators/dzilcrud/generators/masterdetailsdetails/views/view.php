@@ -9,6 +9,7 @@ use yii\helpers\StringHelper;
 /* @var $generator \app\generators\dzilajaxcrud\generators\Generator */
 
 $urlParams = $generator->generateUrlParams();
+$labelID = empty($generator->labelID) ? $generator->getNameAttribute() : $generator->labelID;
 
 echo "<?php\n";
 ?>
@@ -17,11 +18,12 @@ use yii\widgets\DetailView;
 use app\widgets\Table;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
+use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
-$this->title = $model-><?= $generator->getNameAttribute() ?>;
+$this->title = $model-><?= $labelID ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -32,36 +34,35 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-header p-3">
             <div class="d-flex justify-content-start">
 
-                <div class="mr-auto">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Back') ?>, Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
-                </div>
-
-                <div class="mx-1">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Create More') ?>, ['create'], ['class' => 'btn btn-primary']) ?>
-                </div>
-
-                <div class="mr-1">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_LIST). <?= $generator->generateString(' Index') ?>, ['index'], ['class' => 'btn btn-primary']) ?>
-                </div>
-
-                <div class="mr-1">
-                    <?= "<?= " ?>Html::a(FAS::icon(FAS::_PEN). <?= $generator->generateString(' Update') ?>, ['update', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary']) ?>
-                </div>
-
-                <?= "<?php " ?>
-                if(Helper::checkRoute('delete')) :
-                echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Delete') ?>, ['delete', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
-                'method' => 'post',
-                ],
-                ]);
-                endif;
-                ?>
+            <div class="mr-auto">
+                <?= "<?= " ?>Html::a(FAS::icon(FAS::_ARROW_LEFT). <?= $generator->generateString(' Kembali') ?>, Yii::$app->request->referrer, ['class' => 'btn btn-secondary']) ?>
             </div>
-        </div>
 
+            <div class="mx-1">
+                <?= "<?= " ?>Html::a(FAS::icon(FAS::_PLUS). <?= $generator->generateString(' Buat Lagi') ?>, ['create'], ['class' => 'btn btn-primary']) ?>
+            </div>
+
+            <div class="mr-1">
+                <?= "<?= " ?>Html::a(FAS::icon(FAS::_LIST). <?= $generator->generateString(' Index') ?>, ['index'], ['class' => 'btn btn-primary']) ?>
+            </div>
+
+            <div class="mr-1">
+                <?= "<?= " ?>Html::a(FAS::icon(FAS::_PEN). <?= $generator->generateString(' Update') ?>, ['update', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary']) ?>
+            </div>
+
+            <?= "<?php " ?>
+            if(Helper::checkRoute('delete')) :
+            echo Html::a(FAS::icon(FAS::_TRASH). <?= $generator->generateString(' Hapus') ?>, ['delete', <?= $urlParams ?>, 'page' => Yii::$app->request->getQueryParam('page', null)], [
+            'class' => 'btn btn-danger',
+            'data' => [
+            'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
+            'method' => 'post',
+            ],
+            ]);
+            endif;
+            ?>
+        </div>
+        </div>
     <?php $timestamp = ['created_at', 'updated_at',] ?>
     <?php $blameable = ['created_by', 'updated_by',] ?>
     <?php $details = lcfirst(Inflector::camelize(Inflector::pluralize(StringHelper::basename($modelsDetail))));  ?>
@@ -74,20 +75,19 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         }
     ?>
-        <div class="card-body">
+
 <?= "<?php try { echo "?>Tabs::widget([
                 'encodeLabels' => false,
-                'options' => [
-                    'class' => 'nav nav-tabs'
-                ],
+                'navType' => 'nav-tabs justify-content-start border-0',
                 'tabContentOptions' => [
-                    'style' => [
-                        'padding-top' => '12px'
-                    ]
+                    'class' => 'p-0'
                 ],
                 'items' => [
                     [
                         'active' => true,
+                        'headerOptions' => [
+                            'class' => 'pl-3'
+                        ],
                         'label' => FAS::icon(FAS::_YIN_YANG) . ' <?= Inflector::camel2words(StringHelper::basename($generator->modelClass)) ?>',
                         'content' =>
                             DetailView::widget([
@@ -165,6 +165,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo $e->getMessage();
             }
     ?>
-        </div>
+
     </div>
 </div>

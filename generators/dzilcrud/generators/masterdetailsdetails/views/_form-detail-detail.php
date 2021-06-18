@@ -43,14 +43,14 @@ DynamicFormWidget::begin([
                 echo " '" . $columnName . "', " ;} ?>],
 ]); ?>
 
-<h5><?= $detailDetail =   ucwords(Inflector::titleize(Inflector::pluralize(StringHelper::basename($generator->modelsClassDetailDetail)))) ?></h5>
+<h4><?= $detailDetail =   ucwords(Inflector::titleize(Inflector::pluralize(StringHelper::basename($generator->modelsClassDetailDetail)))) ?></h4>
 <table class="table table-bordered">
 
     <thead class="thead-light">
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Titles</th>
-        <th scope="col" style="width: 2px">Act</th>
+        <th scope="col">Attribute</th>
+        <th scope="col" style="width: 2px">Aksi</th>
     </tr>
     </thead>
     <tbody class="container-rooms">
@@ -85,7 +85,7 @@ DynamicFormWidget::begin([
     <tfoot>
     <tr>
         <td colspan="3">
-            <?= "<?php echo " ?>Html::button('<span class="fa fa-plus"></span> Add <?= lcfirst($detailDetail) ?>' , [
+            <?= "<?php echo " ?>Html::button('<span class="fa fa-plus"></span> Tambah <?= lcfirst($detailDetail) ?>' , [
             'class' => 'add-room btn btn-success float-right',
             ]); ?>
 

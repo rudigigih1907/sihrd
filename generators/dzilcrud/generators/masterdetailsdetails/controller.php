@@ -25,6 +25,9 @@ $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
 $actionParamComments = $generator->generateActionParamComments();
+$labelID =
+    !isset($generator->labelID) ? $generator->getNameAttribute() :
+        empty($generator->labelID) ? $generator->getNameAttribute() : $generator->labelID;
 
 echo "<?php\n";
 ?>
@@ -210,7 +213,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 if($status['code']){
                     Yii::$app->session->setFlash('success',
                         FAS::icon(FAS::_THUMBS_UP) .  "
-                        <?= $modelClass ?> successfully created. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
+                        <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil ditambahkan. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
                     );
                     return $this->redirect(['index']);
                 }
@@ -228,11 +231,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
     /**
      * Updates an existing <?= $modelClass ?> model.
+     * Only for ajax request will return json object
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @param null $page
      * @return mixed
      * @throws HttpException
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionUpdate(<?= $actionParams ?>, $page = null){
         $request = Yii::$app->request;
@@ -296,6 +301,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 }
             }
 
+
             $oldDetailDetailsIDs = ArrayHelper::getColumn($oldDetailDetails, 'id');
             $deletedDetailDetailsIDs = array_diff($oldDetailDetailsIDs, $detailDetailIDs);
 
@@ -314,6 +320,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                         if (!empty($deletedDetailsID)) {
                             <?= $modelsDetail ?>::deleteAll(['id' => $deletedDetailsID]);
                         }
+
+
 
                         foreach ($modelsDetail as $i => $detail) :
 
@@ -360,27 +368,33 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 }
 
                 if($status['code']){
-                    Yii::$app->session->setFlash('info',
-                            FAS::icon(FAS::_THUMBS_UP) .  "
-                            <?= $modelClass ?> berhasil di update. ". Html::a('Click Here If you want to see the detail', ['view', <?= $urlParams ?>], [ 'class' => 'btn btn-link'])
-                        );
-                        return $this->redirect(['index', 'page' => $page]);
+                    Yii::$app->session->setFlash('success',
+                        FAS::icon(FAS::_THUMBS_UP) .  "
+                        <?= $modelClass ?> : " . <?=  '$model->' . $labelID ?> . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', <?= $urlParams ?>, 'page' => $page], [ 'class' => 'btn btn-link'])
+                    );
+                    return $this->redirect(['index']);
                 }
 
-                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> is failed to updated. Info: ". $status['message']);
+                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " <?= $modelClass ?> is failed to insert. Info: ". $status['message']);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                    'modelsDetail' => $modelsDetail,
+                    'modelsDetailDetail' => $modelsDetailDetail,
+                ]);
             }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'modelsDetail' => (empty($modelsDetail)) ?  [new <?= $modelsDetail ?>()]  : $modelsDetail,
-            'modelsDetailDetail' =>(empty($modelsDetailDetail)) ? [[new <?= $modelsDetailDetail ?>]] : $modelsDetailDetail,
+            'modelsDetail' => $modelsDetail,
+            'modelsDetailDetail' => $modelsDetailDetail,
         ]);
-
     }
 
     /**
      * Delete an existing <?= $modelClass ?> model.
+     * Only for ajax request will return json object
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      * @throws HttpException

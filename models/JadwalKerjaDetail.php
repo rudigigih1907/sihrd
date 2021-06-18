@@ -40,4 +40,16 @@ class JadwalKerjaDetail extends BaseJadwalKerjaDetail {
             'jam_kerja_id' => 'Jam Kerja',
         ]);
     }
+
+    public function getJamKerjaAsAList() {
+
+        $data = array_map(function ($detail) {
+            return isset($detail->jamKerja)
+                ? $detail->jamKerja->nama . ", " . $detail->jamKerja->jam_masuk . " => " . $detail->jamKerja->jam_pulang
+                : null;
+
+        }, $this->jadwalKerjaDetailDetails);
+
+        return array_filter($data);
+    }
 }

@@ -13,11 +13,10 @@ use Yii;
  * @property integer $jadwal_kerja_id
  * @property integer $jadwal_kerja_hari_id
  * @property string $libur
- * @property integer $jam_kerja_id
  *
  * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\JadwalKerjaHari $jadwalKerjaHari
- * @property \app\models\JamKerja $jamKerja
+ * @property \app\models\JadwalKerjaDetailDetail[] $jadwalKerjaDetailDetails
  * @property string $aliasModel
  */
 abstract class JadwalKerjaDetail extends \yii\db\ActiveRecord
@@ -45,12 +44,11 @@ abstract class JadwalKerjaDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id'], 'integer'],
+            [['jadwal_kerja_id', 'jadwal_kerja_hari_id'], 'integer'],
             [['jadwal_kerja_hari_id'], 'required'],
             [['libur'], 'string'],
             [['jadwal_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerja::className(), 'targetAttribute' => ['jadwal_kerja_id' => 'id']],
             [['jadwal_kerja_hari_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerjaHari::className(), 'targetAttribute' => ['jadwal_kerja_hari_id' => 'id']],
-            [['jam_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JamKerja::className(), 'targetAttribute' => ['jam_kerja_id' => 'id']],
             ['libur', 'in', 'range' => [
                     self::LIBUR_YA,
                     self::LIBUR_TIDAK,
@@ -69,7 +67,6 @@ abstract class JadwalKerjaDetail extends \yii\db\ActiveRecord
             'jadwal_kerja_id' => 'Jadwal Kerja ID',
             'jadwal_kerja_hari_id' => 'Jadwal Kerja Hari ID',
             'libur' => 'Libur',
-            'jam_kerja_id' => 'Jam Kerja ID',
         ];
     }
 
@@ -92,9 +89,9 @@ abstract class JadwalKerjaDetail extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getJamKerja()
+    public function getJadwalKerjaDetailDetails()
     {
-        return $this->hasOne(\app\models\JamKerja::className(), ['id' => 'jam_kerja_id']);
+        return $this->hasMany(\app\models\JadwalKerjaDetailDetail::className(), ['jadwal_kerja_detail_id' => 'id']);
     }
 
 
