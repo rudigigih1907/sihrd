@@ -16,6 +16,7 @@ use app\models\Tabular;
 use Throwable;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -360,6 +361,140 @@ class JadwalKerjaController extends Controller
         return $this->redirect(['index', 'page' => $page]);
     }
 
+    public function actionClone($id, $page = null) {
+
+        $request = Yii::$app->request;
+
+        $toBeCloneModel = $this->findModel($id);
+        $toBeCloneModelsDetail = !empty($toBeCloneModel->jadwalKerjaDetails) ?
+            $toBeCloneModel->jadwalKerjaDetails :
+            [new JadwalKerjaDetail()];
+
+        $modelsDetailDetail = [];
+        $oldDetailDetails = [];
+
+        if (!empty($toBeCloneModelsDetail)) {
+            foreach ($toBeCloneModelsDetail as $i => $toBeCloneModelDetail) {
+                $jadwalKerjaDetailDetails = array_map(function($element){
+                    return new JadwalKerjaDetailDetail([
+                        'attributes' => $element->attributes,
+                        'isNewRecord' => true
+                    ]);
+                }, $toBeCloneModelDetail->jadwalKerjaDetailDetails);
+                $modelsDetailDetail[$i] = $jadwalKerjaDetailDetails;
+                $oldDetailDetails = ArrayHelper::merge(ArrayHelper::index($jadwalKerjaDetailDetails, 'id'), $oldDetailDetails);
+            }
+        }
+
+
+        $model = new JadwalKerja([
+            'nama' => null,
+            'mulai_tanggal' => $toBeCloneModel->mulai_tanggal,
+            'status' => $toBeCloneModel->status,
+            'keterangan' => "Clone"
+        ]);
+         $model->isNewRecord = true;
+
+        $modelsDetail = array_map(function($element){
+            return new JadwalKerjaDetail([
+                'jadwal_kerja_hari_id' => $element->jadwal_kerja_hari_id,
+                'libur' => $element->libur,
+                'isNewRecord' => true,
+            ]);
+        }, $toBeCloneModelsDetail);
+
+        if($model->load($request->post())){
+
+            $modelsDetail = Tabular::createMultiple(JadwalKerjaDetail::class);
+            Tabular::loadMultiple($modelsDetail, $request->post());
+
+            //validate models
+            $isValid = $model->validate();
+            $isValid = Tabular::validateMultiple($modelsDetail) && $isValid;
+
+            if (isset($_POST['JadwalKerjaDetailDetail'][0][0])) {
+                foreach ($_POST['JadwalKerjaDetailDetail'] as $i => $jadwalKerjaDetailDetails) {
+                    foreach ($jadwalKerjaDetailDetails as $j => $jadwalKerjaDetailDetail) {
+                        $data['JadwalKerjaDetailDetail'] = $jadwalKerjaDetailDetail;
+                        $modelJadwalKerjaDetailDetail = new JadwalKerjaDetailDetail();
+                        $modelJadwalKerjaDetailDetail->load($data);
+                        $modelsDetailDetail[$i][$j] = $modelJadwalKerjaDetailDetail;
+                        $isValid = $modelJadwalKerjaDetailDetail->validate() && $isValid;
+                    }
+                }
+            }
+
+            if($isValid){
+
+                $transaction = JadwalKerja::getDb()->beginTransaction();
+
+                try{
+                    $status = [];
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsDetail as $i => $detail) :
+
+                            if ($flag === false) {
+                                break;
+                            }
+
+                            $detail->jadwal_kerja_id = $model->id;
+                            if (!($flag = $detail->save(false))) {
+                                break;
+                            }
+
+                            if (isset($modelsDetailDetail[$i]) && is_array($modelsDetailDetail[$i])) {
+                                foreach ($modelsDetailDetail[$i] as $j => $modelDetailDetail) {
+                                    $modelDetailDetail->jadwal_kerja_detail_id = $detail->id;
+                                    if (!($flag = $modelDetailDetail->save(false))) {
+                                        break;
+                                    }
+                                }
+                            }
+
+                        endforeach;
+                    }
+
+                    if ($flag) {
+                        $transaction->commit();
+                        $status = [
+                            'code' => 1,
+                            'message' => 'Commit'
+                        ];
+                    } else {
+                        $transaction->rollBack();
+                        $status = [
+                            'code' => 0,
+                            'message' => 'Roll Back'
+                        ];
+                    }
+                }catch (\Exception $e){
+                    $transaction->rollBack();
+                    $status = [
+                        'code' => 0,
+                        'message' => 'Roll Back ' . $e->getMessage(),
+                    ];
+                }
+
+                if($status['code']){
+                    Yii::$app->session->setFlash('success',
+                        FAS::icon(FAS::_THUMBS_UP) .  "
+                        JadwalKerja : " . $model->nama . " hasil dari clone ". $toBeCloneModel->nama. "  berhasil dibuat. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id , 'page' => $page], [ 'class' => 'btn btn-link'])
+                    );
+                    return $this->redirect(['index']);
+                }
+
+                Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " JadwalKerja is failed to insert. Info: ". $status['message']);
+            }
+        }
+
+
+        return $this->render('clone', [
+            'model' => $model,
+            'modelsDetail' => $modelsDetail,
+            'modelsDetailDetail' => $modelsDetailDetail,
+            'toBeCloneModel' => $toBeCloneModel
+        ]);
+    }
 
     /**
      * Finds the JadwalKerja model based on its primary key value.

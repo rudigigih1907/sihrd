@@ -113,7 +113,6 @@ $config = [
                     '</div>' .
                     '</div>'
             ],
-
         ]
     ],
     'components' => [

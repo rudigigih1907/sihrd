@@ -149,7 +149,7 @@ $template = ['template' => '{input}{error}'];
 
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
-                    <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['index'], ['class' => 'btn btn-secondary']) ?>
+                    <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['index', 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-secondary']) ?>
                     <?= Html::submitButton(FAS::icon(FAS::_SAVE) . ' Simpan', ['class' => 'btn btn-primary']) ?>
                 </div>
             </div>

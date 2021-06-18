@@ -152,6 +152,5 @@ $this->params['breadcrumbs'][] = $this->title;
             echo $e->getMessage();
         }
         ?>
-
     </div>
 </div>

@@ -4,6 +4,7 @@
 /* @var $model app\models\JadwalKerja */
 /* @var $toBeCloneModel app\models\JadwalKerja */
 /* @var $modelsDetail app\models\JadwalKerjaDetail */
+/* @var $modelsDetailDetail app\models\JadwalKerjaDetailDetail */
 
 $this->title = 'Clone Jadwal Kerja: ' . $toBeCloneModel->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Jadwal Kerja', 'url' => ['index']];
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <?= $this->render('_form', [
         'model' => $model,
         'modelsDetail' => $modelsDetail,
+        'modelsDetailDetail' => $modelsDetailDetail,
     ]) ?>
 
 </div>
