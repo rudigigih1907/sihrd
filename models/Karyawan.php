@@ -64,7 +64,7 @@ class Karyawan extends BaseKaryawan {
 
     public static function findDataUntukMesinAbsensi($statusAktif) {
 
-        $pin = new Expression("k.nomor_induk_karyawan AS pin");
+        $pin = new Expression(" REGEXP_REPLACE(k.nomor_induk_karyawan, '[^0-9a-zA-Z ]', '') AS pin");
         $tanggalLahir = new Expression("DATE_FORMAT(k.tanggal_lahir, '%d-%m-%Y') AS tanggal_lahir");
         $tanggalMulaiBekerja = new Expression("DATE_FORMAT(k.tanggal_mulai_bekerja, '%d-%m-%Y') AS tanggal_mulai_bekerja");
 

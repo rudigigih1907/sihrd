@@ -343,8 +343,7 @@ class KaryawanController extends Controller {
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            $data = Karyawan::findAllDenganStatusKeaktifannya($model->statusAktif);
-
+            $data = Karyawan::findDataUntukMesinAbsensi($model->statusAktif);
             return $this->render('_result_report_export_data_untuk_mesin_absensi', [
                 'data' => $data,
                 'statusAktif' => $model->statusAktif
@@ -376,13 +375,14 @@ class KaryawanController extends Controller {
                             'label' => 'PIN',
                             'contentOptions' => [
                                 'numberFormat' =>[
-                                    'formatCode' => '@' // Failed
+                                    'formatCode' => '@'
                                 ]
                             ],
-                           /* 'value' => function($data){
-                                return  (int) filter_var($data['pin'], FILTER_SANITIZE_NUMBER_INT);
+                            // 'value' => function($data){
+                                // return   preg_replace("/(?![.=$'€%-])\p{P}/u", "", $data['pin']);
+                                // return  (int) filter_var($data['pin'], FILTER_SANITIZE_NUMBER_INT);
                                 // return implode("", preg_match_all('!\d+!', $data['pin'], $matches));
-                            }*/
+                            // }
                         ],
                         [
                             'attribute' => 'nip',
