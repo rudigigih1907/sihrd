@@ -1,24 +1,23 @@
 <?php
-use yii\helpers\Url;
 
 return [
     [
         'class' => 'yii\grid\SerialColumn',
     ],
-        // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'id',
-    // ],
     [
-        'class'=>'\yii\grid\DataColumn',
-        'attribute'=>'nama',
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'id',
     ],
     [
-        'class'=>'\yii\grid\DataColumn',
-        'attribute'=>'alias',
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'nama',
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'alias',
     ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
+    // 'class'=>'\yii\grid\DataColumn',
         // 'attribute'=>'created_at',
     // ],
     // [

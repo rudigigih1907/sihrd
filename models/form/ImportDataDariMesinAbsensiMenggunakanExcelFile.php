@@ -204,9 +204,10 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
         $keys = self::getColumnKeyUnderscored();
         $keys['O'] = 'karyawan_id'; // TODO Hard Code
 
-        // Variale penampung
+        // Variable penampung
         $records = [];
         $apakahAdaKaryawanYangTidakAdaDiDatabase = false;
+        $nomorNikBermasalah = null;
 
         $formatter = Yii::$app->formatter;
         foreach ($rows as $keyRow => $column) {
@@ -218,11 +219,9 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
             if (!$karyawan) {
                 $apakahAdaKaryawanYangTidakAdaDiDatabase = true;
+                $nomorNikBermasalah = $column['E'];
                 break;
             }
-
-            /*$records[$keyRow] = array_combine($keys, $column);
-            $records[$keyRow]['karyawan_id'] = $karyawan->id;*/
 
             $records[$keyRow] = [
                 'tanggal_scan' => $formatter->asDatetime($column['A'], 'php:Y-m-d H:i') ,
@@ -246,7 +245,7 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
         if ($apakahAdaKaryawanYangTidakAdaDiDatabase) {
             return [
                 'status' => false,
-                'message' => 'Ada Karyawan yang tidak ada di database'
+                'message' => 'Ada Karyawan yang tidak ada di database yaitu dengan nomor NIK. '. $nomorNikBermasalah
             ];
         }
 
@@ -273,14 +272,6 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
         return $valid;
 
-
-
-        /*die(
-            Html::tag('pre', VarDumper::dumpAsString($keys)).
-            Html::tag('pre', VarDumper::dumpAsString($records))
-        )
-        ;*/
     }
-
 
 }
