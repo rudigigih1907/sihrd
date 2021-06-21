@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\base\Karyawan as BaseKaryawan;
+use app\traits\TraitMapIDToNama;
 use Psr\Log\NullLogger;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -17,6 +18,15 @@ class Karyawan extends BaseKaryawan {
     const AKTIF = 'AKTIF';
     const TIDAK_AKTIF = 'TIDAK AKTIF';
     const SEMUA = 'SEMUA';
+
+    public static function mapIDToKodeKaryawanDenganNama() {
+        return ArrayHelper::map(self::find()
+            ->select("id, nama, nomor_induk_karyawan ")
+            ->orderBy('nomor_induk_karyawan')
+            ->all(), 'id', function($model){
+            return $model['nomor_induk_karyawan'] . ' - ' . $model['nama'];
+        });
+    }
 
     /**
      * column Status Aktif Karyawan ENUM value labels
