@@ -9,20 +9,20 @@ return [
     [
         'class' => 'yii\grid\SerialColumn',
     ],
-    // [
-    // 'class'=>'yii\grid\DataColumn',
-    // 'attribute'=>'id',
-    // ],
     [
-        'class'=>'yii\grid\DataColumn',
-        'attribute'=>'nama',
-        'headerOptions'=>['class' => 'text-nowrap'],
-        'contentOptions'=>['class' => 'text-nowrap'],
+        'class' => 'yii\grid\DataColumn',
+        'attribute' => 'id',
     ],
     [
-        'class'=>'yii\grid\DataColumn',
-        'attribute'=>'kode',
-        'headerOptions'=>['class' => 'text-nowrap'],
+        'class' => 'yii\grid\DataColumn',
+        'attribute' => 'nama',
+        'headerOptions' => ['class' => 'text-nowrap'],
+        'contentOptions' => ['class' => 'text-nowrap'],
+    ],
+    [
+        'class' => 'yii\grid\DataColumn',
+        'attribute' => 'kode',
+        'headerOptions' => ['class' => 'text-nowrap'],
         'contentOptions'=>['class' => 'text-nowrap'],
     ],
     [

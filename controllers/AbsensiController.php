@@ -36,9 +36,10 @@ class AbsensiController extends Controller {
 
     /**
      * Lists all Absensi models.
+     * @param null $page
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex($page = null) {
         $searchModel = new AbsensiSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -51,10 +52,11 @@ class AbsensiController extends Controller {
     /**
      * Displays a single Absensi model.
      * @param integer $id
+     * @param null $page
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionView($id) {
+    public function actionView($id, $page = null) {
         return $this->render('view', [
             'model' => $this->findModel($id)
         ]);
@@ -160,6 +162,7 @@ class AbsensiController extends Controller {
     public function actionImportDataDariMesinAbsensiMenggunakanExcelFileKeDatabase($file, $startColumn, $startRow) {
 
         $model = new ImportDataDariMesinAbsensiMenggunakanExcelFile();
+
         $batchInsert = $model->insertKeDatabase($file, $startColumn, $startRow);
         $session = Yii::$app->session;
 

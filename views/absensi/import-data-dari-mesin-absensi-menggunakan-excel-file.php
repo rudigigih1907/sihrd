@@ -1,14 +1,22 @@
 <?php
 
 
-
 /* @var $this \yii\web\View */
+
 /* @var $model \app\models\form\ImportDataDariMesinAbsensiMenggunakanExcelFile */
 
 use kartik\file\FileInput;
 use kartik\widgets\ActiveForm;
 use rmrevin\yii\fontawesome\FAS;
-use yii\helpers\Html; ?>
+use yii\helpers\Html;
+
+$this->title = 'Tambah Absensi Via Excel';
+$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
+$this->params['breadcrumbs'][] = $this->title;
+
+?>
+
+
 <div class="absensi-form">
     <div class="row">
         <div class="col-md-4 col-sm-12">
@@ -22,7 +30,6 @@ use yii\helpers\Html; ?>
                     <ol type="A">
                         <?php foreach ($model->getColumnKey() as $item): ?>
                             <li><?= $item       ?></li>
-
                         <?php endforeach; ?>
                     </ol>
                 </div>
