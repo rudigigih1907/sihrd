@@ -4,9 +4,7 @@
 /* @var $this View */
 /* @var $sheets array|string */
 /* @var $model ImportDataDariMesinAbsensiMenggunakanExcelFile */
-
 /* @var $direktori string */
-
 
 use app\models\form\ImportDataDariMesinAbsensiMenggunakanExcelFile;
 use rmrevin\yii\fontawesome\FAS;
@@ -109,14 +107,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'startRow' => $model->startRow,
                         ], [
                             'class' => 'btn btn-primary',
-                            // 'target' => '_blank'
+                            'data' => [
+                                'confirm' => "Anda akan mengimport semuda data dari: " . $file
+                            ]
                         ]) ?>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
-
 </div>

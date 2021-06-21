@@ -5,6 +5,8 @@
 namespace app\models\base;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the base-model class for table "absensi".
@@ -25,6 +27,11 @@ use Yii;
  * @property string $sn
  * @property string $mesin
  * @property integer $karyawan_id
+ * @property string $file
+ * @property integer $created_at
+ * @property string $updated_at
+ * @property integer $created_by
+ * @property string $updated_by
  *
  * @property \app\models\Karyawan $karyawan
  * @property string $aliasModel
@@ -45,14 +52,29 @@ abstract class Absensi extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+            ],
+            [
+                'class' => TimestampBehavior::className(),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['tanggal_scan', 'tanggal', 'karyawan_id'], 'required'],
+            [['tanggal_scan', 'tanggal', 'karyawan_id', 'file'], 'required'],
             [['tanggal_scan', 'tanggal', 'jam'], 'safe'],
             [['karyawan_id'], 'integer'],
             [['pin', 'nip', 'jabatan', 'departemen', 'kantor', 'verifikasi', 'io', 'workcode', 'sn', 'mesin'], 'string', 'max' => 50],
-            [['nama'], 'string', 'max' => 255],
+            [['nama', 'file'], 'string', 'max' => 255],
             [['karyawan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Karyawan::className(), 'targetAttribute' => ['karyawan_id' => 'id']]
         ];
     }
@@ -79,6 +101,11 @@ abstract class Absensi extends \yii\db\ActiveRecord
             'sn' => 'Sn',
             'mesin' => 'Mesin',
             'karyawan_id' => 'Karyawan ID',
+            'file' => 'File',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'created_by' => 'Created By',
+            'updated_by' => 'Updated By',
         ];
     }
 

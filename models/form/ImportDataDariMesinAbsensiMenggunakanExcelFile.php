@@ -211,6 +211,12 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
         $keys = self::getColumnKeyUnderscored();
         $keys['O'] = 'karyawan_id'; // TODO Hard Code
+        $keys['P'] = 'file'; // TODO Hard Code
+        $keys['Q'] = 'created_at'; // TODO Hard Code
+        $keys['R'] = 'updated_at'; // TODO Hard Code
+        $keys['S'] = 'created_by'; // TODO Hard Code
+        $keys['T'] = 'updated_by'; // TODO Hard Code
+
 
         // Variable penampung
         $records = [];
@@ -246,7 +252,12 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
                 'workcode' => $column['L'],
                 'sn' => $column['M'],
                 'mesin' => $column['N'],
-                'karyawan_id' => $karyawan->id
+                'karyawan_id' => $karyawan->id,
+                'file' => $fileName,
+                'created_at' => time(),
+                'updated_at' => time(),
+                'created_by' => Yii::$app->user->id,
+                'updated_by' => Yii::$app->user->id,
             ];
         }
 
