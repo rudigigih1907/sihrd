@@ -4,16 +4,20 @@ namespace app\controllers;
 
 use app\models\Absensi;
 use app\models\form\ImportDataDariMesinAbsensiMenggunakanExcelFile;
+use app\models\form\ReportExportDataUntukLaporanHarianAbsensi;
 use app\models\search\AbsensiSearch;
 use PhpOffice\PhpSpreadsheet\Exception;
 use rmrevin\yii\fontawesome\FAS;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\Expression;
 use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -142,7 +146,7 @@ class AbsensiController extends Controller {
                 $model->startRow = "3";
                 if ($model->upload()) {
 
-                    return $this->render('preview-import-data-dari-mesin-absensi-menggunakan-excel-file', [
+                    return $this->render('_preview_import_data_dari_mesin_absensi_menggunakan_excel_file', [
                         'sheets' => $model->parsingFile(),
                         'model' => $model,
                     ]);
@@ -153,19 +157,18 @@ class AbsensiController extends Controller {
             }
         }
 
-        return $this->render("import-data-dari-mesin-absensi-menggunakan-excel-file", [
+        return $this->render("_form_import_data_dari_mesin_absensi_menggunakan_excel_file", [
             'model' => $model
         ]);
     }
-
 
     /**
      * @param $file
      * @param $startColumn
      * @param $startRow
-     * @return \yii\web\Response
+     * @return Response
      * @throws Exception
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionImportDataDariMesinAbsensiMenggunakanExcelFileKeDatabase($file, $startColumn, $startRow) {
 
@@ -183,6 +186,41 @@ class AbsensiController extends Controller {
         }
 
         return $this->redirect(['absensi/index']);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     */
+    public function actionBuatLaporanHarian() {
+
+        $request = Yii::$app->request;
+        $model = new ReportExportDataUntukLaporanHarianAbsensi();
+
+        if ($model->load($request->post())) {
+
+            $where = new Expression(" DATE(tanggal_scan) = :tanggal",[
+                'tanggal' => Yii::$app->formatter->asDate($model->tanggal, 'php:Y-m-d')
+            ]);
+
+            $days = Absensi::find()
+                ->where($where)
+                ->asArray()
+                ->all();
+
+            return $this->render('_preview_report_export_data_untuk_laporan_harian_absensi', [
+                'days' => $days,
+                'model' => $model
+            ]);
+
+
+        }
+
+        return $this->render('_form_report_export_data_untuk_laporan_harian_absensi', [
+            'model' => $model
+        ]);
+
+
     }
 
     /**

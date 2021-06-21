@@ -25,6 +25,49 @@ $config = [
     'container' => [
         'definitions' => [
             yii\grid\ActionColumn::class => app\components\grid\ActionColumn::class,
+            yii\grid\GridView::class => [
+                'tableOptions' => [
+                    'class' => 'card-table table'
+                ],
+                'headerRowOptions' => [
+                    'class' => 'text-nowrap'
+                ],
+                'rowOptions' => [
+                    'class' => 'text-nowrap'
+                ],
+                'layout' =>
+                    '<div class="table-responsive">' .
+                    '<div class="card-body p-0">' .
+                    "{items}" .
+                    '</div>' .
+                    '<div class="card-footer pt-4 pb-2">' .
+                    '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
+                    '</div>' .
+                    '</div>'
+            ],
+            yii\widgets\DetailView::class => [
+                'options' => [
+                    'class' => 'card-table table'
+                ],
+            ],
+            yii\data\Pagination::class => ['pageSize' => 10],
+            yii\widgets\LinkPager::class => yii\bootstrap4\LinkPager::class,
+            kartik\grid\GridView::class => [
+                'tableOptions' => [
+                    'class' => 'card-table table'
+                ],
+                // 'layout' => "{items}\n <div class='d-flex justify-content-between'>{pager}{summary}</div>",
+                'panel' =>false,
+                'layout' =>
+                    '<div class="table-responsive">' .
+                    '<div class="card-body p-0">' .
+                    "{items}" .
+                    '</div>' .
+                    '<div class="card-footer pt-4 pb-2">' .
+                    '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
+                    '</div>' .
+                    '</div>'
+            ],
             kartik\grid\ActionColumn::class => [
                 'header' => "Act",
                 'mergeHeader' => false,
@@ -70,49 +113,13 @@ $config = [
                     'data-confirm-message' => 'Are you sure want to delete this item'
                 ],
             ],
-            yii\grid\GridView::class => [
-                'tableOptions' => [
-                    'class' => 'card-table table'
-                ],
-                'headerRowOptions' => [
-                    'class' => 'text-nowrap'
-                ],
-                'rowOptions' => [
-                    'class' => 'text-nowrap'
-                ],
-                'layout' =>
-                    '<div class="table-responsive">' .
-                    '<div class="card-body p-0">' .
-                    "{items}" .
-                    '</div>' .
-                    '<div class="card-footer pt-4 pb-2">' .
-                    '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
-                    '</div>' .
-                    '</div>'
-            ],
-            yii\widgets\DetailView::class => [
-                'options' => [
-                    'class' => 'card-table table'
-                ],
-            ],
-            yii\data\Pagination::class => ['pageSize' => 10],
-            yii\widgets\LinkPager::class => yii\bootstrap4\LinkPager::class,
-            kartik\grid\GridView::class => [
-                'tableOptions' => [
-                    'class' => 'card-table table'
-                ],
-                // 'layout' => "{items}\n <div class='d-flex justify-content-between'>{pager}{summary}</div>",
-                'panel' =>false,
-                'layout' =>
-                    '<div class="table-responsive">' .
-                    '<div class="card-body p-0">' .
-                    "{items}" .
-                    '</div>' .
-                    '<div class="card-footer pt-4 pb-2">' .
-                    '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
-                    '</div>' .
-                    '</div>'
-            ],
+            kartik\date\DatePicker::class => [
+                'type' => kartik\date\DatePicker::TYPE_COMPONENT_PREPEND,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd-mm-yyyy'
+                ]
+            ]
         ]
     ],
     'components' => [

@@ -4,7 +4,6 @@ use rmrevin\yii\fontawesome\FAS;
 use yii\bootstrap4\ButtonDropdown;
 use yii\bootstrap4\ButtonToolbar;
 use yii\grid\GridView;
-use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\AbsensiSearch */
@@ -47,6 +46,24 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
                                         ],
 
+                                    ],
+                                    'encodeLabels' => false,
+                                ],
+                            ]),
+                            ButtonDropdown::widget([
+                                'label' => FAS::icon(FAS::_FILE) . ' Laporan',
+                                'buttonOptions' => [
+                                    'class' => ['btn btn-success'],
+                                    'type' => 'button',
+                                ],
+                                'encodeLabel' => false,
+                                'dropdown' => [
+                                    'items' => [
+
+                                        [
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Harian',
+                                            'url' => ['buat-laporan-harian'],
+                                        ],
                                     ],
                                     'encodeLabels' => false,
                                 ],
