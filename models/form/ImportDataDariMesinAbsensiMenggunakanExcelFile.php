@@ -213,7 +213,7 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
             // 2. Cek, apakah Karyawan ID ada, kalau ga ada, false;
             $karyawan = Karyawan::find()->where([
-                'nomor_induk_karyawan' => $column['E']
+                'nomor_induk_karyawan' => trim($column['E'])
             ])->one();
 
             if (!$karyawan) {
