@@ -159,6 +159,14 @@ class AbsensiController extends Controller {
     }
 
 
+    /**
+     * @param $file
+     * @param $startColumn
+     * @param $startRow
+     * @return \yii\web\Response
+     * @throws Exception
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionImportDataDariMesinAbsensiMenggunakanExcelFileKeDatabase($file, $startColumn, $startRow) {
 
         $model = new ImportDataDariMesinAbsensiMenggunakanExcelFile();

@@ -17,6 +17,10 @@ use yii\web\View;
 
 $file = $model->attach_file->baseName . '.' . $model->attach_file->extension;
 
+$this->title = 'Tambah Absensi Via Excel';
+$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 

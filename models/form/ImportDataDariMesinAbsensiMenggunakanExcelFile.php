@@ -172,6 +172,14 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
     }
 
 
+    /**
+     * @param $fileName
+     * @param $startColumn
+     * @param $startRow
+     * @return array
+     * @throws Exception
+     * @throws \yii\base\InvalidConfigException
+     */
     public function insertKeDatabase($fileName, $startColumn, $startRow) {
 
         // 1. Load file
