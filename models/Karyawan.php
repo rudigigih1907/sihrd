@@ -161,7 +161,9 @@ class Karyawan extends BaseKaryawan {
                 'jenis_kelamin' => 'Jenis Kelamin',
                 'agama_id' => 'Agama',
                 'status_perkawinan_id' => 'Status Perkawinan',
-                'jadwal_kerja_id' => 'Jadwal Kerja',
+                'jadwal_kerja_id' => 'Jdw Kerja',
+                'tempat_lahir' => 'T4 Lahir',
+                'tanggal_lahir' => 'Tgl Lahir',
             ]
         );
     }

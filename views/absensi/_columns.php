@@ -1,5 +1,4 @@
 <?php
-use yii\helpers\Url;
 
 return [
     [
@@ -58,26 +57,30 @@ return [
     // ],
     // [
         // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'workcode',
+    // 'attribute'=>'workcode',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'sn',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'sn',
     // ],
     // [
-        // 'class'=>'\yii\grid\DataColumn',
-        // 'attribute'=>'mesin',
+    // 'class'=>'\yii\grid\DataColumn',
+    // 'attribute'=>'mesin',
     // ],
-     [
-         'class'=>'\yii\grid\DataColumn',
-         'attribute'=>'karyawan.nama_panggilan',
-         'label' => 'Nama'
-     ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'file',
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'karyawan.nama_panggilan',
+        'label' => 'Nama (Di Internal)'
+    ],
     [
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
             return \yii\helpers\Url::to([
-                    $action,
+                $action,
                     'id' => $model->id,
                     'page' => Yii::$app->request->getQueryParam('page', null)
             ]);

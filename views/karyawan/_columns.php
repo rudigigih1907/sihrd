@@ -25,6 +25,14 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'nama_panggilan',
+        'format' => 'raw',
+        'value' => function($model){
+            /** @var Karyawan $model */
+            return $model->nama !== $model->nama_panggilan
+                ? Html::tag('span',$model->nama_panggilan , [ 'class' => 'badge badge-info'])
+                : Html::tag('span', 'Sama' , [ 'class' => 'badge badge-info'])
+                ;
+        }
     ],
     [
         'class'=>'\yii\grid\DataColumn',
@@ -46,7 +54,6 @@ return [
                     ['jadwal-kerja/view', 'id' => $model->jadwalKerja->id],
                     ['class' => 'text-primary']);
         }
-
     ],
     // [
         // 'class'=>'\yii\grid\DataColumn',
@@ -107,7 +114,7 @@ return [
             /** @var Karyawan $model */
             return $model->statusAktifKaryawan !== Karyawan::TIDAK_AKTIF
                 ? Html::tag('span', Karyawan::AKTIF, ['class' => 'badge badge-primary'])
-                : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-danger']);
+                : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-warning']);
         }
     ],
     // [
@@ -130,7 +137,6 @@ return [
     // 'class'=>'\yii\grid\DataColumn',
     // 'attribute'=>'updated_by',
     // ],
-
     [
         'class' => '\yii\grid\DataColumn',
         'label' => 'Jabatan',
@@ -144,7 +150,7 @@ return [
         'value' => function ($model) {
             /** @var Karyawan $model */
             return empty($model->countKaryawanStrukturOrganisasis)
-                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-danger'])
+                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-secondary'])
                 : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
         }
     ],
@@ -158,5 +164,4 @@ return [
             ]);
         },
     ],
-
 ];   

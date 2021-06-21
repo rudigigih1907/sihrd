@@ -18,8 +18,8 @@ class AbsensiSearch extends Absensi
     public function rules()
     {
         return [
-            [['id', 'karyawan_id'], 'integer'],
-            [['tanggal_scan', 'tanggal', 'jam', 'pin', 'nip', 'nama', 'jabatan', 'departemen', 'kantor', 'verifikasi', 'io', 'workcode', 'sn', 'mesin'], 'safe'],
+            [['id', 'karyawan_id', 'created_at', 'created_by'], 'integer'],
+            [['tanggal_scan', 'tanggal', 'jam', 'pin', 'nip', 'nama', 'jabatan', 'departemen', 'kantor', 'verifikasi', 'io', 'workcode', 'sn', 'mesin', 'file', 'updated_at', 'updated_by'], 'safe'],
         ];
     }
 
@@ -66,6 +66,8 @@ class AbsensiSearch extends Absensi
             'tanggal' => $this->tanggal,
             'jam' => $this->jam,
             'karyawan_id' => $this->karyawan_id,
+            'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
         ]);
 
         $query->andFilterWhere(['like', 'pin', $this->pin])
@@ -78,7 +80,10 @@ class AbsensiSearch extends Absensi
             ->andFilterWhere(['like', 'io', $this->io])
             ->andFilterWhere(['like', 'workcode', $this->workcode])
             ->andFilterWhere(['like', 'sn', $this->sn])
-            ->andFilterWhere(['like', 'mesin', $this->mesin]);
+            ->andFilterWhere(['like', 'mesin', $this->mesin])
+            ->andFilterWhere(['like', 'file', $this->file])
+            ->andFilterWhere(['like', 'updated_at', $this->updated_at])
+            ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
 
         return $dataProvider;
     }
