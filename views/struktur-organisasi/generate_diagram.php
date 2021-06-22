@@ -3,7 +3,7 @@
 /* @var $this View */
 
 use app\assets\TreeFlexAsset;
-use app\components\helper\Tree;
+use app\components\helpers\OrganizationTree As Tree;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 use yii\web\View;

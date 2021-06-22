@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\helper\Tree;
+use app\components\helpers\OrganizationTree AS Tree;
 use app\models\form\DiagramStrukturOrganisasi;
 use app\models\search\StrukturOrganisasiSearch;
 use app\models\StrukturOrganisasi;

@@ -1,12 +1,12 @@
 <?php
 
-namespace app\components\helper;
+namespace app\components\helpers;
 
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\helpers\Html;
 
-class Tree {
+class OrganizationTree {
     /**
      * @param array $elements
      * @param int $parentId
