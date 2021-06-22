@@ -36,6 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a(FAS::icon(FAS::_PEN) . ' Update', ['update', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary']) ?>
                 </div>
 
+                <div class="mr-1">
+                    <?= Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success']) ?>
+                </div>
+
 
                 <div class="mr-1">
                     <?= Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success']) ?>
@@ -182,6 +186,60 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ])
                                 :
                                 Html::tag("p", 'Jabatan Karyawan tidak tersedia', [
+                                    'class' => 'text-danger font-weight-bold p-3'
+                                ])
+                        ,
+                    ],
+                    [
+                        'label' => 'PTKP',
+                        'content' =>
+
+                            !empty($model->karyawanPtkps) ?
+                                \yii\grid\GridView::widget([
+                                    'layout' => "{items}",
+                                    'dataProvider' =>
+                                        new \yii\data\ActiveDataProvider([
+                                            'models' => $model->karyawanPtkps,
+                                            'pagination' => false
+                                        ]),
+                                    'headerRowOptions' => [
+                                        'class' => 'text-center'
+                                    ],
+                                    'columns' => [
+                                        [
+                                            'class' => 'yii\grid\SerialColumn',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'hubungan_ptkp_id',
+                                            'value' => 'hubunganPtkp.nama',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'nama_tanggungan',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'tempat_lahir',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'tanggal_lahir',
+                                            'format' => 'date'
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'terhitung_sebagai_ptkp',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'batal_ptkp_id',
+                                            'value' => 'batalPtkp.nama'
+                                        ],
+                                    ]
+                                ])
+                                :
+                                Html::tag("p", 'PTKP tidak tersedia', [
                                     'class' => 'text-danger font-weight-bold p-3'
                                 ])
                         ,

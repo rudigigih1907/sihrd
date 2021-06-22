@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\AlamatKaryawan;
 use app\models\form\ReportExportDataUntukMesinAbsensi;
 use app\models\Karyawan;
+use app\models\KaryawanPtkp;
 use app\models\KaryawanStrukturOrganisasi;
 use app\models\search\KaryawanSearch;
 use app\models\Tabular;
@@ -18,6 +19,7 @@ use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -278,6 +280,7 @@ class KaryawanController extends Controller {
 
                     if ($flag) {
                         $transaction->commit();
+                        Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " Jabatan : " . $model->nama . " berhasil di update. ");
                     }else{
                         $transaction->rollBack();
                     }
@@ -293,6 +296,77 @@ class KaryawanController extends Controller {
         }
 
         return $this->render('_form_manage_jabatan', [
+            'model' => $model,
+            'models' => $models,
+        ]);
+
+    }
+
+    /**
+     * Manage PTKP karyawan
+     * @param $id
+     * @param null $page
+     * @return array|string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionManagePtkp($id, $page = null) {
+
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        $models = empty($model->karyawanPtkps) ?
+            [new KaryawanPtkp()] :
+            $model->karyawanPtkps;
+
+        if ($request->isPost && $request->post('ajax') !== null) {
+
+            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+            $models = Tabular::createMultiple(KaryawanPtkp::class, $models);
+            Tabular::loadMultiple($models, $request->post());
+
+            $deletedID = array_filter(array_diff($oldTransactionIds,
+                    array_filter(ArrayHelper::map($models, 'id', 'id')))
+            );
+
+            if (Tabular::validateMultiple($models)) {
+
+                $transaction = Yii::$app->db->beginTransaction();
+
+                try{
+                    $flag = true;
+                    if(!empty($deletedID)){
+                        $number  = KaryawanPtkp::deleteAll(['id' => $deletedID]);
+                        if($number <= 0){
+                            $flag = false;
+                        }
+                    }
+
+                    foreach ($models as $single) {
+                        $flag = $single->save(false) && $flag;
+
+                        if ($flag === false) {
+                            break;
+                        }
+                    }
+
+                    if ($flag) {
+                        $transaction->commit();
+                        Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " PTKP : " . $model->nama . " berhasil di update. ");
+
+                    }else{
+                        $transaction->rollBack();
+                    }
+                }catch (\yii\db\Exception $e) {
+                    $transaction->rollBack();
+                }
+                return $this->redirect(['karyawan/view', 'id' => $id]);
+            }
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validateMultiple($models);
+        }
+
+        return $this->render('_form_manage_ptkp', [
             'model' => $model,
             'models' => $models,
         ]);

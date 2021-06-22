@@ -41,10 +41,12 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
+ * @property \app\models\Absensi[] $absensis
  * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
  * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\StatusPerkawinan $statusPerkawinan
+ * @property \app\models\KaryawanPtkp[] $karyawanPtkps
  * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
  * @property string $aliasModel
  */
@@ -167,6 +169,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAbsensis()
+    {
+        return $this->hasMany(\app\models\Absensi::className(), ['karyawan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getAlamatKaryawans()
     {
         return $this->hasMany(\app\models\AlamatKaryawan::className(), ['karyawan_id' => 'id']);
@@ -194,6 +204,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function getStatusPerkawinan()
     {
         return $this->hasOne(\app\models\StatusPerkawinan::className(), ['id' => 'status_perkawinan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKaryawanPtkps()
+    {
+        return $this->hasMany(\app\models\KaryawanPtkp::className(), ['karyawan_id' => 'id']);
     }
 
     /**
