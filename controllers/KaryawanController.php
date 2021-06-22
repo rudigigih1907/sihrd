@@ -19,7 +19,6 @@ use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -251,6 +250,12 @@ class KaryawanController extends Controller {
 
             $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
             $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
+
+            if (ActiveForm::validateMultiple($models)) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validateMultiple($models);
+            }
+
             Tabular::loadMultiple($models, $request->post());
 
             $deletedID = array_filter(array_diff($oldTransactionIds,
@@ -288,11 +293,8 @@ class KaryawanController extends Controller {
                     $transaction->rollBack();
                 }
 
-                return $this->redirect(['view', 'id' => $id]);
             }
-
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validateMultiple($models);
+            return $this->redirect(['view', 'id' => $id]);
         }
 
         return $this->render('_form_manage_jabatan', [
