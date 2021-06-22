@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 
 $this->title = 'Buat Laporan Harian';
-$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
+$this->params['breadcrumbs'][] = ['label' => 'KehadiranDiMesinAbsensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

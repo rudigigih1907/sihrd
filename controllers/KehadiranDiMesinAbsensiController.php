@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
-use app\models\Absensi;
+use app\models\KehadiranDiMesinAbsensi;
 use app\models\form\ImportDataDariMesinAbsensiMenggunakanExcelFile;
 use app\models\form\ReportExportDataUntukLaporanHarianAbsensi;
-use app\models\search\AbsensiSearch;
+use app\models\search\KehadiranDiMesinAbsensiSearch;
 use PhpOffice\PhpSpreadsheet\Exception;
 use rmrevin\yii\fontawesome\FAS;
 use Throwable;
@@ -21,9 +21,9 @@ use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
- * AbsensiController implements the CRUD actions for Absensi model.
+ * KehadiranDiMesinAbsensiController implements the CRUD actions for KehadiranDiMesinAbsensi model.
  */
-class AbsensiController extends Controller {
+class KehadiranDiMesinAbsensiController extends Controller {
     /**
      * {@inheritdoc}
      */
@@ -39,12 +39,12 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Lists all Absensi models.
+     * Lists all KehadiranDiMesinAbsensi models.
      * @param null $page
      * @return mixed
      */
     public function actionIndex($page = null) {
-        $searchModel = new AbsensiSearch();
+        $searchModel = new KehadiranDiMesinAbsensiSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -54,7 +54,7 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Displays a single Absensi model.
+     * Displays a single KehadiranDiMesinAbsensi model.
      * @param integer $id
      * @param null $page
      * @return string
@@ -67,16 +67,16 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Creates a new Absensi model.
+     * Creates a new KehadiranDiMesinAbsensi model.
      * If creation is successful, the browser will be redirected to the 'index' page.
      * @return mixed
      */
     public function actionCreate() {
-        $model = new Absensi();
+        $model = new KehadiranDiMesinAbsensi();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             Yii::$app->session->setFlash('success',
-                FAS::icon(FAS::_THUMBS_UP) . "Absensi : " . $model->nama . " berhasil ditambahkan. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
+                FAS::icon(FAS::_THUMBS_UP) . "Kehadiran di Mesin Absensi : " . $model->nama . " berhasil ditambahkan. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
             );
             return $this->redirect(['index']);
         }
@@ -87,7 +87,7 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Updates an existing Absensi model.
+     * Updates an existing KehadiranDiMesinAbsensi model.
      * If update is successful, the browser will be redirected to the 'index' page with pagination URL
      * @param integer $id
      * @param null $page
@@ -100,7 +100,7 @@ class AbsensiController extends Controller {
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('info',
                 FAS::icon(FAS::_THUMBS_UP) . "
-                Absensi : " . $model->nama . " berhasil di update. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
+                Kehadiran di Mesin Absensi : " . $model->nama . " berhasil di update. " . Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], ['class' => 'btn btn-link'])
             );
             return $this->redirect(['index', 'page' => $page]);
         }
@@ -111,7 +111,7 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Deletes an existing Absensi model.
+     * Deletes an existing KehadiranDiMesinAbsensi model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -125,7 +125,7 @@ class AbsensiController extends Controller {
 
         $model->delete();
 
-        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Absensi : " . $oldLabel . " successfully deleted.");
+        Yii::$app->session->setFlash('danger', FAS::icon(FAS::_SAD_CRY) . " Kehadiran di Mesin Absensi : " . $oldLabel . " berhasil dihapus.");
         return $this->redirect(['index', 'page' => $page]);
     }
 
@@ -185,7 +185,7 @@ class AbsensiController extends Controller {
                 " " . 'Gagal Insert ke database karena ' . $batchInsert['message']);
         }
 
-        return $this->redirect(['absensi/index']);
+        return $this->redirect(['kehadiran-di-mesin-absensi/index']);
     }
 
     /**
@@ -203,11 +203,14 @@ class AbsensiController extends Controller {
                 'tanggal' => Yii::$app->formatter->asDate($model->tanggal, 'php:Y-m-d')
             ]);
 
-            $days = Absensi::find()
+            $days = KehadiranDiMesinAbsensi::find()
                 ->select([
                     'tanggal_scan',
                     'nik' => 'karyawan.nomor_induk_karyawan',
                     'nama' => 'karyawan.nama',
+                    'tanggal',
+                    'jam',
+                    'nip' => 'karyawan.nomor_induk_karyawan'
                 ])
                 ->joinWith('karyawan', false)
                 ->where($where)
@@ -234,14 +237,14 @@ class AbsensiController extends Controller {
     }
 
     /**
-     * Finds the Absensi model based on its primary key value.
+     * Finds the KehadiranDiMesinAbsensi model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Absensi the loaded model
+     * @return KehadiranDiMesinAbsensi the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id) {
-        if (($model = Absensi::findOne($id)) !== null) {
+        if (($model = KehadiranDiMesinAbsensi::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

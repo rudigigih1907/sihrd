@@ -41,7 +41,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
- * @property \app\models\Absensi[] $absensis
+ * @property \app\models\KehadiranDiMesinAbsensi[] $absensis
  * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
  * @property \app\models\JadwalKerja $jadwalKerja
@@ -159,10 +159,10 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
-            'mesin_absensi_password' => 'Mesin Absensi Password',
-            'mesin_absensi_rfid' => 'Mesin Absensi Rfid',
-            'mesin_absensi_previlege' => 'Mesin Absensi Previlege',
-            'mesin_absensi_telapak_tangan' => 'Mesin Absensi Telapak Tangan',
+            'mesin_absensi_password' => 'Mesin KehadiranDiMesinAbsensi Password',
+            'mesin_absensi_rfid' => 'Mesin KehadiranDiMesinAbsensi Rfid',
+            'mesin_absensi_previlege' => 'Mesin KehadiranDiMesinAbsensi Previlege',
+            'mesin_absensi_telapak_tangan' => 'Mesin KehadiranDiMesinAbsensi Telapak Tangan',
         ];
     }
 
@@ -171,7 +171,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
      */
     public function getAbsensis()
     {
-        return $this->hasMany(\app\models\Absensi::className(), ['karyawan_id' => 'id']);
+        return $this->hasMany(\app\models\KehadiranDiMesinAbsensi::className(), ['karyawan_id' => 'id']);
     }
 
     /**

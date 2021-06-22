@@ -9,7 +9,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the base-model class for table "absensi".
+ * This is the base-model class for table "kehadiran_di_mesin_absensi".
  *
  * @property integer $id
  * @property string $tanggal_scan
@@ -36,7 +36,7 @@ use yii\behaviors\TimestampBehavior;
  * @property \app\models\Karyawan $karyawan
  * @property string $aliasModel
  */
-abstract class Absensi extends \yii\db\ActiveRecord
+abstract class KehadiranDiMesinAbsensi extends \yii\db\ActiveRecord
 {
 
 
@@ -46,7 +46,7 @@ abstract class Absensi extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'absensi';
+        return 'kehadiran_di_mesin_absensi';
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class Absensi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tanggal_scan', 'tanggal', 'karyawan_id', 'file'], 'required'],
+            [['tanggal_scan', 'tanggal', 'karyawan_id'], 'required'],
             [['tanggal_scan', 'tanggal', 'jam'], 'safe'],
             [['karyawan_id'], 'integer'],
             [['pin', 'nip', 'jabatan', 'departemen', 'kantor', 'verifikasi', 'io', 'workcode', 'sn', 'mesin'], 'string', 'max' => 50],
@@ -121,11 +121,11 @@ abstract class Absensi extends \yii\db\ActiveRecord
     
     /**
      * @inheritdoc
-     * @return \app\models\activequery\AbsensiQuery the active query used by this AR class.
+     * @return \app\models\activequery\KehadiranDiMesinAbsensiQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\activequery\AbsensiQuery(get_called_class());
+        return new \app\models\activequery\KehadiranDiMesinAbsensiQuery(get_called_class());
     }
 
 

@@ -16,8 +16,8 @@ use yii\helpers\VarDumper;
 class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
     public $attach_file;
-    public $directoryToUpload = 'absensi';
-    public $table = 'absensi';
+    public $directoryToUpload = 'kehadiran-di-mesin-absensi';
+    public $table = 'kehadiran-di-mesin-absensi';
     public $id; // file name
     public $allowedExtensions = 'csv,xls,xlsx';
     public $startColumn = "A";

@@ -10,8 +10,8 @@ use kartik\widgets\ActiveForm;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 
-$this->title = 'Tambah Absensi Via Excel';
-$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
+$this->title = 'Tambah Kehadiran Menggunakan Excel';
+$this->params['breadcrumbs'][] = ['label' => 'KehadiranDiMesinAbsensi', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

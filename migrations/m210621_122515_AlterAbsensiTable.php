@@ -8,7 +8,7 @@ use yii\db\Migration;
 class m210621_122515_AlterAbsensiTable extends Migration
 {
 
-    private $table = "{{absensi}}";
+    private $table = "{{kehadiran-di-mesin-absensi}}";
 
     /**
      * {@inheritdoc}

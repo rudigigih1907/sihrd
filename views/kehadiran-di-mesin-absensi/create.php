@@ -1,10 +1,10 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model app\models\Absensi */
+/* @var $model app\models\KehadiranDiMesinAbsensi */
 use yii\helpers\Html;
 
-$this->title = 'Tambah Absensi';
-$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index']];
+$this->title = 'Tambah Manual';
+$this->params['breadcrumbs'][] = ['label' => 'Kehadiran Di Mesin Absensi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

@@ -8,7 +8,7 @@
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 
-$this->title = 'Hasil Data Untuk Mesin Absensi';
+$this->title = 'Hasil Data Untuk Mesin KehadiranDiMesinAbsensi';
 $this->params['breadcrumbs'][] = ['label' => 'Karyawan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?=
             Html::a(FAS::icon(FAS::_FILE_EXCEL) . ' Excel',
-                ['karyawan/export-data-untuk-mesin-absensi-berupa-file-excel', 'statusAktif' => $statusAktif ],
+                ['karyawan/export-data-untuk-mesin-kehadiran-di-mesin-absensi-berupa-file-excel', 'statusAktif' => $statusAktif ],
                 ['class' => 'btn btn-success', 'target' => '_blank'])
             ?>
         </div>

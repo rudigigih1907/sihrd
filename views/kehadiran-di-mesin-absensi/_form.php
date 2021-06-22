@@ -5,7 +5,7 @@ use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Absensi */
+/* @var $model app\models\KehadiranDiMesinAbsensi */
 /* @var $form kartik\form\ActiveForm */
 ?>
 
@@ -19,6 +19,12 @@ use yii\helpers\Html;
         ]); ?>
 
         <div class="card-body">
+
+            <div class="form-error">
+                <?= $form->errorSummary($model) ?>
+            </div>
+
+
             <?= $form->field($model, 'tanggal_scan')->widget(\kartik\datecontrol\DateControl::class, [
                 'type' => kartik\datecontrol\DateControl::FORMAT_DATETIME,
                 'options' => [

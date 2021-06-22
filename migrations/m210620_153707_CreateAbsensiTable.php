@@ -3,18 +3,18 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%absensi}}`.
+ * Handles the creation of table `{{%kehadiran-di-mesin-absensi}}`.
  */
 class m210620_153707_CreateAbsensiTable extends Migration {
 
-    private $table = '{{%absensi}}';
+    private $table = '{{%kehadiran-di-mesin-absensi}}';
 
     /**
      * {@inheritdoc}
      */
     public function safeUp() {
 
-        $this->createTable('{{%absensi}}', [
+        $this->createTable('{{%kehadiran-di-mesin-absensi}}', [
             'id' => $this->primaryKey(),
             'tanggal_scan' => $this->dateTime()->notNull(),
             'tanggal' => $this->date()->notNull(),
@@ -51,6 +51,6 @@ class m210620_153707_CreateAbsensiTable extends Migration {
     public function safeDown() {
         $this->dropForeignKey("idx_absensi_karyawan", $this->table);
         $this->dropIndex("idx_absensi_karyawan", $this->table);
-        $this->dropTable('{{%absensi}}');
+        $this->dropTable('{{%kehadiran-di-mesin-absensi}}');
     }
 }

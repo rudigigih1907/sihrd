@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Absensi */
+/* @var $model app\models\KehadiranDiMesinAbsensi */
 
-$this->title = 'Update Absensi: ' . $model->nama;
-$this->params['breadcrumbs'][] = ['label' => 'Absensi', 'url' => ['index']];
+$this->title = 'Update Kehadiran: ' . $model->nama;
+$this->params['breadcrumbs'][] = ['label' => 'KehadiranDiMesinAbsensi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->nama, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

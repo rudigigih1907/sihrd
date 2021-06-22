@@ -6,10 +6,10 @@ use yii\bootstrap4\ButtonToolbar;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\AbsensiSearch */
+/* @var $searchModel app\models\search\KehadiranDiMesinAbsensiSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Absensi';
+$this->title = 'Kehadiran Di Mesin Absensi';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -38,11 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'items' => [
 
                                         [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Manual',
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Secara Manual',
                                             'url' => ['create'],
                                         ],
                                         [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import By Excel',
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Menggunakan Excel',
                                             'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
                                         ],
 

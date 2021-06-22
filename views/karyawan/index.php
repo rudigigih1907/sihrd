@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             [
                                                 'label' => FAS::icon(FAS::_FILE) . ' Data Untuk Mesin Absen',
                                                 'url' => [
-                                                        'find-data-untuk-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
+                                                        'find-data-untuk-mesin-kehadiran-di-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
                                                 ],
                                             ],
 

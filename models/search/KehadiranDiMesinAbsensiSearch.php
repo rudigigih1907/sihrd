@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Absensi;
+use app\models\KehadiranDiMesinAbsensi;
 
 /**
- * AbsensiSearch represents the model behind the search form about `app\models\Absensi`.
+ * KehadiranDiMesinAbsensiSearch represents the model behind the search form about `app\models\KehadiranDiMesinAbsensi`.
  */
-class AbsensiSearch extends Absensi
+class KehadiranDiMesinAbsensiSearch extends KehadiranDiMesinAbsensi
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class AbsensiSearch extends Absensi
      */
     public function search($params)
     {
-        $query = Absensi::find();
+        $query = KehadiranDiMesinAbsensi::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

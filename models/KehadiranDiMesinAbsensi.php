@@ -3,13 +3,13 @@
 namespace app\models;
 
 use Yii;
-use \app\models\base\Absensi as BaseAbsensi;
+use \app\models\base\KehadiranDiMesinAbsensi as BaseAbsensi;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "absensi".
+ * This is the model class for table "kehadiran-di-mesin-absensi".
  */
-class Absensi extends BaseAbsensi
+class KehadiranDiMesinAbsensi extends BaseAbsensi
 {
 
     public function behaviors()

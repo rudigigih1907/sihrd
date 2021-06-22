@@ -405,7 +405,7 @@ class KaryawanController extends Controller {
     }
 
     /**
-     * Form export data untuk mesin absensi,
+     * Form export data untuk mesin kehadiran-di-mesin-absensi,
      * GET  : Form
      * POST : Form + Result
      * @param null $page
@@ -499,7 +499,7 @@ class KaryawanController extends Controller {
 
                     ],
                 ]);
-                return $exporter->send("Import Absensi" . time() . '.xls');
+                return $exporter->send("Import KehadiranDiMesinAbsensi" . time() . '.xls');
             } catch (NotFoundHttpException $e) {
                 $error = $e->getMessage();
             }

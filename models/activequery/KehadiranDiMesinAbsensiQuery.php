@@ -3,11 +3,11 @@
 namespace app\models\activequery;
 
 /**
- * This is the ActiveQuery class for [[\app\models\Absensi]].
+ * This is the ActiveQuery class for [[\app\models\KehadiranDiMesinAbsensi]].
  *
- * @see \app\models\Absensi
+ * @see \app\models\KehadiranDiMesinAbsensi
  */
-class AbsensiQuery extends \yii\db\ActiveQuery
+class KehadiranDiMesinAbsensiQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -17,7 +17,7 @@ class AbsensiQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \app\models\Absensi[]|array
+     * @return \app\models\KehadiranDiMesinAbsensi[]|array
      */
     public function all($db = null)
     {
@@ -26,7 +26,7 @@ class AbsensiQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \app\models\Absensi|array|null
+     * @return \app\models\KehadiranDiMesinAbsensi|array|null
      */
     public function one($db = null)
     {
