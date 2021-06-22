@@ -236,7 +236,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             !empty($model->karyawanStrukturOrganisasis) ?
 
                                 Html::beginTag('div', ['class' => 'p-3'])
-                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary'])
                                 . Html::endTag('div')
                                 . Html::beginTag('div', ['class' => 'table-responsive'])
                                 . \yii\grid\GridView::widget([
@@ -274,7 +274,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 :
                                 Html::beginTag('div', ['class' => 'p-3'])
-                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary'])
                                 . Html::endTag('div')
                                 . Html::tag("p", 'Jabatan Karyawan tidak tersedia', [
                                     'class' => 'text-danger font-weight-bold p-3'
@@ -287,7 +287,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             !empty($model->karyawanPtkps) ?
                                 Html::beginTag('div', ['class' => 'p-3'])
-                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary'])
                                 . Html::endTag('div')
                                 . Html::beginTag('div', ['class' => 'table-responsive']) .
                                 \yii\grid\GridView::widget([
@@ -336,7 +336,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 . Html::endTag('div')
                                 :
                                 Html::beginTag('div', ['class' => 'p-3'])
-                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary'])
                                 . Html::endTag('div')
                                 . Html::tag("p", 'PTKP tidak tersedia', [
                                     'class' => 'text-danger font-weight-bold p-3'

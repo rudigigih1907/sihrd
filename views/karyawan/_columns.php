@@ -137,23 +137,23 @@ return [
     // 'class'=>'\yii\grid\DataColumn',
     // 'attribute'=>'updated_by',
     // ],
-    [
-        'class' => '\yii\grid\DataColumn',
-        'label' => 'Jabatan',
-        'headerOptions' => [
-            'class' => 'text-right'
-        ],
-        'contentOptions' => [
-            'class' => 'text-right'
-        ],
-        'format' => 'raw',
-        'value' => function ($model) {
-            /** @var Karyawan $model */
-            return empty($model->countKaryawanStrukturOrganisasis)
-                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-secondary'])
-                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
-        }
-    ],
+//    [
+//        'class' => '\yii\grid\DataColumn',
+//        'label' => 'Jabatan',
+//        'headerOptions' => [
+//            'class' => 'text-right'
+//        ],
+//        'contentOptions' => [
+//            'class' => 'text-right'
+//        ],
+//        'format' => 'raw',
+//        'value' => function ($model) {
+//            /** @var Karyawan $model */
+//            return empty($model->countKaryawanStrukturOrganisasis)
+//                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-secondary'])
+//                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
+//        }
+//    ],
     [
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
