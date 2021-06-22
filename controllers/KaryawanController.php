@@ -13,6 +13,7 @@ use Exception;
 use rmrevin\yii\fontawesome\FAS;
 use Throwable;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap4\ActiveForm;
 use yii\data\ArrayDataProvider;
 use yii\db\StaleObjectException;
@@ -248,53 +249,56 @@ class KaryawanController extends Controller {
 
         if ($request->isPost && $request->post('ajax') !== null) {
 
-            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
-            $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
-
-            if (ActiveForm::validateMultiple($models)) {
-                Yii::$app->response->format = Response::FORMAT_JSON;
-                return ActiveForm::validateMultiple($models);
+            $data = $request->post('KaryawanStrukturOrganisasi', []);
+            foreach (array_keys($data) as $index) {
+                $models[$index] = new KaryawanStrukturOrganisasi();
             }
+            Model::loadMultiple($models, $request->post());
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validateMultiple($models);
+        }
 
+        if ($request->isPost && $request->post('ajax') === null) {
+
+            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+
+            $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
             Tabular::loadMultiple($models, $request->post());
 
             $deletedID = array_filter(array_diff($oldTransactionIds,
                     array_filter(ArrayHelper::map($models, 'id', 'id')))
             );
 
-            if (Tabular::validateMultiple($models)) {
+            $transaction = Yii::$app->db->beginTransaction();
 
-                $transaction = Yii::$app->db->beginTransaction();
-
-                try{
-                    $flag = true;
-                    if(!empty($deletedID)){
-                        $number  = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
-                        if($number <= 0){
-                            $flag = false;
-                        }
+            try {
+                $flag = true;
+                if (!empty($deletedID)) {
+                    $number = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
+                    if ($number <= 0) {
+                        $flag = false;
                     }
-
-                    foreach ($models as $single) {
-                        $flag = $single->save(false) && $flag;
-
-                        if ($flag === false) {
-                            break;
-                        }
-                    }
-
-                    if ($flag) {
-                        $transaction->commit();
-                        Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " Jabatan : " . $model->nama . " berhasil di update. ");
-                    }else{
-                        $transaction->rollBack();
-                    }
-                }catch (\yii\db\Exception $e) {
-                    $transaction->rollBack();
                 }
 
+                foreach ($models as $single) {
+                    $flag = $single->save(false) && $flag;
+
+                    if ($flag === false) {
+                        break;
+                    }
+                }
+
+                if ($flag) {
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) . " Jabatan : " . $model->nama . " berhasil di update. ");
+                } else {
+                    $transaction->rollBack();
+                }
+            } catch (\yii\db\Exception $e) {
+                $transaction->rollBack();
             }
-            return $this->redirect(['view', 'id' => $id]);
+
+            return $this->redirect(['karyawan/view', 'id' => $id]);
         }
 
         return $this->render('_form_manage_jabatan', [
@@ -361,7 +365,7 @@ class KaryawanController extends Controller {
                 }catch (\yii\db\Exception $e) {
                     $transaction->rollBack();
                 }
-                return $this->redirect(['view', 'id' => $id]);
+                return $this->redirect(['karyawan/view', 'id' => $id]);
             }
 
             Yii::$app->response->format = Response::FORMAT_JSON;
