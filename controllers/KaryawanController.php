@@ -288,7 +288,7 @@ class KaryawanController extends Controller {
                     $transaction->rollBack();
                 }
 
-                return $this->redirect(['/karyawan/view', 'id' => $id]);
+                return $this->redirect(['view', 'id' => $id]);
             }
 
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -359,7 +359,7 @@ class KaryawanController extends Controller {
                 }catch (\yii\db\Exception $e) {
                     $transaction->rollBack();
                 }
-                return $this->redirect(['/karyawan/view', 'id' => $id]);
+                return $this->redirect(['view', 'id' => $id]);
             }
 
             Yii::$app->response->format = Response::FORMAT_JSON;
