@@ -256,6 +256,7 @@ class KaryawanController extends Controller {
             Model::loadMultiple($models, $request->post());
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validateMultiple($models);
+
         }
 
         if ($request->isPost && $request->post('ajax') === null) {
@@ -266,9 +267,7 @@ class KaryawanController extends Controller {
             Tabular::loadMultiple($models, $request->post());
 
             $deletedID = array_filter(array_diff($oldTransactionIds,
-                    array_filter(ArrayHelper::map($models, 'id', 'id')))
-            );
-
+                    array_filter(ArrayHelper::map($models, 'id', 'id'))));
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
@@ -326,50 +325,53 @@ class KaryawanController extends Controller {
 
         if ($request->isPost && $request->post('ajax') !== null) {
 
-            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
-            $models = Tabular::createMultiple(KaryawanPtkp::class, $models);
-            Tabular::loadMultiple($models, $request->post());
-
-            $deletedID = array_filter(array_diff($oldTransactionIds,
-                    array_filter(ArrayHelper::map($models, 'id', 'id')))
-            );
-
-            if (Tabular::validateMultiple($models)) {
-
-                $transaction = Yii::$app->db->beginTransaction();
-
-                try{
-                    $flag = true;
-                    if(!empty($deletedID)){
-                        $number  = KaryawanPtkp::deleteAll(['id' => $deletedID]);
-                        if($number <= 0){
-                            $flag = false;
-                        }
-                    }
-
-                    foreach ($models as $single) {
-                        $flag = $single->save(false) && $flag;
-
-                        if ($flag === false) {
-                            break;
-                        }
-                    }
-
-                    if ($flag) {
-                        $transaction->commit();
-                        Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " PTKP : " . $model->nama . " berhasil di update. ");
-
-                    }else{
-                        $transaction->rollBack();
-                    }
-                }catch (\yii\db\Exception $e) {
-                    $transaction->rollBack();
-                }
-                return $this->redirect(['karyawan/view', 'id' => $id]);
+            $data = $request->post('KaryawanPtkp', []);
+            foreach (array_keys($data) as $index) {
+                $models[$index] = new KaryawanPtkp();
             }
-
+            Model::loadMultiple($models, $request->post());
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validateMultiple($models);
+        }
+
+        if ($request->isPost && $request->post('ajax') === null) {
+
+            $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+            $models = Tabular::createMultiple(KaryawanPtkp::class, $models);
+
+            Tabular::loadMultiple($models, $request->post());
+            $deletedID = array_filter(array_diff($oldTransactionIds,
+                    array_filter(ArrayHelper::map($models, 'id', 'id'))));
+
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                $flag = true;
+                if(!empty($deletedID)){
+                    $number  = KaryawanPtkp::deleteAll(['id' => $deletedID]);
+                    if($number <= 0){
+                        $flag = false;
+                    }
+                }
+
+                foreach ($models as $single) {
+                    $flag = $single->save(false) && $flag;
+
+                    if ($flag === false) {
+                        break;
+                    }
+                }
+
+                if ($flag) {
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " PTKP : " . $model->nama . " berhasil di update. ");
+
+                }else{
+                    $transaction->rollBack();
+                }
+            }catch (\yii\db\Exception $e) {
+                $transaction->rollBack();
+            }
+            return $this->redirect(['karyawan/view', 'id' => $id]);
         }
 
         return $this->render('_form_manage_ptkp', [
