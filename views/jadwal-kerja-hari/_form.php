@@ -24,6 +24,7 @@ use rmrevin\yii\fontawesome\FAS;
                 ]) ?>
     <?= $form->field($model, 'asli')->dropDownList([ 'Ya' => 'Ya', 'Tidak' => 'Tidak', ]) ?>
     <?= $form->field($model, 'default_libur')->dropDownList([ 'Ya' => 'Ya', 'Tidak' => 'Tidak', ]) ?>
+    <?= $form->field($model, 'weekday')->textInput() ?>
         </div>
 
         <div class="card-footer">

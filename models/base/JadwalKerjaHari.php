@@ -13,6 +13,7 @@ use Yii;
  * @property string $nama
  * @property string $asli
  * @property string $default_libur
+ * @property integer $weekday
  *
  * @property \app\models\JadwalKerjaDetail[] $jadwalKerjaDetails
  * @property string $aliasModel
@@ -46,6 +47,7 @@ abstract class JadwalKerjaHari extends \yii\db\ActiveRecord
         return [
             [['nama'], 'required'],
             [['asli', 'default_libur'], 'string'],
+            [['weekday'], 'integer'],
             [['nama'], 'string', 'max' => 255],
             ['asli', 'in', 'range' => [
                     self::ASLI_YA,
@@ -70,6 +72,7 @@ abstract class JadwalKerjaHari extends \yii\db\ActiveRecord
             'nama' => 'Nama',
             'asli' => 'Asli',
             'default_libur' => 'Default Libur',
+            'weekday' => 'Weekday',
         ];
     }
 

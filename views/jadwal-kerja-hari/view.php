@@ -59,6 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                    'nama',
            'asli',
            'default_libur',
+           'weekday',
         ],
         ]) ?>
 

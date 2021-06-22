@@ -14,6 +14,8 @@ class m210622_055136_liburDataInsert extends Migration
 
     public function safeUp()
     {
+        $this->execute("set foreign_key_checks=0");
+        $this->truncateTable('{{%libur}}');
         $this->batchInsert('{{%libur}}',
                            ["id", "tanggal", "keterangan", "status", "created_at", "updated_at", "created_by", "updated_by"],
                             [
@@ -209,6 +211,7 @@ class m210622_055136_liburDataInsert extends Migration
     ],
 ]
         );
+        $this->execute("set foreign_key_checks=1");
     }
 
     public function safeDown()

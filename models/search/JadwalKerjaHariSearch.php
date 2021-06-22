@@ -18,7 +18,7 @@ class JadwalKerjaHariSearch extends JadwalKerjaHari
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'weekday'], 'integer'],
             [['nama', 'asli', 'default_libur'], 'safe'],
         ];
     }
@@ -62,6 +62,7 @@ class JadwalKerjaHariSearch extends JadwalKerjaHari
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'weekday' => $this->weekday,
         ]);
 
         $query->andFilterWhere(['like', 'nama', $this->nama])

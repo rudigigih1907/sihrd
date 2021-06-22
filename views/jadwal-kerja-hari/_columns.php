@@ -22,6 +22,10 @@ return [
         'attribute'=>'default_libur',
     ],
     [
+        'class'=>'\yii\grid\DataColumn',
+        'attribute'=>'weekday',
+    ],
+    [
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
             return \yii\helpers\Url::to([
