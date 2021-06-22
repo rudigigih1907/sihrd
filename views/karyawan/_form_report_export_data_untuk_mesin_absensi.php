@@ -11,7 +11,7 @@ use yii\web\View;
 /* @var $model ReportExportDataUntukMesinAbsensi */
 /* @var $page int|string|null */
 
-$this->title = 'Export Data Untuk Mesin KehadiranDiMesinAbsensi';
+$this->title = 'Export Data Untuk Mesin Mesin Absensi';
 $this->params['breadcrumbs'][] = ['label' => 'Karyawan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

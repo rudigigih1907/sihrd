@@ -1,6 +1,5 @@
 <?php
 
-use app\widgets\Table;
 use mdm\admin\components\Helper;
 use rmrevin\yii\fontawesome\FAS;
 use yii\bootstrap4\Tabs;
@@ -34,15 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="mr-1">
                     <?= Html::a(FAS::icon(FAS::_PEN) . ' Update', ['update', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-primary']) ?>
-                </div>
-
-                <div class="mr-1">
-                    <?= Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success']) ?>
-                </div>
-
-
-                <div class="mr-1">
-                    <?= Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success']) ?>
                 </div>
 
                 <?php if (Helper::checkRoute('delete')) :
@@ -81,15 +71,26 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'nama',
                                     'nama_panggilan',
                                     'tempat_lahir',
-                                    'tanggal_lahir',
+                                    'tanggal_lahir:date',
                                     'status_kewarganegaraan',
                                     'nomor_kartu_tanda_penduduk',
                                     'nomor_kartu_keluarga',
                                     'nomor_pokok_wajib_pajak',
                                     'nomor_kitas_atau_sejenisnya',
                                     'jenis_kelamin',
-                                    'agama_id',
-                                    'status_perkawinan_id',
+                                    [
+                                        'attribute' => 'agama_id',
+                                        'value' => function ($model) {
+                                            return $model->agama->nama;
+                                        }
+                                    ],
+                                    [
+                                        'attribute' => 'status_perkawinan_id',
+                                        'value' => function ($model) {
+                                            return $model->statusPerkawinan->nama;
+                                        }
+                                    ],
+
                                     'nama_ayah',
                                     'nama_ibu',
                                     'pendidikan_terakhir',
@@ -98,13 +99,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'format' => 'raw',
                                         'value' => function ($model) {
                                             return
-                                                Html::a($model->jadwalKerja->nama,
+                                                Html::a($model->jadwalKerja->nama . ' ' . FAS::icon(FAS::_NEWSPAPER),
                                                     ['jadwal-kerja/view', 'id' => $model->jadwalKerja->id],
-                                                    ['class' => 'btn btn-link']);
+                                                    []);
                                         }
                                     ],
-                                    'tanggal_mulai_bekerja',
-                                    'tanggal_berhenti_bekerja',
+                                    'tanggal_mulai_bekerja:date',
+                                    'tanggal_berhenti_bekerja:date',
                                     'alasan_berhenti_bekerja',
                                     [
                                         'attribute' => 'created_at',
@@ -135,12 +136,92 @@ $this->params['breadcrumbs'][] = $this->title;
                         'content' =>
 
                             !empty($model->alamatKaryawans) ?
-                                Table::widget([
-                                    'data' => $model->alamatKaryawans,
-                                    'skippedColumns' => [
-                                        'karyawan_id'
+                                Html::beginTag('div', ['class' => 'table-responsive']) .
+                                \yii\grid\GridView::widget([
+                                    'layout' => "{items}",
+                                    'dataProvider' =>
+                                        new \yii\data\ActiveDataProvider([
+                                            'models' => $model->alamatKaryawans,
+                                            'pagination' => false
+                                        ]),
+                                    'headerRowOptions' => [
+                                        'class' => 'text-center text-nowrap'
+                                    ],
+                                    'columns' => [
+                                        [
+                                            'class' => 'yii\grid\SerialColumn',
+                                        ],
+                                        /* [
+                                         'class'=>'\yii\grid\DataColumn',
+                                         'attribute'=>'id',
+                                         ],*/
+                                        /*[
+                                            'class'=>'\yii\grid\DataColumn',
+                                            'attribute'=>'karyawan_id',
+                                        ],*/
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'type',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'atas_nama',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'jalan',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'block',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'nomor',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'rt',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'rw',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'kecamatan',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'kelurahan',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'kabupaten',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'propinsi',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'kode_pos',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'nomor_telepon',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'email',
+                                        ],
+                                        [
+                                            'class' => '\yii\grid\DataColumn',
+                                            'attribute' => 'keterangan',
+                                        ],
                                     ]
                                 ])
+                                . Html::endTag('div')
                                 :
 
                                 Html::tag("p", 'Alamat Karyawan tidak tersedia', [
@@ -153,7 +234,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'content' =>
 
                             !empty($model->karyawanStrukturOrganisasis) ?
-                                \yii\grid\GridView::widget([
+
+                                Html::beginTag('div', ['class' => 'p-3'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::endTag('div')
+                                . Html::beginTag('div', ['class' => 'table-responsive'])
+                                . \yii\grid\GridView::widget([
                                     'layout' => "{items}",
                                     'dataProvider' =>
                                         new \yii\data\ActiveDataProvider([
@@ -174,7 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'value' => function($model){
                                                 /** @var \app\models\KaryawanStrukturOrganisasi $model */
                                                 return Html::a($model->strukturOrganisasi->nama, ['/struktur-organisasi/view', 'id'=> $model->struktur_organisasi_id],[
-                                                        'class' => 'btn btn-link'
+                                                    'class' => 'btn btn-link'
                                                 ]);
                                             }
                                         ],
@@ -184,8 +270,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'alasan_berakhir'
                                     ]
                                 ])
+                                . Html::endTag('div')
+
                                 :
-                                Html::tag("p", 'Jabatan Karyawan tidak tersedia', [
+                                Html::beginTag('div', ['class' => 'p-3'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage Jabatan', ['manage-jabatan', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::endTag('div')
+                                . Html::tag("p", 'Jabatan Karyawan tidak tersedia', [
                                     'class' => 'text-danger font-weight-bold p-3'
                                 ])
                         ,
@@ -195,6 +286,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         'content' =>
 
                             !empty($model->karyawanPtkps) ?
+                                Html::beginTag('div', ['class' => 'p-3'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::endTag('div')
+                                . Html::beginTag('div', ['class' => 'table-responsive']) .
                                 \yii\grid\GridView::widget([
                                     'layout' => "{items}",
                                     'dataProvider' =>
@@ -238,8 +333,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                         ],
                                     ]
                                 ])
+                                . Html::endTag('div')
                                 :
-                                Html::tag("p", 'PTKP tidak tersedia', [
+                                Html::beginTag('div', ['class' => 'p-3'])
+                                . Html::a(FAS::icon(FAS::_CHAIR) . ' Manage PTKP', ['manage-ptkp', 'id' => $model->id, 'page' => Yii::$app->request->getQueryParam('page', null)], ['class' => 'btn btn-success'])
+                                . Html::endTag('div')
+                                . Html::tag("p", 'PTKP tidak tersedia', [
                                     'class' => 'text-danger font-weight-bold p-3'
                                 ])
                         ,

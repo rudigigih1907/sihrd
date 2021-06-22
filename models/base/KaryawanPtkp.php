@@ -48,7 +48,7 @@ abstract class KaryawanPtkp extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['karyawan_id', 'hubungan_ptkp_id', 'nama_tanggungan', 'tempat_lahir', 'tanggal_lahir', 'batal_ptkp_id'], 'required'],
+            [['karyawan_id', 'hubungan_ptkp_id', 'nama_tanggungan', 'tempat_lahir', 'tanggal_lahir'], 'required'],
             [['karyawan_id', 'hubungan_ptkp_id', 'batal_ptkp_id'], 'integer'],
             [['tanggal_lahir'], 'safe'],
             [['terhitung_sebagai_ptkp'], 'string'],
