@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="absensi-form">
     <div class="row">
-        <div class="col-md-8 col">
+        <div class="col">
 
             <?php $form = ActiveForm::begin([
                 'type' => ActiveForm::TYPE_HORIZONTAL,

@@ -34,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ?>
 
                     <?=
-                    Html::a(FAS::icon(FAS::_FILE_EXCEL) . ' Excel',
-                        ['karyawan/absensi/export-data-untuk-report-per-hari', 'tanggal' => $model->tanggal ],
+                    Html::a(FAS::icon(FAS::_FILE_PDF) . ' PDF',
+                        ['absensi/export-laporan-harian-ke-pdf', 'tanggal' => $model->tanggal ],
                         ['class' => 'btn btn-success', 'target' => '_blank'])
                     ?>
                 </div>
@@ -49,13 +49,61 @@ $this->params['breadcrumbs'][] = $this->title;
                     'tableOptions' => [
                         'class' => 'card-table table'
                     ],
-                    'columns' => []
+                    'columns' => [
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                        ],
+                        [
+                            'class' => '\yii\grid\DataColumn',
+                            'attribute' => 'nama',
+                            'label' => 'Nama Karyawan (Sistem)'
+                        ],
+                        [
+                            'class'=>'\yii\grid\DataColumn',
+                            'attribute'=>'tanggal_scan',
+                            'format' => 'datetime'
+                        ],
+                        [
+                            'class'=>'\yii\grid\DataColumn',
+                            'attribute'=>'masuk',
+                            'format' => 'date'
+                        ],
+                        [
+                            'class'=>'\yii\grid\DataColumn',
+                            'attribute'=>'pulang',
+                            'format' => 'date'
+                        ],
+                        [
+                            'class'=>'\yii\grid\DataColumn',
+                            'attribute'=>'jml_menit',
+                        ],
+                        [
+                            'class'=>'\yii\grid\DataColumn',
+                            'attribute'=>'keterangan',
+                        ],
+                        [
+                            'class' => '\yii\grid\DataColumn',
+                            'attribute' => 'status',
+                        ],
+                        [
+                            'class' => '\yii\grid\DataColumn',
+                            'attribute' => 'temperatur_masuk',
+                            'label' => "&#8451; Masuk",
+                            'encodeLabel' => false
+                        ],
+                        [
+                            'class' => '\yii\grid\DataColumn',
+                            'attribute' => 'temperatur_pulang',
+                            'label' => "&#8451; Pulang",
+                            'encodeLabel' => false
+                        ],
+                    ]
                 ]);
                 ?>
 
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['absensi/find-data-untuk-report-per-hari'], ['class' => 'btn btn-secondary']) ?>
+                        <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['absensi/buat-laporan-harian'], ['class' => 'btn btn-secondary']) ?>
                     </div>
                 </div>
             </div>

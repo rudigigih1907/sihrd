@@ -204,6 +204,12 @@ class AbsensiController extends Controller {
             ]);
 
             $days = Absensi::find()
+                ->select([
+                    'tanggal_scan',
+                    'nik' => 'karyawan.nomor_induk_karyawan',
+                    'nama' => 'karyawan.nama',
+                ])
+                ->joinWith('karyawan', false)
                 ->where($where)
                 ->asArray()
                 ->all();
@@ -220,6 +226,10 @@ class AbsensiController extends Controller {
             'model' => $model
         ]);
 
+
+    }
+
+    public function actionExportLaporanHarianKePDF($tanggal) {
 
     }
 

@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             Html::a(FAS::icon(FAS::_PLUS_CIRCLE) . ' Tambah', ['create'], ['class' => 'btn btn-primary']),
 
                             ButtonDropdown::widget([
-                                'label' => FAS::icon(FAS::_FILE) . ' Report',
+                                'label' => FAS::icon(FAS::_FILE) . ' Laporan',
                                 'buttonOptions' => [
                                     'class' => ['btn btn-success'],
                                     'type' => 'button',
