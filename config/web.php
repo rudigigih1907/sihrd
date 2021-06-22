@@ -186,7 +186,7 @@ $config = [
         'session' => [
 
             // this is the name of the session cookie used for login on the backend
-            'name' => 'raya_maudy_azzahra_binti_ahmad_fadly_dzil_jalal',
+            'name' => getenv('SESSION_NAME'),
             'timeout' => 86400, // 1 Day
             'class' => 'yii\web\DbSession',
             'writeCallback' => function($session){
