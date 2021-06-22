@@ -32,6 +32,15 @@ $isGuest = Yii::$app->user->isGuest;
 
             </div>
 
+            <div class="row">
+                <div class="col col-md-6 col-lg-4">
+                    <?= \yii\helpers\Html::tag('pre', \yii\helpers\VarDumper::dumpAsString(\app\components\helpers\LiburHelper::statusLiburHariIni())) ?>
+                </div>
+                <div class="col col-md-6 col-lg-4">
+
+                </div>
+            </div>
+
         <?php else: ?>
 
             <div class="jumbotron">
