@@ -162,7 +162,7 @@ class Karyawan extends BaseKaryawan {
                 'agama_id' => 'Agama',
                 'status_perkawinan_id' => 'Status Perkawinan',
                 'jadwal_kerja_id' => 'Jdw Kerja',
-                'tempat_lahir' => 'T4 Lahir',
+                'tempat_lahir' => 'Tempat Lahir',
                 'tanggal_lahir' => 'Tgl Lahir',
             ]
         );

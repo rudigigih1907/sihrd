@@ -6,14 +6,14 @@ use yii\bootstrap4\ButtonToolbar;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\KehadiranDiMesinAbsensiSearch */
+/* @var $searchModel app\models\search\KehadiranDiInternalSistemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kehadiran Di Mesin Absensi';
+$this->title = 'Kehadiran Di Internal Sistem';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="absensi-index">
+<div class="kehadiran-di-internal-sistem-index">
 
     <div class="card shadow" id="crud">
 
@@ -36,13 +36,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'encodeLabel' => false,
                                 'dropdown' => [
                                     'items' => [
-
                                         [
                                             'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Secara Manual',
                                             'url' => ['create'],
                                         ],
                                         [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Menggunakan Excel',
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Masuk',
+                                            'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
+                                        ],
+                                        [
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Pulang',
                                             'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
                                         ],
 
@@ -73,7 +76,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
-
         </div>
 
         <?php try {
