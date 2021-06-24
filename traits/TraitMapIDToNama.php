@@ -27,4 +27,11 @@ trait TraitMapIDToNama {
                 return $model['kode'] . ' - ' . $model['nama'];
             });
     }
+
+    public static function mapIDToKode() {
+        return ArrayHelper::map(self::find()
+            ->select("id, kode")
+            ->orderBy('kode')
+            ->all(), 'id', 'kode');
+    }
 }

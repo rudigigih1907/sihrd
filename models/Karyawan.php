@@ -19,6 +19,8 @@ class Karyawan extends BaseKaryawan {
     const TIDAK_AKTIF = 'TIDAK AKTIF';
     const SEMUA = 'SEMUA';
 
+    use TraitMapIDToNama;
+
     public static function mapIDToKodeKaryawanDenganNama() {
         return ArrayHelper::map(self::find()
             ->select("id, nama, nomor_induk_karyawan ")

@@ -13,11 +13,19 @@ class JamKerja extends BaseJamKerja {
 
     public static function mapIDToNama() {
         return ArrayHelper::map(self::find()
-            ->select("id, nama, jam_masuk, jam_pulang")
-            ->orderBy('nama')
+            ->select("id, kode, jam_masuk, jam_pulang")
+            ->orderBy('kode')
             ->all(), 'id', function ($el) {
-            return $el['nama'] . ', ' . $el['jam_masuk'] . ' => ' . $el['jam_pulang'];
+            return $el['kode'] . ', ' . $el['jam_masuk'] . ' => ' . $el['jam_pulang'];
         });
+
+    }
+
+    public static function mapIDToNamaTanpaInformasiTambahan() {
+        return ArrayHelper::map(self::find()
+            ->select("id, kode")
+            ->orderBy('kode')
+            ->all(), 'id', 'kode');
     }
 
     public function behaviors() {

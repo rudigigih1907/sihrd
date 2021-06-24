@@ -119,6 +119,13 @@ $config = [
                     'autoclose' => true,
                     'format' => 'dd-mm-yyyy'
                 ]
+            ],
+            kartik\widgets\DateTimePicker::class => [
+                'type' => kartik\widgets\DateTimePicker::TYPE_INPUT,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd-mm-yyyy hh:ii'
+                ]
             ]
         ]
     ],
@@ -267,7 +274,7 @@ $config = [
                     ],
                 ], // example
                 kartik\datecontrol\Module::FORMAT_DATETIME => [
-                    'type' => 2,
+                    'type' => 3,
                     'options' => [
                         'class' => 'date-time-picker'
                     ],

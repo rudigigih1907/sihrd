@@ -131,3 +131,7 @@ label{
     margin-top: .25rem;
     font-weight: 700;
 }
+
+.multiple-input-list tbody .form-group{
+    margin-bottom: 0;
+}

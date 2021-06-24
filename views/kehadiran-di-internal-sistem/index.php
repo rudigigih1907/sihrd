@@ -42,11 +42,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                         ],
                                         [
                                             'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Masuk',
-                                            'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
+                                            'url' => ['import-kehadiran-masuk'],
                                         ],
                                         [
                                             'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Pulang',
-                                            'url' => ['import-data-dari-mesin-absensi-menggunakan-excel-file'],
+                                            'url' => ['import-kehadiran-pulang'],
                                         ],
 
                                     ],
