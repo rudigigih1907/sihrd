@@ -262,6 +262,7 @@ class KehadiranDiInternalSistemController extends Controller {
 
         return $this->render('_preview_import_kehadiran_masuk', [
             'models' => $models,
+            'tanggal' => $tanggal
         ]);
     }
 
