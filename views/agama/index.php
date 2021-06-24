@@ -1,9 +1,8 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
-use yii\bootstrap4\Modal;
-use yii\grid\GridView;
+
 use rmrevin\yii\fontawesome\FAS;
+use yii\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\AgamaSearch */
@@ -26,9 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__.'/_columns.php'),
-                'headerRowOptions' => [
-                    'class' => 'text-nowrap'
-                ]
             ]);
         } catch(Exception $e){
             echo $e->getMessage();

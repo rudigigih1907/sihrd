@@ -81,9 +81,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__ . '/_columns.php'),
-                'headerRowOptions' => [
-                    'class' => 'text-nowrap'
-                ],
                 'tableOptions' => [
                     'class' => 'card-table table table-sm small'
                 ]

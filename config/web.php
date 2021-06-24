@@ -30,7 +30,7 @@ $config = [
                     'class' => 'card-table table'
                 ],
                 'headerRowOptions' => [
-                    'class' => 'text-nowrap'
+                    'class' => 'text-nowrap text-center'
                 ],
                 'rowOptions' => [
                     'class' => 'text-nowrap'

@@ -43,10 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__.'/_columns.php'),
-                'headerRowOptions' => [
-                    'class' => 'text-nowrap'
-                ]
-
             ]);
         }catch(Exception $e){
             echo $e->getMessage();
