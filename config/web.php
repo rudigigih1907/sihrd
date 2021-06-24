@@ -274,7 +274,7 @@ $config = [
                     ],
                 ], // example
                 kartik\datecontrol\Module::FORMAT_DATETIME => [
-                    'type' => 3,
+                    'type' => 1,
                     'options' => [
                         'class' => 'date-time-picker'
                     ],

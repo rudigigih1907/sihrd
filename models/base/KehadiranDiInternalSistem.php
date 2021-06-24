@@ -19,6 +19,7 @@ use Yii;
  * @property string $aktual_masuk
  * @property string $aktual_pulang
  * @property integer $jenis_izin_id
+ * @property string $keterangan
  *
  * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\JadwalKerjaHari $jadwalKerjaHari
@@ -49,6 +50,7 @@ abstract class KehadiranDiInternalSistem extends \yii\db\ActiveRecord
             [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id'], 'required'],
             [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id'], 'integer'],
             [['ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang'], 'safe'],
+            [['keterangan'], 'string'],
             [['jadwal_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerja::className(), 'targetAttribute' => ['jadwal_kerja_id' => 'id']],
             [['jadwal_kerja_hari_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerjaHari::className(), 'targetAttribute' => ['jadwal_kerja_hari_id' => 'id']],
             [['jam_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JamKerja::className(), 'targetAttribute' => ['jam_kerja_id' => 'id']],
@@ -73,6 +75,7 @@ abstract class KehadiranDiInternalSistem extends \yii\db\ActiveRecord
             'aktual_masuk' => 'Aktual Masuk',
             'aktual_pulang' => 'Aktual Pulang',
             'jenis_izin_id' => 'Jenis Izin ID',
+            'keterangan' => 'Keterangan',
         ];
     }
 

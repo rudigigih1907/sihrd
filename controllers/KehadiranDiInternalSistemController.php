@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\form\ImportKehadiranMasukDiInternalSistemAbsensi;
+use app\models\form\LaporanHarianAbsensi;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
 use rmrevin\yii\fontawesome\FAS;
@@ -127,6 +128,7 @@ class KehadiranDiInternalSistemController extends Controller {
 
 
     /**
+     * Menampilkan Form Import data kehadiran
      * @return string|\yii\web\Response
      */
     public function actionImportKehadiranMasuk() {
@@ -143,9 +145,7 @@ class KehadiranDiInternalSistemController extends Controller {
         ]);
     }
 
-
     /**
-     *
      * Import data kehadiran Karyawan.
      * @param $tanggal
      * @return array|string|Response
@@ -264,6 +264,29 @@ class KehadiranDiInternalSistemController extends Controller {
             'models' => $models,
             'tanggal' => $tanggal
         ]);
+    }
+
+    /**
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionCreateLaporanHarian() {
+
+        $request = Yii::$app->request;
+        $model = new LaporanHarianAbsensi();
+
+        if($model->load($request->post())){
+            $records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($model->tanggal);
+            return $this->render('_preview_laporan_harian', [
+                'records' => $records,
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('_form_laporan_harian', [
+            'model' => $model
+        ]);
+
     }
 
 

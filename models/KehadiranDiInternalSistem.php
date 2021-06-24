@@ -6,6 +6,7 @@ use app\models\base\KehadiranDiInternalSistem as BaseKehadiranDiInternalSistem;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -131,6 +132,101 @@ SQL;
         )->queryAll();
     }
 
+    /**
+     * Mencari data untuk laporan harian menggunakan Active Record
+     * @param $tanggal
+     * @return KehadiranDiInternalSistem[]|array
+     */
+    public static function findUntukLaporanHarian($tanggal) {
+
+        return self::find()
+            ->select([
+                'nama' => 'karyawan.nama',
+                'nik' => 'karyawan.nomor_induk_karyawan',
+                'menjabat' => new Expression(" GROUP_CONCAT(struktur_organisasi.nama) "),
+                'aktual_masuk',
+                'aktual_pulang',
+                'lama_waktu_bekerja' => new Expression("TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk),'%H:%i')"),
+                'status_masuk_kerja' => new Expression("
+                    CASE
+                        WHEN aktual_masuk IS NULL THEN 'Belum Masuk'
+                        WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+                        ELSE 'Sesuai'
+                    END
+                "),
+                'jenis_izin' => 'jenis_izin.nama',
+                'status_kehadiran' => new Expression("
+                    	CASE
+                            WHEN aktual_pulang IS NULL THEN 'Tidak hadir, absen pulang kosong'
+                            ELSE 'Hadir, Sesuai Aturan' 
+                        END
+                "),
+                'keterangan'
+
+            ])
+            ->where(
+                new Expression(" DATE(ketentuan_masuk) = :tanggal", ['tanggal' => $tanggal])
+            )
+            ->joinWith('strukturOrganisasi', false)
+            ->joinWith('jenisIzin', false)
+            ->groupBy([
+                'kehadiran_di_internal_sistem.id'
+            ])
+            ->asArray()
+            ->all();
+
+    }
+
+
+    /**
+     * Mencari data untuk laporan harian menggunakan Raw SQL
+     * @param $tanggal
+     * @return array
+     * @throws Exception
+     */
+    public static function findUntukLaporanHarianRawSql($tanggal) {
+
+        $sql = <<<SQL
+        SELECT karyawan.nama                                               AS nama,
+               karyawan.nomor_induk_karyawan                               AS nik,
+               GROUP_CONCAT(struktur_organisasi.path)                      AS menjabat,
+               aktual_masuk,
+               aktual_pulang,
+               TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,
+               CASE
+                   WHEN aktual_masuk IS NULL THEN 'Belum Masuk'
+                   WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+                   ELSE 'Sesuai' END                                       AS status_masuk_kerja,
+               jenis_izin.nama                                             AS jenis_izin,
+               CASE
+                   WHEN aktual_pulang IS NULL THEN 'Tidak hadir karena tidak ada absen pulang'
+                   ELSE 'Hadir, Sesuai Aturan' END                         AS status_kehadiran,
+               keterangan
+        FROM kehadiran_di_internal_sistem
+                 LEFT JOIN karyawan ON kehadiran_di_internal_sistem.karyawan_id = karyawan.id
+                 LEFT JOIN karyawan_struktur_organisasi ON karyawan.id = karyawan_struktur_organisasi.karyawan_id
+                 # LEFT JOIN struktur_organisasi ON karyawan_struktur_organisasi.struktur_organisasi_id = struktur_organisasi.id
+                 LEFT JOIN (
+            WITH RECURSIVE reporting_chain(id, nama, path) AS (
+                SELECT id, nama, nama
+                FROM struktur_organisasi
+                WHERE parent_id IS NULL
+                UNION ALL
+                SELECT oc.id, oc.nama, CONCAT(rc.path, '->', oc.nama)
+                FROM reporting_chain rc
+                         JOIN struktur_organisasi oc ON rc.id = oc.parent_id)
+            SELECT *
+            FROM reporting_chain
+        ) AS struktur_organisasi
+                           ON karyawan_struktur_organisasi.struktur_organisasi_id = struktur_organisasi.id
+                 LEFT JOIN jenis_izin ON kehadiran_di_internal_sistem.jenis_izin_id = jenis_izin.id
+        WHERE DATE(ketentuan_masuk) = :tanggal
+        GROUP BY kehadiran_di_internal_sistem.id
+SQL;
+        return self::getDb()->createCommand($sql, [':tanggal' => $tanggal])->queryAll();
+
+    }
+
     public function behaviors() {
         return ArrayHelper::merge(
             parent::behaviors(),
@@ -196,4 +292,22 @@ SQL;
         ];
         return $scenarios;
     }
+
+    /**
+     * @return yii\db\ActiveQuery
+     */
+    public function getKaryawanStrukturOrganisasis() {
+        return $this->hasMany(\app\models\KaryawanStrukturOrganisasi::className(), ['karyawan_id' => 'id'])->via(
+            'karyawan'
+        );
+    }
+
+    /**
+     * @return yii\db\ActiveQuery
+     */
+    public function getStrukturOrganisasi() {
+        return $this->hasOne(\app\models\StrukturOrganisasi::className(), ['id' => 'struktur_organisasi_id'])
+            ->via('karyawanStrukturOrganisasis');
+    }
+
 }
