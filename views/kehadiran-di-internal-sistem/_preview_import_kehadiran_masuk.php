@@ -46,7 +46,10 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                     'rendererClass' => \app\components\renderers\TableRenderer::class,
                     'removeButtonOptions' => [
                         'class' => 'btn btn-block btn-danger',
-                        'label' => '<i class="fas fa-trash"></i>'
+                        'label' => FAS::icon(FAS::_TRASH),
+                        'data' => [
+                            'confirm' => 'Anda akan menghapus data ini ?'
+                        ]
                     ],
                     'allowEmptyList' => true,
                     'attributeOptions' => [
@@ -125,7 +128,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                             'enableError' => true,
                             'options' => [
                                 'readonly' => true,
-                                'class' => 'readonly'
+                                'class' => 'readonly ketentuan-masuk'
                             ],
                             'columnOptions' => [
                                 'style' => 'width: 162px;',
@@ -143,7 +146,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                             'enableError' => true,
                             'options' => [
                                 'readonly' => true,
-                                'class' => 'readonly'
+                                'class' => 'readonly ketentuan-pulang'
                             ],
                             'columnOptions' => [
                                 'style' => 'width: 162px;',
@@ -165,7 +168,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                             'enableError' => true,
                             'options' => [
                                 'readonly' => true,
-                                'class' => 'readonly'
+                                'class' => 'readonly karyawan'
                             ],
                             'columnOptions' => [
                                 'style' => 'width: 244px;',
@@ -194,9 +197,9 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                 <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['index'], ['class' => 'btn btn-secondary']) ?>
                 <?= Html::submitButton(FAS::icon(FAS::_SAVE) . ' Simpan', [
                     'class' => 'btn btn-primary',
-//                    'data' => [
-//                        'confirm' => 'Anda akan mengupload data karyawan masuk hari ini ? '
-//                    ]
+                    /*'data' => [
+                        'confirm' => 'Are you sure want to Create/Update this message?'
+                    ]*/
                 ]) ?>
             </div>
         </div>
@@ -204,3 +207,33 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+
+<?php
+
+$js = <<<JS
+jQuery('#tabular-form').on('afterInit', function(){
+    
+}).on('beforeAddRow', function(e, row, currentIndex) {
+    
+}).on('afterAddRow', function(e, row, currentIndex) {
+    
+}).on('beforeDeleteRow', function(e, row, currentIndex){
+    
+    let children = row.children();
+    let karyawan = children.find('.karyawan').val();
+    let ketentuanMasuk = children.find('.ketentuan-masuk').val();
+    let ketentuanPulang = children.find('.ketentuan-pulang').val();
+    return confirm('Anda yakin akan menghapus record berikut: ' + 
+        '\\n' + karyawan + ', '+ 
+        ketentuanMasuk + ' => ' + 
+        ketentuanPulang  +' ?')
+        
+}).on('afterDeleteRow', function(e, row, currentIndex){
+ 
+}).on('afterDropRow', function(e, item){       
+    
+});
+JS;
+
+$this->registerJs($js);
+
