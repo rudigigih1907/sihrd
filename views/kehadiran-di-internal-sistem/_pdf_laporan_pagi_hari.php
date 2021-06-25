@@ -1,19 +1,19 @@
 <?php
 
 
-
 /* @var $this \yii\web\View */
 /* @var $records array */
 /* @var $tanggal string */
 $formatter = Yii::$app->formatter;
 
 use yii\grid\GridView;
-use yii\helpers\Html; ?>
+
+?>
 
 <div class="kehadiran-di-internal-sistem-index">
 
     <p>Rekapan Masuk Kerja (Pagi)</p>
-    <p>Absensi Per Tanggal : <b><?= Yii::$app->formatter->asDate($tanggal) ?></b> </p>
+    <p>Absensi Per Tanggal : <b><?= Yii::$app->formatter->asDate($tanggal) ?></b></p>
     <?php try {
         echo GridView::widget([
             'tableOptions' => [

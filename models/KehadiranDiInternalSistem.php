@@ -190,6 +190,8 @@ SQL;
         SELECT karyawan.nama                                               AS nama,
                karyawan.nomor_induk_karyawan                               AS nik,
                GROUP_CONCAT(struktur_organisasi.kode_path)                 AS kode_menjabat,
+               ketentuan_masuk,
+               ketentuan_pulang,
                aktual_masuk,
                aktual_pulang,
                TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,

@@ -5,6 +5,7 @@ namespace app\models\form;
 
 
 use app\models\Karyawan;
+use app\models\KehadiranDiMesinAbsensi;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -17,7 +18,6 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
     public $attach_file;
     public $directoryToUpload = 'kehadiran-di-mesin-absensi';
-    public $table = 'kehadiran-di-mesin-absensi';
     public $id; // file name
     public $allowedExtensions = 'csv,xls,xlsx';
     public $startColumn = "A";
@@ -273,7 +273,7 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
 
         try {
             Yii::$app->db->createCommand()->batchInsert(
-                $this->table, $keys, $records
+                KehadiranDiMesinAbsensi::tableName(), $keys, $records
             )->execute();
 
             $transaction->commit();
@@ -285,7 +285,7 @@ class ImportDataDariMesinAbsensiMenggunakanExcelFile extends Model {
             $transaction->rollBack();
             $valid = [
                 'status' => false,
-                'message' => $e->getTraceAsString()
+                'message' => $e->getFile() . ' ' .$e->getLine()
             ];
         }
 

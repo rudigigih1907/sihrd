@@ -36,6 +36,16 @@ return [
     ],
     [
         'class' => '\yii\grid\DataColumn',
+        'attribute' => 'ketentuan_masuk',
+        'format' => 'datetime'
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'ketentuan_pulang',
+        'format' => 'datetime'
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
         'attribute' => 'aktual_masuk',
         'format' => 'datetime'
     ],
@@ -47,7 +57,7 @@ return [
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'lama_waktu_bekerja',
-        'label' => 'Jumlah Menit',
+        'label' => 'Lama Bekerja',
         'format' => 'time'
     ],
     [

@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['import-data-dari-mesin-absensi-menggunakan-excel-file'], ['class' => 'btn btn-secondary']) ?>
-                        <?= Html::a(FAS::icon(FAS::_SAVE) . ' Simpan', ['kehadiran-di-mesin-absensi/import-data-dari-mesin-kehadiran-di-mesin-absensi-menggunakan-excel-file-ke-database',
+                        <?= Html::a(FAS::icon(FAS::_SAVE) . ' Simpan', ['kehadiran-di-mesin-absensi/import-data-dari-mesin-absensi-menggunakan-excel-file-ke-database',
                             'file' => $file,
                             'startColumn' => $model->startColumn,
                             'startRow' => $model->startRow,

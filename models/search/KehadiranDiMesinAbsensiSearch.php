@@ -47,7 +47,7 @@ class KehadiranDiMesinAbsensiSearch extends KehadiranDiMesinAbsensi
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC
+                    'tanggal' => SORT_DESC
                 ]
             ]
         ]);
