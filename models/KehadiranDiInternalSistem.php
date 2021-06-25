@@ -196,7 +196,7 @@ SQL;
                aktual_pulang,
                TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,
                CASE
-                   WHEN aktual_masuk IS NULL THEN 'Belum Masuk'
+                   WHEN aktual_masuk IS NULL THEN 'Belum Ada Kabar'
                    WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
                    ELSE 'Sesuai' END                                       AS status_masuk_kerja,
                jenis_izin.nama                                             AS jenis_izin,

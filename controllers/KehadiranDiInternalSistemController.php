@@ -295,11 +295,15 @@ class KehadiranDiInternalSistemController extends Controller {
      * @param $tanggal
      * @return string
      * @throws HttpException
-     * @throws yii\db\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function actionExportLaporanHarianPagiHariDenganFormatPdf($tanggal){
 
         if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($tanggal)) {
+
+            $summary = [];
+
             try {
                 $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
                 $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
