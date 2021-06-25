@@ -1,13 +1,18 @@
 <?php
 
 
-/* @var $this \yii\web\View */
-/* @var $records \app\models\KehadiranDiInternalSistem[]|array */
+/* @var $this View */
+/* @var $records KehadiranDiInternalSistem[]|array */
 
-/* @var $model \app\models\form\LaporanHarianAbsensi */
+/* @var $model LaporanHarianAbsensi */
 
+use app\models\form\LaporanHarianAbsensi;
+use app\models\KehadiranDiInternalSistem;
 use rmrevin\yii\fontawesome\FAS;
+use yii\bootstrap4\ButtonDropdown;
+use yii\bootstrap4\ButtonToolbar;
 use yii\helpers\Html;
+use yii\web\View;
 
 $this->title = 'Laporan Harian ' . Yii::$app->formatter->asDate($model->tanggal);
 $this->params['breadcrumbs'][] = ['label' => 'Kehadiran Di Internal Absensi', 'url' => ['index']];
@@ -24,17 +29,47 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="card-header p-3">
 
-                    <?=
-                    Html::a(FAS::icon(FAS::_ARROW_LEFT) . ' Kembali',
-                        Yii::$app->request->referrer,
-                        ['class' => 'btn btn-secondary'])
+                    <?php echo
+                    ButtonToolbar::widget([
+                        'options' => [
+                            'class' => 'btn-toolbar',
+                        ],
+                        'buttonGroups' => [
+                            [
+                                'buttons' => [
+
+                                    Html::a(FAS::icon(FAS::_ARROW_LEFT) . ' Kembali',
+                                        Yii::$app->request->referrer,
+                                        ['class' => 'btn btn-secondary']),
+
+                                    ButtonDropdown::widget([
+                                        'label' => FAS::icon(FAS::_FILE) . ' Laporan',
+                                        'buttonOptions' => [
+                                            'class' => ['btn btn-success'],
+                                            'type' => 'button',
+                                        ],
+                                        'encodeLabel' => false,
+                                        'dropdown' => [
+                                            'items' => [
+
+                                                [
+                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Pagi Hari',
+                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-pagi-hari-dengan-format-pdf', 'tanggal' => $model->tanggal],
+                                                    'linkOptions' => [
+                                                        'target' => '_blank'
+                                                    ]
+                                                ],
+                                            ],
+                                            'encodeLabels' => false,
+                                        ],
+                                    ]),
+                                ],
+                            ]
+                        ],
+                    ])
                     ?>
 
-                    <?=
-                    Html::a(FAS::icon(FAS::_FILE_PDF) . ' PDF',
-                        ['kehadiran-di-mesin-absensi/export-laporan-harian-ke-pdf', 'tanggal' => $model->tanggal],
-                        ['class' => 'btn btn-success', 'target' => '_blank'])
-                    ?>
+
                 </div>
 
                 <?php
@@ -46,67 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'tableOptions' => [
                         'class' => 'card-table table table-sm small'
                     ],
-                    'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'nama',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'nik',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'menjabat',
-                            'format' => 'raw',
-                            'value' => function ($model) {
-                                $temp = "";
-                                if (!empty($model['menjabat'])) {
-                                    $tempArray = explode(",", $model['menjabat']);
-                                    $temp = array_map(function ($element) {
-                                        $breakingChain = explode("->", $element);
-                                        return $breakingChain[1] . ' : ' . end($breakingChain);
-                                    }, $tempArray);
-                                    $temp = implode('<br/>', $temp);
-                                }
-                                return $temp;
-                            }
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'aktual_masuk',
-                            'format' => 'datetime'
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'aktual_pulang',
-                            'format' => 'datetime'
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'lama_waktu_bekerja',
-                            'format' => 'time'
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'status_masuk_kerja',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'jenis_izin',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'status_kehadiran',
-                        ],
-                        [
-                            'class' => '\yii\grid\DataColumn',
-                            'attribute' => 'keterangan',
-                        ],
-                    ]
+                    'columns' => require(__DIR__ . '/_columns_laporan_harian.php'),
                 ]);
                 ?>
 

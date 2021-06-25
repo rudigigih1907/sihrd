@@ -189,7 +189,7 @@ SQL;
         $sql = <<<SQL
         SELECT karyawan.nama                                               AS nama,
                karyawan.nomor_induk_karyawan                               AS nik,
-               GROUP_CONCAT(struktur_organisasi.path)                      AS menjabat,
+               GROUP_CONCAT(struktur_organisasi.kode_path)                 AS kode_menjabat,
                aktual_masuk,
                aktual_pulang,
                TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,
@@ -207,12 +207,12 @@ SQL;
                  LEFT JOIN karyawan_struktur_organisasi ON karyawan.id = karyawan_struktur_organisasi.karyawan_id
                  # LEFT JOIN struktur_organisasi ON karyawan_struktur_organisasi.struktur_organisasi_id = struktur_organisasi.id
                  LEFT JOIN (
-            WITH RECURSIVE reporting_chain(id, nama, path) AS (
-                SELECT id, nama, nama
+            WITH RECURSIVE reporting_chain(id, nama, kode_path) AS (
+                SELECT id, nama, CAST(kode AS CHAR (10000))
                 FROM struktur_organisasi
                 WHERE parent_id IS NULL
                 UNION ALL
-                SELECT oc.id, oc.nama, CONCAT(rc.path, '->', oc.nama)
+                SELECT oc.id, oc.nama, CONCAT(rc.kode_path, '->', oc.kode)
                 FROM reporting_chain rc
                          JOIN struktur_organisasi oc ON rc.id = oc.parent_id)
             SELECT *

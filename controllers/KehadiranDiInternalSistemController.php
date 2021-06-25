@@ -6,6 +6,7 @@ use app\models\form\ImportKehadiranMasukDiInternalSistemAbsensi;
 use app\models\form\LaporanHarianAbsensi;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
+use kartik\mpdf\Pdf;
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\base\Model;
@@ -15,6 +16,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -287,6 +289,30 @@ class KehadiranDiInternalSistemController extends Controller {
             'model' => $model
         ]);
 
+    }
+
+    /**
+     * @param $tanggal
+     * @return string
+     * @throws HttpException
+     * @throws yii\db\Exception
+     */
+    public function actionExportLaporanHarianPagiHariDenganFormatPdf($tanggal){
+
+        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($tanggal)) {
+            try {
+                $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
+                $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
+                $pdf->content = $this->renderPartial('_pdf_laporan_pagi_hari', [
+                    'records' => $records,
+                    'tanggal' => $tanggal,
+                ]);
+                return $pdf->render();
+            } catch (NotFoundHttpException $e) {
+                return $e->getMessage();
+            }
+        }
+        throw new HttpException(400, 'Model is not found');
     }
 
 

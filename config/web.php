@@ -186,6 +186,75 @@ $config = [
             // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
+        'pdf' => [
+            'class' => kartik\mpdf\Pdf::class,
+            'format' => kartik\mpdf\Pdf::FORMAT_A4,
+            'orientation' => kartik\mpdf\Pdf::ORIENT_PORTRAIT,
+            'destination' => kartik\mpdf\Pdf::DEST_BROWSER,
+            'cssFile' => '@webroot/css/pdf-report.css',
+            'methods' => [
+                'SetHeader' => ['TRESNAMUDA GROUP'],
+                'SetFooter' => ['{PAGENO}'],
+            ],
+            'options' => [
+                'showWatermarkText' => true
+            ]
+        ],
+        'pdfDenganHeaderDariAplikasi' => [
+            'class' => kartik\mpdf\Pdf::class,
+            'format' => kartik\mpdf\Pdf::FORMAT_A4,
+            'orientation' => kartik\mpdf\Pdf::ORIENT_PORTRAIT,
+            'destination' => kartik\mpdf\Pdf::DEST_BROWSER,
+            'cssFile' => '@webroot/css/pdf-report.css',
+            'methods' => [
+                'SetHTMLHeader' => widgets\PdfHtmlHeader::widget(), # FAILED
+                'SetDisplayMode' => 'fullpage',
+                'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow'
+            ],
+            'marginTop' => '32',
+            'marginHeader' => '5'
+        ],
+        'pdfDenganMinimalMargin' => [
+            'class' => kartik\mpdf\Pdf::class,
+            'format' => kartik\mpdf\Pdf::FORMAT_A4,
+            'orientation' => kartik\mpdf\Pdf::ORIENT_PORTRAIT,
+            'destination' => kartik\mpdf\Pdf::DEST_BROWSER,
+            'cssFile' => '@webroot/css/pdf-report.css',
+            'methods' => [
+                'SetDisplayMode' => 'fullpage',
+                'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow'
+            ],
+            'marginTop' => '2',
+            'marginLeft' => '2',
+            'marginBottom' => '4',
+            'marginRight' => '2',
+        ],
+        'pdfDenganMinimalMarginJugaHeaderDariAplikasi' => [
+            'class' => kartik\mpdf\Pdf::class,
+            'format' => kartik\mpdf\Pdf::FORMAT_A4,
+            'orientation' => kartik\mpdf\Pdf::ORIENT_LANDSCAPE,
+            'destination' => kartik\mpdf\Pdf::DEST_BROWSER,
+            'cssFile' => '@webroot/css/pdf-report.css',
+            'methods' => [
+                'SetHTMLHeader' => widgets\PdfHtmlHeader::widget(), # FAILED
+                'SetDisplayMode' => 'fullpage',
+                'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow'
+            ],
+            'marginTop' => '32',
+            'marginHeader' => '5',
+            'marginLeft' => '2',
+            'marginBottom' => '4',
+            'marginRight' => '2',
+        ],
+        'pdfDenganHeaderTercetakDariKertasnyaLangsung' => [
+            'class' => kartik\mpdf\Pdf::class,
+            'format' => kartik\mpdf\Pdf::FORMAT_A4,
+            'orientation' => kartik\mpdf\Pdf::ORIENT_PORTRAIT,
+            'destination' => kartik\mpdf\Pdf::DEST_BROWSER,
+            'cssFile' => '@webroot/css/pdf-report.css',
+            'marginTop' => '50',
+            'marginHeader' => '5'
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'BDJXVhHOg0ZurNKLqJ2a_keyCpeT4DRv',

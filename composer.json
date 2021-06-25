@@ -1,9 +1,9 @@
 {
-    "name": "yiisoft/yii2-app-basic",
-    "description": "Yii 2 Basic Project Template",
-    "keywords": ["yii2", "framework", "basic", "project template"],
-    "homepage": "http://www.yiiframework.com/",
-    "type": "project",
+    "name": "ahmadfadlydziljalal/sihrd",
+    "description": "Sistem Informasi HRD",
+    "keywords": ["SIHRD", "sistem", "hrd"],
+    "homepage": "http://rayakreasi.xyz/",
+    "type": "kerjaan",
     "license": "BSD-3-Clause",
     "support": {
         "issues": "https://github.com/yiisoft/yii2/issues?state=open",
@@ -27,7 +27,8 @@
         "kartik-v/yii2-datecontrol": "@dev",
         "wbraganca/yii2-dynamicform": "dev-dev-dzil",
         "unclead/yii2-multiple-input": "~2.0",
-        "yii2tech/spreadsheet": "1.0.1"
+        "yii2tech/spreadsheet": "1.0.1",
+        "kartik-v/yii2-mpdf": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
