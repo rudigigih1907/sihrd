@@ -8,12 +8,11 @@
 
 
 use app\components\renderers\ListRenderer;
+use kartik\widgets\ActiveForm;
 use rmrevin\yii\fontawesome\FAS;
 use unclead\multipleinput\TabularColumn;
 use unclead\multipleinput\TabularInput;
-use kartik\widgets\ActiveForm;
 use yii\bootstrap4\Html;
-use yii\web\View;
 
 $this->title = 'Manage PTKP: ' . $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Karyawan', 'url' => ['index']];
@@ -28,6 +27,8 @@ $this->params['breadcrumbs'][] = 'Update';
         <?php
         $form = ActiveForm::begin([
             'id' => 'tabular-form',
+            'type' => ActiveForm::TYPE_HORIZONTAL,
+            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL],
             'enableAjaxValidation' => true,
             'enableClientValidation' => false,
             'validateOnChange' => false,
@@ -39,132 +40,129 @@ $this->params['breadcrumbs'][] = 'Update';
         <?= $form->errorSummary($model) ?>
         <div class="table-responsive">
 
-            <div class="card-body">
-                <?php
-                echo TabularInput::widget([
-                    'options' => [
-                        'class' => 'card-table table'
-                    ],
-                    'id' => 'some-id',
-                    'rendererClass' => ListRenderer::class,
-                    'models' => $models,
-                    'layoutConfig' => [
-                        'offsetClass' => 'offset-3',
-                        'labelClass' => 'col-sm-4 col-form-label',
-                        'wrapperClass' => 'col-sm-8',
-                        'errorClass' => 'offset-2 text-danger',
-                        'buttonActionClass' => '',
-                    ],
+            <?php
+            echo TabularInput::widget([
+                'options' => [
+                    'class' => 'card-table table'
+                ],
+                'id' => 'some-id',
+                'rendererClass' => \app\components\renderers\TableRenderer::class,
+                'models' => $models,
+                /*'layoutConfig' => [
+                    'offsetClass' => 'offset-3',
+                    'labelClass' => 'col-sm-4 col-form-label',
+                    'wrapperClass' => 'col-sm-8',
+                    'errorClass' => 'offset-2 text-danger',
+                    'buttonActionClass' => '',
+                ],*/
 
-                    'addButtonPosition' => TabularInput::POS_FOOTER,
-                    'addButtonOptions' => [
-                        'class' => 'btn btn-block btn-success',
-                        'label' => '<i class="fas fa-plus"></i>'
+                'addButtonPosition' => TabularInput::POS_FOOTER,
+                'addButtonOptions' => [
+                    'class' => 'btn btn-block btn-success',
+                    'label' => '<i class="fas fa-plus"></i>'
+                ],
+                'removeButtonOptions' => [
+                    'class' => 'btn btn-block btn-danger',
+                    'label' => '<i class="fas fa-trash"></i>'
+                ],
+                'cloneButtonOptions' => [
+                    'class' => 'btn btn-block btn-secondary',
+                    'label' => '<i class="fas fa-copy"></i>'
+                ],
+                'allowEmptyList' => false,
+                'attributeOptions' => [
+                    'enableAjaxValidation' => true,
+                    'enableClientValidation' => false,
+                    'validateOnChange' => false,
+                    'validateOnSubmit' => true,
+                    'validateOnBlur' => false,
+                ],
+                'columns' => [
+                    [
+                        'name' => 'id',
+                        'title' => 'ID',
+                        'enableError' => true,
+                        'type' => TabularColumn::TYPE_HIDDEN_INPUT,
                     ],
-                    'removeButtonOptions' => [
-                        'class' => 'btn btn-block btn-danger',
-                        'label' => '<i class="fas fa-trash"></i>'
+                    [
+                        'name' => 'karyawan_id',
+                        'title' => 'Karyawan',
+                        'enableError' => true,
+                        'defaultValue' => $model->id,
+                        'type' => TabularColumn::TYPE_HIDDEN_INPUT,
                     ],
-                    'cloneButtonOptions' => [
-                        'class' => 'btn btn-block btn-secondary',
-                        'label' => '<i class="fas fa-copy"></i>'
-                    ],
-                    'allowEmptyList' => false,
-                    'attributeOptions' => [
-                        'enableAjaxValidation' => true,
-                        'enableClientValidation' => false,
-                        'validateOnChange' => false,
-                        'validateOnSubmit' => true,
-                        'validateOnBlur' => false,
-                    ],
-                    'columns' => [
-                        [
-                            'name' => 'id',
-                            'title' => 'ID',
-                            'enableError' => true,
-                            'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                        ],
-                        [
-                            'name' => 'karyawan_id',
-                            'title' => 'Karyawan',
-                            'enableError' => true,
-                            'defaultValue' => $model->id,
-                            'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                        ],
-                        [
-                            'name' => 'hubungan_ptkp_id',
-                            'title' => 'Hubungan PTKP',
-                            'type' => kartik\select2\Select2::class,
-                            'enableError' => true,
+                    [
+                        'name' => 'hubungan_ptkp_id',
+                        'title' => 'Hubungan PTKP',
+                        'type' => kartik\select2\Select2::class,
+                        'enableError' => true,
+                        'options' => [
+                            'data' => app\models\HubunganPtkp::mapIDToNama(),
                             'options' => [
-                                'data' => app\models\HubunganPtkp::mapIDToNama(),
-                                'options' => [
-                                    'prompt' => '-'
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'dropdownAutoWidth' => true,
-                                    'placeholder' => " = "
-                                ]
+                                'prompt' => '-'
                             ],
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'dropdownAutoWidth' => true,
+                                'placeholder' => " = "
+                            ]
                         ],
-                        [
-                            'name' => 'nama_tanggungan',
-                            'title' => 'Nama Tanggungan',
-                            'enableError' => true,
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
-                        ],
-                        [
-                            'name' => 'tempat_lahir',
-                            'title' => 'Tempat Lahir',
-                            'enableError' => true,
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
-                        ],
-                        [
-                            'name' => 'tanggal_lahir',
-                            'type' => \kartik\date\DatePicker::class,
-                            'title' => 'Tanggal Lahir',
-                            'enableError' => true,
-                            'options' => [
-                                'type' => \kartik\date\DatePicker::TYPE_INPUT,
-                                'pluginOptions' => [
-                                    'format' => 'dd-mm-yyyy',
-                                    'todayHighlight' => true
-                                ]
-                            ],
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
-                        ],
-                        [
-                            'name' => 'terhitung_sebagai_ptkp',
-                            'title' => 'Terhitung PTKP',
-                            'type'  => 'dropDownList',
-                            'items' => \app\models\KaryawanPtkp::optsTerhitungSebagaiPtkp(),
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
-                        ],
-                        [
-                            'name' => 'batal_ptkp_id',
-                            'title' => 'Alasan Tidak Terhitung',
-                            'enableError' => true,
-                            'type' => kartik\select2\Select2::class,
-                            'options' => [
-                                'data' => app\models\BatalPtkp::mapIDToNama(),
-                                'options' => [
-                                    'prompt' => '-'
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'dropdownAutoWidth' => true,
-                                    'placeholder' => " = "
-                                ]
-                            ],
-                            'errorOptions' => ['class' => 'help-block invalid-feedback']
-                        ],
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
                     ],
-                ]);
-                ?>
-            </div>
-
+                    [
+                        'name' => 'nama_tanggungan',
+                        'title' => 'Nama Tanggungan',
+                        'enableError' => true,
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                    ],
+                    [
+                        'name' => 'tempat_lahir',
+                        'title' => 'Tempat Lahir',
+                        'enableError' => true,
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                    ],
+                    [
+                        'name' => 'tanggal_lahir',
+                        'type' => \kartik\date\DatePicker::class,
+                        'title' => 'Tanggal Lahir',
+                        'enableError' => true,
+                        'options' => [
+                            'type' => \kartik\date\DatePicker::TYPE_INPUT,
+                            'pluginOptions' => [
+                                'format' => 'dd-mm-yyyy',
+                                'todayHighlight' => true
+                            ]
+                        ],
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                    ],
+                    [
+                        'name' => 'terhitung_sebagai_ptkp',
+                        'title' => 'Terhitung PTKP',
+                        'type' => 'dropDownList',
+                        'items' => \app\models\KaryawanPtkp::optsTerhitungSebagaiPtkp(),
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                    ],
+                    [
+                        'name' => 'batal_ptkp_id',
+                        'title' => 'Alasan Tidak Terhitung',
+                        'enableError' => true,
+                        'type' => kartik\select2\Select2::class,
+                        'options' => [
+                            'data' => app\models\BatalPtkp::mapIDToNama(),
+                            'options' => [
+                                'prompt' => '-'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'dropdownAutoWidth' => true,
+                                'placeholder' => " = "
+                            ]
+                        ],
+                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                    ],
+                ],
+            ]);
+            ?>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
                     <?= Html::submitButton(FAS::icon(FAS::_SAVE) . ' Save', ['class' => 'btn btn-primary']) ?>

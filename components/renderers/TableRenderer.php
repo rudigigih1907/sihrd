@@ -32,7 +32,7 @@ class TableRenderer extends \unclead\multipleinput\renderers\TableRenderer
         Html::addCssClass($options, 'multiple-input-list');
 
         if ($this->isBootstrapTheme()) {
-            Html::addCssClass($options, 'card-table table table-sm'); //  table-renderer
+            Html::addCssClass($options, 'card-table table'); //  table-renderer
         }
 
         $content = Html::tag('table', implode("\n", $content), $options);
