@@ -25,7 +25,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
     <div class="kehadiran-di-internal-sistem-index">
         <div class="card shadow">
 
-            <div class="table-responsive pt-1">
+            <div class="table-responsive">
                 <?php
                 $form = ActiveForm::begin([
                     'id' => 'tabular-form',
@@ -71,12 +71,15 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
 
                             ],
                             [
-                                'title' => 'Jadwal Kerja',
+                                'title' => 'Jdw Kerja',
                                 'name' => 'readonlyJadwalKerja',
                                 'options' => [
                                     'readonly' => true,
-                                    'class' => 'readonly'
-                                ]
+                                    'class' => 'readonly text-small'
+                                ],
+                                'columnOptions' => [
+                                    'style' => 'width: 2px;',
+                                ],
                             ],
 
                             [
@@ -94,11 +97,9 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                                     'class' => 'readonly'
                                 ],
                                 'columnOptions' => [
-                                    'style' => 'width: 85px;',
+                                    'style' => 'width: 90px;',
                                 ],
                             ],
-
-
                             [
                                 'name' => 'jam_kerja_id',
                                 'title' => 'Jam Kerja',
@@ -134,7 +135,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                                     'class' => 'readonly ketentuan-masuk'
                                 ],
                                 'columnOptions' => [
-                                    'style' => 'width: 162px;',
+                                    'style' => 'width: 182px;',
                                 ],
                             ],
                             [
@@ -152,7 +153,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                                     'class' => 'readonly ketentuan-pulang'
                                 ],
                                 'columnOptions' => [
-                                    'style' => 'width: 162px;',
+                                    'style' => 'width: 182px;',
                                 ],
                             ],
                             [
@@ -183,7 +184,7 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                                 'enableError' => true,
                                 'errorOptions' => ['class' => 'help-block invalid-feedback'],
                                 'columnOptions' => [
-                                    'style' => 'width: 162px;',
+                                    'style' => 'width: 194px;',
                                 ],
                                 'type' => kartik\widgets\DateTimePicker::class,
                             ],

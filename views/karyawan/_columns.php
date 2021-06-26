@@ -167,6 +167,13 @@ return [
     ],*/
     [
         'class' => 'yii\grid\ActionColumn',
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([
+                $action,
+                'id' => $model->id,
+                'page' => Yii::$app->request->getQueryParam('page', null)
+            ]);
+        },
         'template' => "{all}",
         'contentOptions' => [
             'style'=> [
@@ -177,6 +184,7 @@ return [
         'buttons' => [
             'all' => function ($url, $model, $key) {
                 return ButtonDropdown::widget([
+
                     'encodeLabel' => false, // if you're going to use html on the button label
                     'label' => '',
                     'direction' => 'left',
@@ -186,20 +194,20 @@ return [
                             '<h6 class="dropdown-header">'.$model->nama_panggilan.'</h6>',
                             [
                                 'label' => FAS::icon(FAS::_LIFE_RING) .' PTKP',
-                                'url' => ['manage-ptkp', 'id' => $key],
+                                'url' => ['manage-ptkp', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                             ],
                             [
                                 'label' => FAS::icon(FAS::_HANDSHAKE) .' Jabatan',
-                                'url' => ['manage-jabatan', 'id' => $key],
+                                'url' => ['manage-jabatan', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                             ],
                             '<div class="dropdown-divider"></div>',
                             [
                                 'label' => FAS::icon(FAS::_EYE) . ' ' . Yii::t('yii', 'View'),
-                                'url' => ['view', 'id' => $key],
+                                'url' => ['view', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                             ],
                             [
                                 'label' => FAS::icon(FAS::_PEN) . ' ' .Yii::t('yii', 'Update'),
-                                'url' => ['update', 'id' => $key],
+                                'url' => ['update', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                                 'visible' => true,  // if you want to hide an item based on a condition, use this
                             ],
                             [
@@ -210,7 +218,7 @@ return [
                                         'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
                                     ],
                                 ],
-                                'url' => ['delete', 'id' => $key],
+                                'url' => ['delete', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                                 'visible' => true,   // same as above
                             ],
                         ],

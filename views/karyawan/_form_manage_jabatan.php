@@ -113,15 +113,27 @@ $template = ['template' => '{input}{error}'];
                         'options' => [
                             'data' => app\models\StrukturOrganisasi::mapIDToNamaKhususJabatanSaja(),
                             'options' => [
-                                'prompt' => '-'
+                                'prompt' => '-',
+                                'style' => [
+                                    'width' => '2px'
+                                ],
+
                             ],
                             'pluginOptions' => [
                                 'allowClear' => true,
                                 'dropdownAutoWidth' => true,
-                                'placeholder' => "= Pilih Jabatan ="
+                                'placeholder' => "= Pilih Jabatan =",
+                                'style' => [
+                                    'width' => '2px'
+                                ],
                             ]
                         ],
-                        'errorOptions' => ['class' => 'help-block invalid-feedback']
+                        'errorOptions' => ['class' => 'help-block invalid-feedback'],
+                        'columnOptions' => [
+                            'style' => [
+                                'width' => '2px'
+                            ],
+                        ],
                     ],
                     [
                         'name' => 'nomor_surat_pengangkatan',

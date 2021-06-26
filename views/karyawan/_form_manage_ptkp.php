@@ -37,7 +37,6 @@ $this->params['breadcrumbs'][] = 'Update';
         ]);
         ?>
 
-        <?= $form->errorSummary($model) ?>
         <div class="table-responsive">
 
             <?php
