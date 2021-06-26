@@ -252,7 +252,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'columns' => [
                                         [
                                             'attribute' => 'karyawan_id',
-                                            'value' => 'karyawan.nama'
+                                            'value' => 'jenis_jabatan'
                                         ],
                                         [
                                             'attribute' => 'struktur_organisasi_id',

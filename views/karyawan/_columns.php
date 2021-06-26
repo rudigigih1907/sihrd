@@ -2,6 +2,7 @@
 
 use app\models\Karyawan;
 use rmrevin\yii\fontawesome\FAS;
+use yii\bootstrap4\ButtonDropdown;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -29,7 +30,7 @@ return [
         'value' => function($model){
             /** @var Karyawan $model */
             return $model->nama !== $model->nama_panggilan
-                ? Html::tag('span',$model->nama_panggilan , [ 'class' => 'badge badge-info'])
+                ? Html::tag('span',$model->nama_panggilan , [])
                 : Html::tag('span', 'Sama' , [ 'class' => 'badge badge-info'])
                 ;
         }
@@ -154,7 +155,7 @@ return [
 //                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
 //        }
 //    ],
-    [
+    /*[
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([
@@ -163,5 +164,65 @@ return [
                 'page' => Yii::$app->request->getQueryParam('page', null)
             ]);
         },
+    ],*/
+    [
+        'class' => 'yii\grid\ActionColumn',
+        'template' => "{all}",
+        'contentOptions' => [
+            'style'=> [
+                'padding' => '0'
+            ],
+            'class'=> 'text-center align-middle'
+        ],
+        'buttons' => [
+            'all' => function ($url, $model, $key) {
+                return ButtonDropdown::widget([
+                    'encodeLabel' => false, // if you're going to use html on the button label
+                    'label' => '',
+                    'direction' => 'left',
+                    'dropdown' => [
+                        'encodeLabels' => false, // if you're going to use html on the items' labels
+                        'items' => [
+                            '<h6 class="dropdown-header">'.$model->nama_panggilan.'</h6>',
+                            [
+                                'label' => FAS::icon(FAS::_LIFE_RING) .' PTKP',
+                                'url' => ['manage-ptkp', 'id' => $key],
+                            ],
+                            [
+                                'label' => FAS::icon(FAS::_HANDSHAKE) .' Jabatan',
+                                'url' => ['manage-jabatan', 'id' => $key],
+                            ],
+                            '<div class="dropdown-divider"></div>',
+                            [
+                                'label' => FAS::icon(FAS::_EYE) . ' ' . Yii::t('yii', 'View'),
+                                'url' => ['view', 'id' => $key],
+                            ],
+                            [
+                                'label' => FAS::icon(FAS::_PEN) . ' ' .Yii::t('yii', 'Update'),
+                                'url' => ['update', 'id' => $key],
+                                'visible' => true,  // if you want to hide an item based on a condition, use this
+                            ],
+                            [
+                                'label' => FAS::icon(FAS::_TRASH) . ' ' .Yii::t('yii', 'Delete'),
+                                'linkOptions' => [
+                                    'data' => [
+                                        'method' => 'post',
+                                        'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                                    ],
+                                ],
+                                'url' => ['delete', 'id' => $key],
+                                'visible' => true,   // same as above
+                            ],
+                        ],
+                        'options' => [
+                            'class' => 'dropdown-menu-right', // right dropdown
+                        ],
+                    ],
+                    'buttonOptions' => [
+                        'class' => 'btn-sm btn-outline-secondary'
+                    ]
+                ]);
+            }
+        ]
     ],
 ];   

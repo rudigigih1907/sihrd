@@ -114,10 +114,11 @@ $config = [
                 ],
             ],
             kartik\date\DatePicker::class => [
-                'type' => kartik\date\DatePicker::TYPE_COMPONENT_PREPEND,
+                'type' => kartik\date\DatePicker::TYPE_INPUT,
                 'pluginOptions' => [
                     'autoclose' => true,
-                    'format' => 'dd-mm-yyyy'
+                    'format' => 'dd-mm-yyyy',
+                    'todayHighlight' => true
                 ]
             ],
             kartik\widgets\DateTimePicker::class => [

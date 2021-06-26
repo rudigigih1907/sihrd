@@ -115,6 +115,11 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
                                 ]
                             ],
                             [
+                                'name' => 'tanggal',
+                                'title' => 'Tanggal',
+                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
+                            ],
+                            [
                                 'name' => 'ketentuan_masuk',
                                 'title' => 'Ketentuan Masuk',
                                 'enableError' => true,

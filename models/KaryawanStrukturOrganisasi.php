@@ -38,7 +38,7 @@ class KaryawanStrukturOrganisasi extends BaseKaryawanStrukturOrganisasi {
                 'id' => 'ID',
                 'karyawan_id' => 'Karyawan',
                 'struktur_organisasi_id' => 'Struktur Organisasi',
-                'nomor_surat_pengangkatan' => 'Nomor Surat Pengangkatan',
+                'nomor_surat_pengangkatan' => 'No. Surat Pengangkatan',
                 'tanggal_aktif' => 'Tanggal Aktif',
                 'tanggal_berakhir' => 'Tanggal Berakhir',
                 'alasan_berakhir' => 'Alasan Berakhir',

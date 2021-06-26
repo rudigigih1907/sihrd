@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'buttons' => [
                             Html::a(FAS::icon(FAS::_PLUS_CIRCLE) . ' Tambah', ['create'], ['class' => 'btn btn-primary']),
-
                             ButtonDropdown::widget([
                                 'label' => FAS::icon(FAS::_FILE) . ' Laporan',
                                 'buttonOptions' => [
@@ -37,14 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'encodeLabel' => false,
                                 'dropdown' => [
                                     'items' => [
-
                                             [
                                                 'label' => FAS::icon(FAS::_FILE) . ' Data Untuk Mesin Absen',
                                                 'url' => [
                                                         'find-data-untuk-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
                                                 ],
                                             ],
-
                                     ],
                                     'encodeLabels' => false,
                                 ],

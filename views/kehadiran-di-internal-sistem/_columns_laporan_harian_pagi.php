@@ -23,9 +23,9 @@ return [
             $temp = "";
 
             if (!empty($model['kode_menjabat'])) {
-                $kodeMenjabat = explode(",", $model['kode_menjabat']);
-                $kode = app\components\helpers\ArrayHelper::getFirstAndLastElement($kodeMenjabat, 1);
-                $temp = implode("<br/>", $kode);
+//                $kodeMenjabat = explode(",", $model['kode_menjabat']);
+//                $kode = app\components\helpers\KaryawanHelper::getFirstAndLastElement($kodeMenjabat, 1);
+                $temp = \yii\helpers\Html::tag($model['menjabat']);
             }
             return $temp;
         }
@@ -53,6 +53,13 @@ return [
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'jenis_izin',
+        'contentOptions' => [
+            'class' => 'text-nowrap'
+        ]
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'cuti_normatif',
         'contentOptions' => [
             'class' => 'text-nowrap'
         ]

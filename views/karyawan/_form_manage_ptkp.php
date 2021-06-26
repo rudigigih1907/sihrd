@@ -11,7 +11,7 @@ use app\components\renderers\ListRenderer;
 use rmrevin\yii\fontawesome\FAS;
 use unclead\multipleinput\TabularColumn;
 use unclead\multipleinput\TabularInput;
-use yii\bootstrap4\ActiveForm;
+use kartik\widgets\ActiveForm;
 use yii\bootstrap4\Html;
 use yii\web\View;
 

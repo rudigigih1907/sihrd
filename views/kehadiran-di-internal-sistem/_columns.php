@@ -54,6 +54,11 @@ return [
         'value' => 'jenisIzin.nama'
     ],
     [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'cuti_normatif_id',
+        'value' => 'cutiNormatif.nama'
+    ],
+    [
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
             return \yii\helpers\Url::to([

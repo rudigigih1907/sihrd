@@ -12,6 +12,7 @@ use Yii;
  * @property integer $id
  * @property integer $karyawan_id
  * @property integer $struktur_organisasi_id
+ * @property string $jenis_jabatan
  * @property string $nomor_surat_pengangkatan
  * @property string $tanggal_aktif
  * @property string $tanggal_berakhir
@@ -27,6 +28,13 @@ abstract class KaryawanStrukturOrganisasi extends \yii\db\ActiveRecord
 
 
     /**
+    * ENUM field values
+    */
+    const JENIS_JABATAN_UTAMA = 'Utama';
+    const JENIS_JABATAN_PEJABAT_SEMENTARA = 'Pejabat Sementara';
+    const JENIS_JABATAN_DI_PERBANTUKAN = 'Di-perbantukan';
+    var $enum_labels = false;
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -40,12 +48,19 @@ abstract class KaryawanStrukturOrganisasi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['karyawan_id', 'struktur_organisasi_id', 'nomor_surat_pengangkatan', 'tanggal_aktif'], 'required'],
             [['karyawan_id', 'struktur_organisasi_id'], 'integer'],
+            [['struktur_organisasi_id', 'nomor_surat_pengangkatan', 'tanggal_aktif'], 'required'],
+            [['jenis_jabatan'], 'string'],
             [['tanggal_aktif', 'tanggal_berakhir'], 'safe'],
             [['nomor_surat_pengangkatan', 'alasan_berakhir'], 'string', 'max' => 255],
             [['karyawan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Karyawan::className(), 'targetAttribute' => ['karyawan_id' => 'id']],
-            [['struktur_organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\StrukturOrganisasi::className(), 'targetAttribute' => ['struktur_organisasi_id' => 'id']]
+            [['struktur_organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\StrukturOrganisasi::className(), 'targetAttribute' => ['struktur_organisasi_id' => 'id']],
+            ['jenis_jabatan', 'in', 'range' => [
+                    self::JENIS_JABATAN_UTAMA,
+                    self::JENIS_JABATAN_PEJABAT_SEMENTARA,
+                    self::JENIS_JABATAN_DI_PERBANTUKAN,
+                ]
+            ]
         ];
     }
 
@@ -58,6 +73,7 @@ abstract class KaryawanStrukturOrganisasi extends \yii\db\ActiveRecord
             'id' => 'ID',
             'karyawan_id' => 'Karyawan ID',
             'struktur_organisasi_id' => 'Struktur Organisasi ID',
+            'jenis_jabatan' => 'Jenis Jabatan',
             'nomor_surat_pengangkatan' => 'Nomor Surat Pengangkatan',
             'tanggal_aktif' => 'Tanggal Aktif',
             'tanggal_berakhir' => 'Tanggal Berakhir',
@@ -92,5 +108,31 @@ abstract class KaryawanStrukturOrganisasi extends \yii\db\ActiveRecord
         return new \app\models\activequery\KaryawanStrukturOrganisasiQuery(get_called_class());
     }
 
+
+    /**
+     * get column jenis_jabatan enum value label
+     * @param string $value
+     * @return string
+     */
+    public static function getJenisJabatanValueLabel($value){
+        $labels = self::optsJenisJabatan();
+        if(isset($labels[$value])){
+            return $labels[$value];
+        }
+        return $value;
+    }
+
+    /**
+     * column jenis_jabatan ENUM value labels
+     * @return array
+     */
+    public static function optsJenisJabatan()
+    {
+        return [
+            self::JENIS_JABATAN_UTAMA => 'Utama',
+            self::JENIS_JABATAN_PEJABAT_SEMENTARA => 'Pejabat Sementara',
+            self::JENIS_JABATAN_DI_PERBANTUKAN => 'Di Perbantukan',
+        ];
+    }
 
 }

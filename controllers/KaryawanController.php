@@ -247,63 +247,166 @@ class KaryawanController extends Controller {
             [new KaryawanStrukturOrganisasi()] :
             $model->karyawanStrukturOrganisasis;
 
-        if ($request->isPost && $request->post('ajax') !== null) {
-
-            $data = $request->post('KaryawanStrukturOrganisasi', []);
-            foreach (array_keys($data) as $index) {
-                $models[$index] = new KaryawanStrukturOrganisasi();
-            }
-            Model::loadMultiple($models, $request->post());
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validateMultiple($models);
-
-        }
-
-        if ($request->isPost && $request->post('ajax') === null) {
+        if ($request->isPost) {
 
             $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+            $models = Tabular::createMultiple(
+                KaryawanStrukturOrganisasi::class, $models
+            );
 
-            $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
             Tabular::loadMultiple($models, $request->post());
-
             $deletedID = array_filter(array_diff($oldTransactionIds,
-                    array_filter(ArrayHelper::map($models, 'id', 'id'))));
-            $transaction = Yii::$app->db->beginTransaction();
+                array_filter(ArrayHelper::map($models, 'id', 'id'))));
 
-            try {
-                $flag = true;
-                if (!empty($deletedID)) {
-                    $number = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
-                    if ($number <= 0) {
-                        $flag = false;
+            if (Tabular::validateMultiple($models)) {
+
+                // Validasi Manual untuk mengecek jenis jabatan
+                $countJenisJabatan = array_count_values(
+                    array_column($request->post('KaryawanStrukturOrganisasi'), 'jenis_jabatan')
+                );
+
+                $errors = [];
+                if ((!array_key_exists(KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA, $countJenisJabatan))) {
+                    $errors[] = 'Minimal ada satu jabatan utama yang harus dimiliki seorang karyawan';
+                }
+
+                if (array_key_exists(KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA, $countJenisJabatan)) {
+                    if ($countJenisJabatan[KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA] > 1) {
+                        $errors[] = 'Hanya ada satu jabatan utama yang diperbolehkan seorang karyawan';
                     }
                 }
 
-                foreach ($models as $single) {
-                    $flag = $single->save(false) && $flag;
+                if (empty($errors)) {
 
-                    if ($flag === false) {
-                        break;
+                    $transaction = Yii::$app->db->beginTransaction();
+
+                    try {
+                        $flag = true;
+                        if (!empty($deletedID)) {
+                            $number = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
+                            if ($number <= 0) {
+                                $flag = false;
+                            }
+                        }
+
+                        foreach ($models as $single) {
+                            $single->karyawan_id = $model->id;
+                            $flag = $single->save(false) && $flag;
+
+                            if ($flag === false) {
+                                break;
+                            }
+                        }
+
+                        if ($flag) {
+                            $transaction->commit();
+                            Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) . " Jabatan : " . $model->nama . " berhasil di update. ");
+                        } else {
+                            $transaction->rollBack();
+                        }
+                    } catch (\yii\db\Exception $e) {
+                        $transaction->rollBack();
                     }
+
+                    return $this->redirect(['karyawan/view', 'id' => $id]);
                 }
 
-                if ($flag) {
-                    $transaction->commit();
-                    Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) . " Jabatan : " . $model->nama . " berhasil di update. ");
-                } else {
-                    $transaction->rollBack();
-                }
-            } catch (\yii\db\Exception $e) {
-                $transaction->rollBack();
+                // Tampilkan error message, karena ada record yang duplikat
+                Yii::$app->session->setFlash('error', "Beberapa rule masih belum sesuai. " .
+                    Html::ul($errors, ['item' => function ($item, $index) {
+                        return Html::tag('li', $item, []);
+                    }
+                    ])
+                );
             }
-
-            return $this->redirect(['karyawan/view', 'id' => $id]);
         }
 
         return $this->render('_form_manage_jabatan', [
             'model' => $model,
             'models' => $models,
         ]);
+
+
+//        if ($request->isPost && $request->post('ajax') !== null) {
+//            $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
+//            Tabular::loadMultiple($models, $request->post());
+//
+//            Yii::$app->response->format = Response::FORMAT_JSON;
+//            return ActiveForm::validateMultiple($models);
+//        }
+//
+//        // POST dan tidak ada error berdasarkan validasi ActiveForm
+//        if (Tabular::loadMultiple($models, $request->post())) {
+//
+//            // Validasi Manual untuk mengecek jenis jabatan
+//            $countJenisJabatan = array_count_values(
+//                array_column($request->post('KaryawanStrukturOrganisasi'), 'jenis_jabatan')
+//            );
+//            $errors = [];
+//            if ((!array_key_exists(KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA, $countJenisJabatan))) {
+//                $errors[] = 'Minimal ada satu jabatan utama yang harus dimiliki seorang karyawan';
+//            }
+//            if (array_key_exists(KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA, $countJenisJabatan)) {
+//                if ($countJenisJabatan[KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA] > 1) {
+//                    $errors[] = 'Hanya ada satu jabatan utama yang diperbolehkan seorang karyawan';
+//                }
+//            }
+//
+//            if (empty($errors)) {
+//
+//                $oldTransactionIds = ArrayHelper::map($models, 'id', 'id');
+//                $models = Tabular::createMultiple(KaryawanStrukturOrganisasi::class, $models);
+//                Tabular::loadMultiple($models, $request->post());
+//
+//                $deletedID = array_filter(array_diff($oldTransactionIds,
+//                    array_filter(ArrayHelper::map($models, 'id', 'id'))));
+//                $transaction = Yii::$app->db->beginTransaction();
+//
+//                try {
+//                    $flag = true;
+//                    if (!empty($deletedID)) {
+//                        $number = KaryawanStrukturOrganisasi::deleteAll(['id' => $deletedID]);
+//                        if ($number <= 0) {
+//                            $flag = false;
+//                        }
+//                    }
+//
+//                    foreach ($models as $single) {
+//                        $flag = $single->save(false) && $flag;
+//
+//                        if ($flag === false) {
+//                            break;
+//                        }
+//                    }
+//
+//                    if ($flag) {
+//                        $transaction->commit();
+//                        Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) . " Jabatan : " . $model->nama . " berhasil di update. ");
+//                    } else {
+//                        $transaction->rollBack();
+//                    }
+//                } catch (\yii\db\Exception $e) {
+//                    $transaction->rollBack();
+//                }
+//
+//                return $this->redirect(['karyawan/view', 'id' => $id]);
+//            }
+//
+//            // Tampilkan error message, karena ada record yang duplikat
+//            Yii::$app->session->setFlash('error', "Beberapa rule masih belum sesuai. " .
+//                Html::ul($errors, ['item' => function ($item, $index) {
+//                    return Html::tag('li', $item, []);
+//                }
+//                ])
+//            );
+//
+//
+//        }
+//
+//        return $this->render('_form_manage_jabatan', [
+//            'model' => $model,
+//            'models' => $models,
+//        ]);
 
     }
 

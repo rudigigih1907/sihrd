@@ -18,7 +18,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
     public function rules()
     {
         return [
-            [['id', 'jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id'], 'integer'],
+            [['id', 'jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id'], 'integer'],
             [['ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang'], 'safe'],
         ];
     }
@@ -71,6 +71,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
             'aktual_masuk' => $this->aktual_masuk,
             'aktual_pulang' => $this->aktual_pulang,
             'jenis_izin_id' => $this->jenis_izin_id,
+            'cuti_normatif_id' => $this->cuti_normatif_id,
         ]);
 
         return $dataProvider;

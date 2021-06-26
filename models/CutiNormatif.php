@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\traits\TraitMapIDToNama;
 use Yii;
 use \app\models\base\CutiNormatif as BaseCutiNormatif;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,8 @@ use yii\helpers\ArrayHelper;
  */
 class CutiNormatif extends BaseCutiNormatif
 {
+
+    use TraitMapIDToNama;
 
     public function behaviors()
     {

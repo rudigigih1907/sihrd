@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\form\ImportKehadiranMasukDiInternalSistemAbsensi;
+use app\models\form\ImportKehadiranDiInternalSistemAbsensi;
 use app\models\form\LaporanHarianAbsensi;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
@@ -15,6 +15,7 @@ use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -33,6 +34,7 @@ class KehadiranDiInternalSistemController extends Controller {
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                    'batch-update-jam-pulang-karyawan' => ['POST'],
                 ],
             ],
         ];
@@ -128,7 +130,6 @@ class KehadiranDiInternalSistemController extends Controller {
         return $this->redirect(['index', 'page' => $page]);
     }
 
-
     /**
      * Menampilkan Form Import data kehadiran
      * @return string|\yii\web\Response
@@ -136,19 +137,20 @@ class KehadiranDiInternalSistemController extends Controller {
     public function actionImportKehadiranMasuk() {
 
         $request = Yii::$app->request;
-        $model = new ImportKehadiranMasukDiInternalSistemAbsensi();
+        $model = new ImportKehadiranDiInternalSistemAbsensi();
 
         if ($model->load($request->post()) && $model->validate()) {
-            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-masuk', 'tanggal' => $model->tanggalMasuk]);
+            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-masuk', 'tanggal' => $model->tanggal]);
         }
 
-        return $this->render('_form_import_kehadiran_masuk', [
-            'model' => $model
+        return $this->render('_form_import_kehadiran', [
+            'model' => $model,
+            'title' =>"Import Kehadiran Masuk"
         ]);
     }
 
     /**
-     * Import data kehadiran Karyawan.
+     * PreviewImport data kehadiran Karyawan masuk kantor.
      * @param $tanggal
      * @return array|string|Response
      * @throws \Throwable
@@ -168,6 +170,7 @@ class KehadiranDiInternalSistemController extends Controller {
                     'jadwal_kerja_id' => $absenRecord['jadwal_kerja_id'],
                     'jadwal_kerja_hari_id' => $absenRecord['jadwal_kerja_hari_id'],
                     'jam_kerja_id' => $absenRecord['jam_kerja_id'],
+                    'tanggal' => $absenRecord['tanggal'],
                     'ketentuan_masuk' => $absenRecord['unformated_ketentuan_masuk'],
                     'ketentuan_pulang' => $absenRecord['unformated_ketentuan_pulang'],
                     'karyawan_id' => $absenRecord['karyawan_id'],
@@ -219,6 +222,7 @@ class KehadiranDiInternalSistemController extends Controller {
                         'jadwal_kerja_id' => $el['jadwal_kerja_id'],
                         'jadwal_kerja_hari_id' => $el['jadwal_kerja_hari_id'],
                         'jam_kerja_id' => $el['jam_kerja_id'],
+                        'tanggal' => $el['tanggal'],
                         'ketentuan_masuk' => $el['ketentuan_masuk'],
                         'ketentuan_pulang' => $el['ketentuan_pulang'],
                         'karyawan_id' => $el['karyawan_id'],
@@ -233,7 +237,7 @@ class KehadiranDiInternalSistemController extends Controller {
                 $transaction = $db->beginTransaction();
                 try {
                     $db->createCommand()->batchInsert(KehadiranDiInternalSistem::tableName(),
-                        ['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id', 'aktual_masuk'],
+                        ['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'tanggal' ,'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id', 'aktual_masuk'],
                         $modelsArray
                     )->execute();
 
@@ -266,6 +270,81 @@ class KehadiranDiInternalSistemController extends Controller {
             'models' => $models,
             'tanggal' => $tanggal
         ]);
+    }
+
+    public function actionImportKehadiranPulang() {
+
+        $request = Yii::$app->request;
+        $model = new ImportKehadiranDiInternalSistemAbsensi();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-pulang', 'tanggal' => $model->tanggal]);
+        }
+
+        return $this->render('_form_import_kehadiran', [
+            'model' => $model,
+            'title' => "Import Kehadiran Pulang"
+        ]);
+    }
+
+    /**
+     * Mengupdate data jam pulang karyawan.
+     *
+     * 1. Dari mesin absensi, export data terakhir pada tanggal tertentu. (DONE)
+     * 2. Hasil file berupa excel kemudian di import masuk ke dalam table `kehadiran_di_mesin_absensi`.  (DONE)
+     * 3. Tarik lagi data dari  `kehadiran_di_mesin_absensi` kemudian di previewkan
+     *
+     *
+     *
+     * @param $tanggal
+     * @return array|string|Response
+     * @throws \Throwable
+     */
+    public function actionPreviewImportKehadiranPulang($tanggal) {
+
+        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal);
+        return $this->render('_preview_import_kehadiran_pulang', [
+            'models' => $models,
+            'tanggal' => $tanggal
+        ]);
+
+    }
+
+
+    /**
+     * @param $tanggal
+     * @return Response
+     * @throws \Throwable
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
+    public function actionBatchUpdateJamPulangKaryawan($tanggal){
+
+        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal);
+        $connection = KehadiranDiInternalSistem::getDb();
+        $transaction = $connection->beginTransaction();
+
+        try {
+            foreach ($models as $model) {
+                $connection->createCommand()->update(KehadiranDiInternalSistem::tableName(),[
+                    'aktual_masuk' => $model['aktual_masuk'],
+                    'aktual_pulang' => $model['aktual_pulang'],
+                ],[
+                    'karyawan_id'=> $model['karyawan_id'],
+                    'tanggal' => $model['tanggal_scan'],
+                ])->execute();
+            }
+
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+        return $this->redirect('index');
     }
 
     /**
@@ -301,8 +380,6 @@ class KehadiranDiInternalSistemController extends Controller {
     public function actionExportLaporanHarianPagiHariDenganFormatPdf($tanggal){
 
         if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($tanggal)) {
-
-            $summary = [];
 
             try {
                 $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;

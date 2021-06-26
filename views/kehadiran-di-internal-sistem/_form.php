@@ -41,6 +41,13 @@ use yii\helpers\Html;
                         'prompt' => "-"
                 ]
             ]) ?>
+
+            <?= $form->field($model, 'cuti_normatif_id')->widget(\kartik\select2\Select2::class,[
+                'data' => \app\models\CutiNormatif::mapIDToNama(),
+                'options' => [
+                    'prompt' => "-"
+                ]
+            ]) ?>
         </div>
 
         <div class="card-footer">
