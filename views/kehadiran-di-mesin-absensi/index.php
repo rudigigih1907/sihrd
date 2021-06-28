@@ -3,7 +3,7 @@
 use rmrevin\yii\fontawesome\FAS;
 use yii\bootstrap4\ButtonDropdown;
 use yii\bootstrap4\ButtonToolbar;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\KehadiranDiMesinAbsensiSearch */
@@ -81,9 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__ . '/_columns.php'),
-                'tableOptions' => [
-                    'class' => 'card-table table table-sm small'
-                ]
+
             ]);
         } catch (Exception $e) {
             echo $e->getMessage();

@@ -118,18 +118,18 @@ return [
                 : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-warning']);
         }
     ],
-    // [
-    // 'class'=>'\yii\grid\DataColumn',
-    // 'attribute'=>'alasan_berhenti_bekerja',
-    // ],
-    // [
-    // 'class'=>'\yii\grid\DataColumn',
-    // 'attribute'=>'created_at',
-    // ],
-    // [
-    // 'class'=>'\yii\grid\DataColumn',
-    // 'attribute'=>'updated_at',
-    // ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'alasan_berhenti_bekerja',
+    ],
+//     [
+//     'class'=>'\yii\grid\DataColumn',
+//     'attribute'=>'created_at',
+//     ],
+//     [
+//     'class'=>'\yii\grid\DataColumn',
+//     'attribute'=>'updated_at',
+//     ],
     // [
     // 'class'=>'\yii\grid\DataColumn',
     // 'attribute'=>'created_by',
@@ -138,23 +138,23 @@ return [
     // 'class'=>'\yii\grid\DataColumn',
     // 'attribute'=>'updated_by',
     // ],
-//    [
-//        'class' => '\yii\grid\DataColumn',
-//        'label' => 'Jabatan',
-//        'headerOptions' => [
-//            'class' => 'text-right'
-//        ],
-//        'contentOptions' => [
-//            'class' => 'text-right'
-//        ],
-//        'format' => 'raw',
-//        'value' => function ($model) {
-//            /** @var Karyawan $model */
-//            return empty($model->countKaryawanStrukturOrganisasis)
-//                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-secondary'])
-//                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
-//        }
-//    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'label' => 'Jabatan',
+        'headerOptions' => [
+            'class' => 'text-right'
+        ],
+        'contentOptions' => [
+            'class' => 'text-right'
+        ],
+        'format' => 'raw',
+        'value' => function ($model) {
+            /** @var Karyawan $model */
+            return empty($model->countKaryawanStrukturOrganisasis)
+                ? Html::tag('span', FAS::icon(FAS::_SAD_CRY), ['class' => 'text-secondary'])
+                : Html::tag('span', $model->countKaryawanStrukturOrganisasis, ['class' => 'text-primary font-weight-bold']);
+        }
+    ],
     /*[
         'class' => 'yii\grid\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
@@ -227,7 +227,7 @@ return [
                         ],
                     ],
                     'buttonOptions' => [
-                        'class' => 'btn-sm btn-outline-secondary'
+                        'class' => 'btn-sm btn-outline-primary'
                     ]
                 ]);
             }

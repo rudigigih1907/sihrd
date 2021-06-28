@@ -4,7 +4,9 @@
 namespace app\components\helpers;
 
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
+use yii\helpers\Json;
 use yii\web\HttpException;
 
 class KaryawanHelper extends \yii\helpers\ArrayHelper {
@@ -43,4 +45,43 @@ class KaryawanHelper extends \yii\helpers\ArrayHelper {
         return $newArray;
     }
 
+    private static function generatePathNode($array, $value = 'nama') {
+        $max = isset($array)
+            ? max(array_keys($array))
+            : null;
+
+        if(!is_null($max)){
+             return $array[$max][$value];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $dept
+     * @return array|null
+     */
+    public static function generatePathJabatanUtama($dept) {
+
+        if (isset($dept)) {
+
+            $data = ArrayHelper::map(Json::decode($dept, true), 'level', function ($element) {
+                return [
+                    'kode' => $element['kode'],
+                    'nama' => $element['nama'],
+                    'singkatan' => $element['singkatan'],
+                ];
+            }, 'tipe');
+
+            return [
+                'group' => self::generatePathNode($data['group']),
+                'perusahaan' => self::generatePathNode($data['perusahaan'], 'kode'),
+                'cabang' => self::generatePathNode($data['cabang'], 'singkatan'),
+                'departemen' => self::generatePathNode($data['departemen'], 'singkatan'),
+                'jabatan' => self::generatePathNode($data['jabatan']),
+            ];
+        }
+
+        return null;
+    }
 }

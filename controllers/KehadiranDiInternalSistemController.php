@@ -150,7 +150,7 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-     * PreviewImport data kehadiran Karyawan masuk kantor.
+     * Preview Import data kehadiran Karyawan masuk kantor.
      * @param $tanggal
      * @return array|string|Response
      * @throws \Throwable
@@ -272,6 +272,9 @@ class KehadiranDiInternalSistemController extends Controller {
         ]);
     }
 
+    /**
+     * @return string|Response
+     */
     public function actionImportKehadiranPulang() {
 
         $request = Yii::$app->request;
@@ -288,7 +291,7 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-     * Mengupdate data jam pulang karyawan.
+     * Preview data sebelum meng-update data jam pulang karyawan.
      *
      * 1. Dari mesin absensi, export data terakhir pada tanggal tertentu. (DONE)
      * 2. Hasil file berupa excel kemudian di import masuk ke dalam table `kehadiran_di_mesin_absensi`.  (DONE)
@@ -310,8 +313,8 @@ class KehadiranDiInternalSistemController extends Controller {
 
     }
 
-
     /**
+     * Batch update jam pulang karyawan
      * @param $tanggal
      * @return Response
      * @throws \Throwable
@@ -348,6 +351,7 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
+     * Tampilkan form untuk membuat laporan harian
      * @return string
      * @throws \yii\db\Exception
      */
@@ -357,7 +361,7 @@ class KehadiranDiInternalSistemController extends Controller {
         $model = new LaporanHarianAbsensi();
 
         if($model->load($request->post())){
-            $records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($model->tanggal);
+            $records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($model->tanggal);
             return $this->render('_preview_laporan_harian', [
                 'records' => $records,
                 'model' => $model,
@@ -371,20 +375,21 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
+     * Laporan Harian untuk kehadiran pagi
      * @param $tanggal
      * @return string
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    public function actionExportLaporanHarianPagiHariDenganFormatPdf($tanggal){
+    public function actionExportLaporanHarianPagiDenganFormatPdf($tanggal){
 
-        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianRawSql($tanggal)) {
+        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal)) {
 
             try {
                 $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
                 $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
-                $pdf->content = $this->renderPartial('_pdf_laporan_pagi_hari', [
+                $pdf->content = $this->renderPartial('_pdf_laporan_pagi', [
                     'records' => $records,
                     'tanggal' => $tanggal,
                 ]);
@@ -396,6 +401,24 @@ class KehadiranDiInternalSistemController extends Controller {
         throw new HttpException(400, 'Model is not found');
     }
 
+    public function actionExportLaporanHarianPerHariDenganFormatPdf($tanggal){
+
+        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal)) {
+
+            try {
+                $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
+                $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
+                $pdf->content = $this->renderPartial('_pdf_laporan_per_hari', [
+                    'records' => $records,
+                    'tanggal' => $tanggal,
+                ]);
+                return $pdf->render();
+            } catch (NotFoundHttpException $e) {
+                return $e->getMessage();
+            }
+        }
+        throw new HttpException(400, 'Model is not found');
+    }
 
     /**
      * Finds the KehadiranDiInternalSistem model based on its primary key value.

@@ -20,15 +20,8 @@ return [
             'class' => 'text-nowrap'
         ],
         'value' => function ($model) {
-            $temp = "";
-
-            if (!empty($model['menjabat'])) {
-                $kodeMenjabat = explode(",", $model['kode_menjabat']);
-                $menjabat = explode(",", $model['menjabat']);
-                $help = \app\components\helpers\KaryawanHelper::generateDept($kodeMenjabat, $menjabat);
-                $temp =  $help[0];
-            }
-            return $temp;
+            $data = app\components\helpers\KaryawanHelper::generatePathJabatanUtama($model['dept']);
+            return $data['perusahaan'] . ' ' . $data['cabang'] . ' ' . $data['departemen'];
         }
     ],
     [

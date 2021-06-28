@@ -24,10 +24,18 @@ $config = [
     'bootstrap' => ['log'],
     'container' => [
         'definitions' => [
+            yii\grid\SerialColumn::class => [
+                'contentOptions' => [
+                    'class' => 'text-right',
+                ],
+                'headerOptions' => [
+                    'class' => 'text-right',
+                ]
+            ],
             yii\grid\ActionColumn::class => app\components\grid\ActionColumn::class,
             yii\grid\GridView::class => [
                 'tableOptions' => [
-                    'class' => 'card-table table'
+                    'class' => 'card-table table table-striped'
                 ],
                 'headerRowOptions' => [
                     'class' => 'text-nowrap text-center'
@@ -36,13 +44,14 @@ $config = [
                     'class' => 'text-nowrap'
                 ],
                 'layout' =>
-                    '<div class="table-responsive">' .
+
                     '<div class="card-body p-0">' .
-                    "{items}" .
+                        '<div class="table-responsive">' .
+                            "{items}" .
+                        '</div>' .
                     '</div>' .
                     '<div class="card-footer pt-4 pb-2">' .
                     '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
-                    '</div>' .
                     '</div>'
             ],
             yii\widgets\DetailView::class => [
@@ -50,22 +59,31 @@ $config = [
                     'class' => 'card-table table'
                 ],
             ],
-            yii\data\Pagination::class => ['pageSize' => 10],
+            yii\data\Pagination::class => ['pageSize' => 5],
             yii\widgets\LinkPager::class => yii\bootstrap4\LinkPager::class,
             kartik\grid\GridView::class => [
                 'tableOptions' => [
-                    'class' => 'card-table table'
+                    'class' => 'card-table table table-striped'// Tambah table-responsive
                 ],
-                // 'layout' => "{items}\n <div class='d-flex justify-content-between'>{pager}{summary}</div>",
+                'headerRowOptions' => [
+                    'class' => 'text-nowrap text-center'
+                ],
+                'rowOptions' => [
+                    'class' => 'text-nowrap'
+                ],
+                'bordered' => false,
+                'responsive' => false, // Matikan responsive bawaan
+                'responsiveWrap' => false, // Matikan responsive bawaan
+                'resizableColumns' => false, // Matikan responsive bawaan
                 'panel' =>false,
                 'layout' =>
-                    '<div class="table-responsive">' .
                     '<div class="card-body p-0">' .
-                    "{items}" .
+                        '<div class="table-responsive">' .
+                            "{items}" .
+                        '</div>' .
                     '</div>' .
                     '<div class="card-footer pt-4 pb-2">' .
                     '<div class="d-flex justify-content-between align-items-baseline">' . "{pager}{summary}" . '</div>' .
-                    '</div>' .
                     '</div>'
             ],
             kartik\grid\ActionColumn::class => [

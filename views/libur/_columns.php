@@ -10,9 +10,10 @@ return [
         // 'attribute'=>'id',
     // ],
     [
-        'class'=>'\yii\grid\DataColumn',
+        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'tanggal',
-        'format' => 'date'
+        'format' => 'date',
+        'filterType' => \kartik\date\DatePicker::class
     ],
     [
         'class'=>'\yii\grid\DataColumn',

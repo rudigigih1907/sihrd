@@ -1,5 +1,8 @@
 <?php
 
+use app\models\KehadiranDiInternalSistem;
+use yii\helpers\Html;
+
 return [
     [
         'class' => 'yii\grid\SerialColumn',
@@ -20,14 +23,8 @@ return [
             'class' => 'text-nowrap'
         ],
         'value' => function ($model) {
-            $temp = "";
-
-            if (!empty($model['kode_menjabat'])) {
-//                $kodeMenjabat = explode(",", $model['kode_menjabat']);
-//                $kode = app\components\helpers\KaryawanHelper::getFirstAndLastElement($kodeMenjabat, 1);
-                $temp = \yii\helpers\Html::tag($model['menjabat']);
-            }
-            return $temp;
+            $data = app\components\helpers\KaryawanHelper::generatePathJabatanUtama($model['dept']);
+            return $data['perusahaan'] . ' ' . $data['cabang'] . ' ' . $data['departemen'];
         }
     ],
     [
@@ -47,8 +44,27 @@ return [
 
     [
         'class' => '\yii\grid\DataColumn',
-        'attribute' => 'status_masuk_kerja',
+        'attribute' => 'status_masuk_kerja_pada_pagi_hari',
         'label' => 'Status Masuk',
+        'format' => 'raw',
+        'value' => function ($model) {
+
+            $label = $model['status_masuk_kerja_pada_pagi_hari'];
+            switch ($label):
+                case KehadiranDiInternalSistem::STATUS_TERLAMBAT:
+                case  KehadiranDiInternalSistem::STATUS_BELUM_ADA_KABAR:
+                    $label = Html::tag('span', $label, ['class' => 'text-danger']);
+                    break;
+                case  KehadiranDiInternalSistem::STATUS_IZIN_TIDAK_MASUK:
+                case  KehadiranDiInternalSistem::STATUS_CUTI:
+                    $label = Html::tag('span', $label, ['class' => 'text-success']);
+                    break;
+                default:
+                    break;
+            endswitch;
+
+            return $label;
+        }
     ],
     [
         'class' => '\yii\grid\DataColumn',

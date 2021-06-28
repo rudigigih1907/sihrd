@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Url;
+
 use yii\helpers\Html;
-use yii\bootstrap4\Modal;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FAS;
 
 /* @var $this yii\web\View */

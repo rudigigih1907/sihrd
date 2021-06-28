@@ -33,8 +33,7 @@ use yii\helpers\Html;
             <?= $form->field($model, 'tipe')->dropDownList(\app\models\StrukturOrganisasi::optsTipe()) ?>
             <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 
-            <?php // $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
-
+            <?= $form->field($model, 'singkatan')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'kode')->textInput(['maxlength' => true])
                 ->hint("Ganti spasi dengan underscore")
             ?>

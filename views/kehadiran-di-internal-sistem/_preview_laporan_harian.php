@@ -53,8 +53,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'items' => [
 
                                                 [
-                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Pagi Hari',
-                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-pagi-hari-dengan-format-pdf', 'tanggal' => $model->tanggal],
+                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Pagi',
+                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-pagi-dengan-format-pdf', 'tanggal' => $model->tanggal],
+                                                    'linkOptions' => [
+                                                        'target' => '_blank'
+                                                    ]
+                                                ],
+                                                [
+                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Per Hari',
+                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-per-hari-dengan-format-pdf', 'tanggal' => $model->tanggal],
                                                     'linkOptions' => [
                                                         'target' => '_blank'
                                                     ]
@@ -68,8 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ])
                     ?>
-
-
                 </div>
 
                 <?php
@@ -79,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'pagination' => false
                     ]),
                     'tableOptions' => [
-                        'class' => 'card-table table table-sm small'
+                        'class' => 'card-table table table-striped table-responsive'
                     ],
                     'columns' => require(__DIR__ . '/_columns_laporan_harian.php'),
                 ]);
@@ -87,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['kehadiran-di-mesin-absensi/buat-laporan-harian'], ['class' => 'btn btn-secondary']) ?>
+                        <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['buat-laporan-harian'], ['class' => 'btn btn-secondary']) ?>
                     </div>
                 </div>
             </div>

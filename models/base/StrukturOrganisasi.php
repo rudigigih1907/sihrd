@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $parent_id
  * @property string $tipe
  * @property string $nama
+ * @property string $singkatan
  * @property string $alias
  * @property string $kode
  * @property integer $created_at
@@ -22,6 +23,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
+ * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
  * @property \app\models\StrukturOrganisasi $parent
  * @property \app\models\StrukturOrganisasi[] $strukturOrganisasis
  * @property string $aliasModel
@@ -70,9 +72,10 @@ abstract class StrukturOrganisasi extends \yii\db\ActiveRecord
     {
         return [
             [['parent_id'], 'integer'],
-            [['tipe', 'nama', 'kode'], 'required'],
+            [['tipe', 'nama', 'singkatan', 'kode'], 'required'],
             [['tipe'], 'string'],
             [['nama', 'alias'], 'string', 'max' => 255],
+            [['singkatan'], 'string', 'max' => 50],
             [['kode'], 'string', 'max' => 100],
             [['kode'], 'unique'],
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\StrukturOrganisasi::className(), 'targetAttribute' => ['parent_id' => 'id']],
@@ -97,6 +100,7 @@ abstract class StrukturOrganisasi extends \yii\db\ActiveRecord
             'parent_id' => 'Parent ID',
             'tipe' => 'Tipe',
             'nama' => 'Nama',
+            'singkatan' => 'Singkatan',
             'alias' => 'Alias',
             'kode' => 'Kode',
             'created_at' => 'Created At',
@@ -104,6 +108,14 @@ abstract class StrukturOrganisasi extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKaryawanStrukturOrganisasis()
+    {
+        return $this->hasMany(\app\models\KaryawanStrukturOrganisasi::className(), ['struktur_organisasi_id' => 'id']);
     }
 
     /**

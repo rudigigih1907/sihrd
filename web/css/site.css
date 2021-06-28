@@ -132,6 +132,26 @@ label{
     font-weight: 700;
 }
 
-.multiple-input-list tbody .form-group{
+.multiple-input-list tbody .form-group {
     margin-bottom: 0;
 }
+
+.table-fixes-last-column th:last-child{
+    background-color: #F3F4F6;
+}
+
+.table-fixes-last-column tr:nth-child(odd) td:last-child{
+    background-color: #F9FAFB;
+    border-top: 1px solid #fff;
+}
+
+.table-fixes-last-column tr:nth-child(even) td:last-child{
+    background-color: #F9FAFB;
+    border-top: 1px solid #fff;
+}
+
+.table-fixes-last-column td:last-child, .table-fixes-last-column th:last-child {
+    position: sticky;
+    right: 0;
+}
+

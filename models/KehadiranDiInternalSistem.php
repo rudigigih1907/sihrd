@@ -6,7 +6,6 @@ use app\models\base\KehadiranDiInternalSistem as BaseKehadiranDiInternalSistem;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -16,6 +15,17 @@ class KehadiranDiInternalSistem extends BaseKehadiranDiInternalSistem {
 
 
     const SCENARIO_INPUT_KEHADIRAN_MASUK = 'input-kehadiran-masuk';
+
+    const STATUS_MASUK_KERJA = 'Sesuai';
+    const STATUS_TIDAK_MASUK_KERJA = 'Tidak Masuk Kerja';
+    const STATUS_TERLAMBAT= 'Terlambat';
+    const STATUS_BELUM_ADA_KABAR= 'Belum Ada Kabar';
+    const STATUS_CUTI= 'Cuti';
+    const STATUS_IZIN_TIDAK_MASUK =  'Izin Tidak Masuk';
+
+    const STATUS_KEHADIRAN_MASUK_KERJA = 'Hadir';
+    const STATUS_TIDAK_HADIR_KERJA = 'Tidak Hadir';
+    const STATUS_MASUK_KERJA_TAPI_TIDAK_ABSEN_PULANG = 'Tidak Hadir, Tidak Ada Absen Pulang';
 
     public $readonlyJadwalKerja;
     public $readonlyJadwalKerjaHari;
@@ -213,6 +223,125 @@ SQL;
 
     }
 
+
+    public static function findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal) {
+
+        $sql = <<<SQL
+        SELECT base_karyawan.nama,
+       base_karyawan.dept,
+       base_karyawan.nik,
+       kehadiran.ketentuan_masuk,
+       kehadiran.ketentuan_pulang,
+       kehadiran.aktual_masuk,
+       kehadiran.aktual_pulang,
+       kehadiran.lama_waktu_bekerja,
+       kehadiran.status_masuk_kerja_pada_pagi_hari,
+       kehadiran.status_masuk_kerja,
+       kehadiran.jenis_izin,
+       kehadiran.cuti_normatif,
+       kehadiran.status_kehadiran
+FROM (
+         SELECT k.id                   AS id,
+                k.nama                 AS nama,
+                rc.path                AS dept,
+                k.nomor_induk_karyawan AS nik
+         FROM karyawan k
+                  LEFT JOIN (SELECT *
+                             FROM karyawan_struktur_organisasi kso
+                             WHERE kso.jenis_jabatan = :jenisJabatan) AS filter_kso_utama
+                            ON filter_kso_utama.karyawan_id = k.id
+                  LEFT JOIN (
+             WITH RECURSIVE reporting_chain(id, parent_id, nama, tipe, root, path, level) AS (
+                 SELECT id,                                   #id
+                        parent_id,
+                        nama,                                 #nama
+                        tipe,                                 #tipe
+                        CAST((CONCAT('{ "tipe":"', tipe, '","kode":"', kode, '","nama":"', nama,
+                                     '"}')) AS CHAR(100000)), #root
+                        CAST((CONCAT('"0" : { "tipe":"', lower(tipe),
+                            '","kode":"', kode,
+                            '","nama":"', nama,
+                            '","singkatan":"', singkatan,
+                            '","level":"', 0,
+                                     '"}')) AS CHAR(100000)), #path
+                        1
+                 FROM struktur_organisasi so
+                 WHERE parent_id IS NULL
+                 UNION ALL
+                 SELECT so.id,                                         #id
+                        so.parent_id,
+                        so.nama,                                       #nama
+                        so.tipe,                                       #tipe
+                        rc.root,                                       #root
+                        CONCAT(rc.path, ',',
+                               (CONCAT('"', (rc.level), '": {',
+                                   '"tipe":"', lower(so.tipe),
+                                   '","kode":"', so.kode,
+                                   '","nama":"', so.nama,
+                                   '","singkatan":"', so.singkatan,
+                                   '","level":"', rc.level + 1,
+                                   '"}'
+                               ))), #path
+                        rc.level + 1
+                 FROM reporting_chain rc
+                          JOIN struktur_organisasi so ON rc.id = so.parent_id)
+             SELECT id,
+                    parent_id,
+                    nama,
+                    tipe,
+                    (root)                   AS root,
+                    (CONCAT('{', path, '}')) AS path,
+                    level
+             FROM reporting_chain
+         ) AS rc ON rc.id = filter_kso_utama.struktur_organisasi_id
+         WHERE k.tanggal_berhenti_bekerja IS NULL
+     ) AS base_karyawan
+
+
+         LEFT JOIN (
+    SELECT kdis.id                                                     AS id,
+           k.id                                                        as karyawan_id,
+           ketentuan_masuk,
+           ketentuan_pulang,
+           aktual_masuk,
+           aktual_pulang,
+           TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,
+           CASE
+               WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
+               WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
+               WHEN (aktual_masuk IS NULL) THEN 'Belum Ada Kabar'
+               WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+               ELSE 'Sesuai' END                                       AS status_masuk_kerja_pada_pagi_hari,
+           CASE
+               WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
+               WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
+               WHEN (aktual_masuk IS NULL) AND (aktual_pulang IS NULL) THEN 'Tidak Masuk Kerja'
+               WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+               ELSE 'Sesuai' END                                       AS status_masuk_kerja,
+           ji.nama                                                     AS jenis_izin,
+           CASE
+               WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
+               WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
+               WHEN (aktual_masuk IS NOT NULL) AND (aktual_pulang IS NULL) THEN 'Tidak Hadir, Tidak Ada Absen Pulang'
+               WHEN (aktual_masuk IS NULL)     AND (aktual_pulang IS NULL) THEN 'Tidak Hadir'
+               ELSE 'Hadir' END                         AS status_kehadiran,
+           cn.nama                                                     as cuti_normatif,
+           keterangan
+    FROM kehadiran_di_internal_sistem kdis
+
+             LEFT JOIN karyawan k on kdis.karyawan_id = k.id
+             LEFT JOIN jenis_izin ji on kdis.jenis_izin_id = ji.id
+             LEFT JOIN cuti_normatif cn on kdis.cuti_normatif_id = cn.id
+
+    WHERE DATE(ketentuan_masuk) = :tanggal
+) AS kehadiran ON kehadiran.karyawan_id = base_karyawan.id;
+SQL;
+        return self::getDb()->createCommand($sql, [
+            ':tanggal' => $tanggal,
+            'jenisJabatan' => KaryawanStrukturOrganisasi::JENIS_JABATAN_UTAMA
+        ])->queryAll();
+
+    }
 
 
     public function behaviors() {

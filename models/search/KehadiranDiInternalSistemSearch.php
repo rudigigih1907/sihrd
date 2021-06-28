@@ -2,10 +2,10 @@
 
 namespace app\models\search;
 
+use app\models\KehadiranDiInternalSistem;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\KehadiranDiInternalSistem;
 
 /**
  * KehadiranDiInternalSistemSearch represents the model behind the search form about `app\models\KehadiranDiInternalSistem`.
@@ -15,19 +15,17 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id'], 'integer'],
-            [['ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang'], 'safe'],
+            [['ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang', 'tanggal'], 'safe'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,8 +37,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = KehadiranDiInternalSistem::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -72,6 +69,10 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
             'aktual_pulang' => $this->aktual_pulang,
             'jenis_izin_id' => $this->jenis_izin_id,
             'cuti_normatif_id' => $this->cuti_normatif_id,
+            'tanggal' =>
+                empty($this->tanggal)
+                    ? $this->tanggal
+                    : Yii::$app->formatter->asDate($this->tanggal, "php:Y-m-d"),
         ]);
 
         return $dataProvider;

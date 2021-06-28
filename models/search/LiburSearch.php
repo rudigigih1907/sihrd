@@ -62,7 +62,7 @@ class LiburSearch extends Libur
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'tanggal' => $this->tanggal,
+            'tanggal' => Yii::$app->formatter->asDate($this->tanggal, 'php:Y-m-d'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
