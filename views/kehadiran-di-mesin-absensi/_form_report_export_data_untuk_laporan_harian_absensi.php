@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="absensi-form">
     <div class="row">
-        <div class="col">
+        <div class="col-md-8 col-sm-12">
 
             <?php $form = ActiveForm::begin([
                 'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -35,7 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'tanggal')->widget(kartik\date\DatePicker::class); ?>
 
                 </div>
-
 
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">

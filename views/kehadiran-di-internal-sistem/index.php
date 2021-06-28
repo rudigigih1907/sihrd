@@ -67,6 +67,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Harian',
                                             'url' => ['create-laporan-harian'],
                                         ],
+                                        [
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Uang Kehadiran',
+                                            'url' => ['create-laporan-uang-kehadiran'],
+                                        ],
                                     ],
                                     'encodeLabels' => false,
                                 ],

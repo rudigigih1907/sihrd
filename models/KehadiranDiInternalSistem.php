@@ -301,7 +301,7 @@ FROM (
          LEFT JOIN (
     SELECT kdis.id                                                     AS id,
            k.id                                                        as karyawan_id,
-           ketentuan_masuk,
+           DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE) AS ketentuan_masuk,
            ketentuan_pulang,
            aktual_masuk,
            aktual_pulang,
@@ -310,13 +310,13 @@ FROM (
                WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
                WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
                WHEN (aktual_masuk IS NULL) THEN 'Belum Ada Kabar'
-               WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+               WHEN (aktual_masuk > DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE)) THEN 'Terlambat'
                ELSE 'Sesuai' END                                       AS status_masuk_kerja_pada_pagi_hari,
            CASE
                WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
                WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
                WHEN (aktual_masuk IS NULL) AND (aktual_pulang IS NULL) THEN 'Tidak Masuk Kerja'
-               WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
+               WHEN (aktual_masuk > DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE)) THEN 'Terlambat'
                ELSE 'Sesuai' END                                       AS status_masuk_kerja,
            ji.nama                                                     AS jenis_izin,
            CASE
@@ -332,6 +332,7 @@ FROM (
              LEFT JOIN karyawan k on kdis.karyawan_id = k.id
              LEFT JOIN jenis_izin ji on kdis.jenis_izin_id = ji.id
              LEFT JOIN cuti_normatif cn on kdis.cuti_normatif_id = cn.id
+             LEFT JOIN jam_kerja jk on kdis.jam_kerja_id = jk.id
 
     WHERE DATE(ketentuan_masuk) = :tanggal
 ) AS kehadiran ON kehadiran.karyawan_id = base_karyawan.id;
