@@ -91,10 +91,11 @@ return [
         'format' => 'raw',
         'value' => function ($model) {
 
-            $label = $model['status_masuk_kerja_pada_pagi_hari'];
+            $label = $model['status_masuk_kerja'];
             switch ($label):
                 case KehadiranDiInternalSistem::STATUS_TERLAMBAT:
-                case  KehadiranDiInternalSistem::STATUS_BELUM_ADA_KABAR:
+                case KehadiranDiInternalSistem::STATUS_TIDAK_MASUK_KERJA:
+                case KehadiranDiInternalSistem::STATUS_BELUM_ADA_KABAR:
                     $label = Html::tag('span', $label, ['class' => 'text-danger']);
                     break;
                 case  KehadiranDiInternalSistem::STATUS_IZIN_TIDAK_MASUK:
