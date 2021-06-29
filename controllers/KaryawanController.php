@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\AlamatKaryawan;
+use app\models\form\LaporanSeluruhBiodataKaryawan;
 use app\models\form\ReportExportDataUntukMesinAbsensi;
 use app\models\Karyawan;
 use app\models\KaryawanPtkp;
@@ -21,7 +22,6 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -553,7 +553,6 @@ class KaryawanController extends Controller {
         ]);
     }
 
-
     /**
      * @param null $page
      * @return array|void
@@ -584,6 +583,77 @@ class KaryawanController extends Controller {
             ? ['success', $files]
             : ['error', 'Error While uploading image, contact the system administrator' . $files["error"]];
     }
+
+    /**
+     * @param null $page
+     * @return string
+     */
+    public function actionLaporanBiodataSeluruhKaryawan($page = null) {
+        $model = new LaporanSeluruhBiodataKaryawan();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $data = Karyawan::findDataUntukBiodataSeluruhKaryawan($model->statusAktif);
+            return $this->render('_result_laporan_seluruh_biodata_karyawan', [
+                'data' => $data,
+                'statusAktif' => $model->statusAktif
+            ]);
+        }
+        return $this->render("_form_laporan_seluruh_biodata_karyawan", [
+            'model' => $model,
+            'page' => $page
+        ]);
+    }
+
+
+    /**
+     * @param $statusAktif
+     * @param $type
+     * @return string|Response
+     * @throws HttpException
+     */
+    public function actionExportLaporanBiodataSeluruhKaryawan($statusAktif, $type) {
+
+        $data = Karyawan::findDataUntukBiodataSeluruhKaryawan($statusAktif);
+        $error = null;
+        if ($data):
+            switch ($type):
+                case 'Excel' :
+
+                    try {
+                        $exporter = new Spreadsheet([
+                            'dataProvider' => new ArrayDataProvider([
+                                'models' => $data,
+                            ]),
+                            'columns' => [],
+                        ]);
+
+                        return $exporter->send("Seluruh Data Karyawan " . time() . '.xls');
+
+                    } catch (NotFoundHttpException $e) {
+                        $error = $e->getMessage();
+                    }
+
+                    break;
+                case 'Pdf':
+                    try {
+                        $exporter = Yii::$app->pdfDenganMinimalMargin;
+                        $exporter->filename ="Seluruh Data Karyawan " . time() . '.pdf';
+                        $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan', [
+                            'data' => $data,
+                        ]);
+                        return $exporter->render();
+                    } catch (NotFoundHttpException $e) {
+                        $error = $e->getMessage();
+                    }
+                    break;
+                default:
+                    break;
+            endswitch;
+        endif;
+        throw new HttpException(400, $error);
+    }
+
 
     /**
      * Finds the Karyawan model based on its primary key value.

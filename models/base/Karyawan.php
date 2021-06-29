@@ -67,6 +67,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     const PENDIDIKAN_TERAKHIR_SD = 'SD';
     const PENDIDIKAN_TERAKHIR_SMP = 'SMP';
     const PENDIDIKAN_TERAKHIR_SMA = 'SMA';
+    const PENDIDIKAN_TERAKHIR_D3 = 'D3';
     const PENDIDIKAN_TERAKHIR_S1 = 'S1';
     const PENDIDIKAN_TERAKHIR_S2 = 'S2';
     const PENDIDIKAN_TERAKHIR_S3 = 'S3';
@@ -100,7 +101,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'jenis_kelamin', 'agama_id', 'status_perkawinan_id', 'pendidikan_terakhir', 'jadwal_kerja_id'], 'required'],
+            [['nama', 'jenis_kelamin', 'agama_id', 'jadwal_kerja_id'], 'required'],
             [['tanggal_lahir', 'tanggal_mulai_bekerja', 'tanggal_berhenti_bekerja'], 'safe'],
             [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir', 'photo_identitas_diri'], 'string'],
             [['agama_id', 'status_perkawinan_id', 'alasan_berhenti_bekerja', 'jadwal_kerja_id'], 'integer'],
@@ -122,6 +123,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
                     self::PENDIDIKAN_TERAKHIR_SD,
                     self::PENDIDIKAN_TERAKHIR_SMP,
                     self::PENDIDIKAN_TERAKHIR_SMA,
+                    self::PENDIDIKAN_TERAKHIR_D3,
                     self::PENDIDIKAN_TERAKHIR_S1,
                     self::PENDIDIKAN_TERAKHIR_S2,
                     self::PENDIDIKAN_TERAKHIR_S3,
@@ -318,6 +320,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             self::PENDIDIKAN_TERAKHIR_SD => 'Sd',
             self::PENDIDIKAN_TERAKHIR_SMP => 'Smp',
             self::PENDIDIKAN_TERAKHIR_SMA => 'Sma',
+            self::PENDIDIKAN_TERAKHIR_D3 => 'D3',
             self::PENDIDIKAN_TERAKHIR_S1 => 'S1',
             self::PENDIDIKAN_TERAKHIR_S2 => 'S2',
             self::PENDIDIKAN_TERAKHIR_S3 => 'S3',

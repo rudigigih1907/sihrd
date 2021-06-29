@@ -47,7 +47,7 @@ class KaryawanSearch extends Karyawan
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC
+                    'nama' => SORT_ASC
                 ]
             ]
         ]);

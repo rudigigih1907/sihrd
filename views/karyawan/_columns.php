@@ -228,12 +228,15 @@ return [
                             ],
                         ],
                         'options' => [
-                            'class' => 'dropdown-menu-right', // right dropdown
+                            //'class' => 'dropdown-menu-right', // right dropdown
+                            'style' => [
+                                'z-index' => '100000'
+                            ]
                         ],
                     ],
                     'buttonOptions' => [
                         'class' => 'btn-sm btn-outline-primary'
-                    ]
+                    ],
                 ]);
             }
         ]

@@ -133,6 +133,35 @@ class Karyawan extends BaseKaryawan {
 
     }
 
+    public static function findDataUntukBiodataSeluruhKaryawan($statusAktif) {
+
+        $query = (new \yii\db\Query())
+            ->select("k.* ")
+            ->from('hrd.karyawan k')
+        ;
+
+        switch ($statusAktif):
+            case self::AKTIF:
+                $query->where([
+                    'IS', 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            case self::TIDAK_AKTIF:
+                $query->where([
+                    'IS NOT', 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            default:
+                break;
+
+        endswitch;
+
+        return $query
+            ->orderBy('hrd.k.nama')
+            ->groupBy('hrd.k.id')
+            ->all();
+    }
+
     public function behaviors() {
         return ArrayHelper::merge(
             parent::behaviors(),

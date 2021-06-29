@@ -13,6 +13,8 @@ use yii\helpers\Html;
 $this->title = 'Karyawan';
 $this->params['breadcrumbs'][] = $this->title;
 
+$this->registerCss('.table-responsive{ min-height: 320px }')
+
 ?>
 <div class="karyawan-index">
     <div class="card shadow" id="crud">
@@ -36,12 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'encodeLabel' => false,
                                 'dropdown' => [
                                     'items' => [
-                                            [
-                                                'label' => FAS::icon(FAS::_FILE) . ' Data Untuk Mesin Absen',
-                                                'url' => [
-                                                        'find-data-untuk-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
-                                                ],
+                                        [
+                                            'label' => FAS::icon(FAS::_FILE) . ' Seluruh Data Karyawan',
+                                            'url' => [
+                                                'laporan-biodata-seluruh-karyawan', 'page' => Yii::$app->request->getQueryParam('page', null)
                                             ],
+                                        ],
+
+                                        [
+                                            'label' => FAS::icon(FAS::_FILE) . ' Seluruh Data Karyawan Untuk Mesin Absen',
+                                            'url' => [
+                                                'find-data-untuk-mesin-absensi', 'page' => Yii::$app->request->getQueryParam('page', null)
+                                            ],
+                                        ],
                                     ],
                                     'encodeLabels' => false,
                                 ],
@@ -52,8 +61,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ])
             ?>
         </div>
+
+
         <?php try {
             echo GridView::widget([
+                'id' => 'crudTable',
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__ . '/_columns.php'),
@@ -63,6 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         } catch (Exception $e) {
             echo $e->getMessage();
-        }?>
+        } ?>
+
     </div>
 </div>
