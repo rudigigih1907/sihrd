@@ -16,7 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).' Create User', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE) . ' Create', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE) . ' Batch Create', ['/superadmin/mini-user/batch-create'], [
+                'class' => 'btn btn-warning',
+                'data-confirm' => Yii::t('yii', 'Beberapa user akan dibuat dengan format NIk-tanggalLahir?'),
+                'data-method' => 'post',
+            ]) ?>
         </div>
 
         <?= GridView::widget([
@@ -26,6 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 ['class' => 'yii\grid\SerialColumn'],
 
                 //'id',
+                [
+                    'attribute' => 'namaKaryawan',
+                    'value' => function($model){
+                        return $model->karyawan->nama;
+                    }
+                ],
+
                 'username',
                 //'auth_key',
                 //'password_hash',

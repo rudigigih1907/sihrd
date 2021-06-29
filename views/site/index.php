@@ -14,22 +14,37 @@ $isGuest = Yii::$app->user->isGuest;
 
         <?php if (!$isGuest) : ?>
 
+
+
             <div class="row mb-4">
+                <?php
+                $user= Yii::$app->user;
+                if (
+                        $user->can('super-admin') ||
+                        $user->can('manager') ||
+                        $user->can('staff') ||
+                        $user->can('direksi')
+                ): ?>
+                    <?= InfoBox::widget([
+                        'infoBoxText' => 'Loading ...',
+                        'icon' => FAS::_ADDRESS_CARD,
+                        'url' => Url::to(['/struktur-organisasi/hitung-jumlah-record', 'type' => app\models\StrukturOrganisasi::TIPE_PERUSAHAAN]),
+                        'urlTo' => Url::to(['/struktur-organisasi/index'])
+                    ]) ?>
 
-                <?= InfoBox::widget([
-                    'infoBoxText' => 'Loading ...',
-                    'icon' => FAS::_ADDRESS_CARD,
-                    'url' => Url::to(['/struktur-organisasi/hitung-jumlah-record', 'type' => app\models\StrukturOrganisasi::TIPE_PERUSAHAAN]),
-                    'urlTo' => Url::to(['/struktur-organisasi/index'])
-                ]) ?>
+                    <?= InfoBox::widget([
+                        'infoBoxText' => 'Karyawan',
+                        'icon' => FAS::_USERS,
+                        'url' => Url::to(['/karyawan/hitung-jumlah-record', 'kriteria' => app\models\Karyawan::AKTIF]),
+                        'urlTo' => Url::to(['/karyawan/index'])
+                    ]) ?>
 
-                <?= InfoBox::widget([
-                    'infoBoxText' => 'Karyawan',
-                    'icon' => FAS::_USERS,
-                    'url' => Url::to(['/karyawan/hitung-jumlah-record', 'kriteria' => app\models\Karyawan::AKTIF]),
-                    'urlTo' => Url::to(['/karyawan/index'])
-                ]) ?>
-
+                <?php else: ?>
+                    <div class="jumbotron">
+                        <h1>Selamat Datang!</h1>
+                        <p class="lead">Silahkan mengecek data Anda pada Link Profile Anda...</p>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="row">

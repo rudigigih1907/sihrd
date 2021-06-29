@@ -14,12 +14,27 @@ use yii\helpers\Html;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <div class="card card-default">
+    <div class="card shadow">
 
         <div class="card-body">
 
-            <?php echo $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
-            <?php echo $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+            <div class="row">
+
+                <div class="col-sm-12 col-md-4">
+                    <?php echo $form->field($additionalModel, 'karyawan')->widget(\kartik\select2\Select2::class,[
+                            'data' => \app\models\Karyawan::mapIDToNamaOrderById()
+                    ]) ?>
+                </div>
+
+                <div class="col-sm-12 col-md-4">
+                    <?php echo $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+                </div>
+
+                <div class="col">
+                    <?php echo $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+                </div>
+            </div>
 
             <?php $model->status = $model->status == 1 ? 1 : 0 ?>
             <?php echo $form->field($model, 'status')->radioList([

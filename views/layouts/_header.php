@@ -89,7 +89,7 @@ try {
                         '<div class="dropdown-divider"></div>',
                         [
                             'label' => '<i class="fas fa-user"></i> ' . 'Your Profile',
-                            'url' => ['/site/profile'],
+                            'url' => ['/profile'],
                         ],
                         [
                             'label' => FAS::icon(FAS::_SIGN_OUT_ALT) . 'Log Out',

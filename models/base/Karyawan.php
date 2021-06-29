@@ -50,6 +50,7 @@ use yii\behaviors\TimestampBehavior;
  * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
  * @property \app\models\KehadiranDiInternalSistem[] $kehadiranDiInternalSistems
  * @property \app\models\KehadiranDiMesinAbsensi[] $kehadiranDiMesinAbsensis
+ * @property \app\models\User $user
  * @property string $aliasModel
  */
 abstract class Karyawan extends \yii\db\ActiveRecord
@@ -233,6 +234,14 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function getKehadiranDiMesinAbsensis()
     {
         return $this->hasMany(\app\models\KehadiranDiMesinAbsensi::className(), ['karyawan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(\app\models\User::className(), ['karyawan_id' => 'id']);
     }
 
 

@@ -8,7 +8,6 @@ use app\models\MiminAdditionalModel;
 use hscstudio\mimin\models\AuthAssignment;
 use hscstudio\mimin\models\AuthItem;
 use hscstudio\mimin\models\User;
-use hscstudio\mimin\models\UserSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -21,7 +20,7 @@ class MiniUserController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        $searchModel = new UserSearch();
+        $searchModel = new \app\models\search\UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -126,6 +125,59 @@ class MiniUserController extends Controller {
     }
 
     /**
+     * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     */
+    public function actionBatchCreate() {
+
+        ini_set('max_execution_time', 10000000);
+        $connection = User::getDb();
+        $q = $connection->createCommand("
+            SELECT 
+                CONCAT(nomor_induk_karyawan , '-',DATE_FORMAT(tanggal_lahir, '%d%m%Y')) AS username,
+                :hash as password_hash,
+                10 as status,
+                :auth_key as auth_key,
+                'user@email.co.id' as email,
+                id as karyawan_id,
+                UNIX_TIMESTAMP(NOW()) AS created_at,
+                UNIX_TIMESTAMP(NOW()) AS updated_at
+            FROM karyawan
+        ", [
+            ':hash' => Yii::$app->security->generatePasswordHash('123456'),
+            ':auth_key' => Yii::$app->security->generateRandomString()
+        ])->queryAll();
+
+        $transaction = $connection->beginTransaction();
+        try {
+            $connection->createCommand()
+                ->batchInsert('user', [
+                    'username',
+                    'password_hash',
+                    'status',
+                    'auth_key',
+                    'email',
+                    'karyawan_id',
+                    'created_at',
+                    'updated_at',
+                ], $q)
+                ->execute();
+
+            //.... other SQL executions
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+        Yii::$app->session->setFlash('success', 'User: ' . count($q));
+
+        return $this->redirect(['/mini-user']);
+    }
+
+    /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -135,7 +187,10 @@ class MiniUserController extends Controller {
      */
     public function actionUpdate($id) {
 
-        $model = $this->findModel($id);
+        $model = \app\models\User::findOne($id);
+        $additionalModel = new MiminAdditionalModel([
+            'karyawan' => $model->karyawan_id
+        ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if (!empty($model->new_password)) {
@@ -154,6 +209,7 @@ class MiniUserController extends Controller {
             $model->status = $model->status == 10 ? 1 : 0;
             return $this->render('update', [
                 'model' => $model,
+                'additionalModel' => $additionalModel,
             ]);
         }
     }
