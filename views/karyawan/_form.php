@@ -32,7 +32,6 @@ use yii\helpers\Html;
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
-
                     </div>
 
                     <div class="col-sm-12 col-md-4">
@@ -95,7 +94,7 @@ use yii\helpers\Html;
 
                 <div class="row">
                     <div class="col-sm-12 col-md-4">
-                        <?= $form->field($model, 'pendidikan_terakhir')->dropDownList(['SD' => 'SD', 'SMP' => 'SMP', 'SMA' => 'SMA', 'S1' => 'S1', 'S2' => 'S2', 'S3' => 'S3',]) ?>
+                        <?= $form->field($model, 'pendidikan_terakhir')->dropDownList(\app\models\Karyawan::optsPendidikanTerakhir()) ?>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <?= $form->field($model, 'jadwal_kerja_id')->dropDownList(\app\models\JadwalKerja::mapIDToNama(),[

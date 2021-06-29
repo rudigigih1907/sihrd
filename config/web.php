@@ -198,7 +198,7 @@ $config = [
                 NumberFormatter::MAX_FRACTION_DIGITS => 2,
             ],
             'nullDisplay' => '',
-            'locale' => 'id-ID', //your language locale
+            //'locale' => 'id-ID', //your language locale
         ],
         'i18n' => [
             'translations' => [
@@ -348,7 +348,7 @@ $config = [
         ],
     ],
     'id' => 'basic',
-    'language' => 'id-ID',
+    //'language' => 'id-ID',
     'modules' => [
         'admin' => [
             'class' => 'mdm\admin\Module',

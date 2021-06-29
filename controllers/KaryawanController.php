@@ -633,8 +633,8 @@ class KaryawanController extends Controller {
                     } catch (NotFoundHttpException $e) {
                         $error = $e->getMessage();
                     }
-
                     break;
+
                 case 'Pdf':
                     try {
                         $exporter = Yii::$app->pdfDenganMinimalMargin;
@@ -647,6 +647,7 @@ class KaryawanController extends Controller {
                         $error = $e->getMessage();
                     }
                     break;
+
                 default:
                     break;
             endswitch;
