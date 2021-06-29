@@ -59,7 +59,7 @@ $config = [
                     'class' => 'card-table table'
                 ],
             ],
-            yii\data\Pagination::class => ['pageSize' => 5],
+            yii\data\Pagination::class => ['pageSize' => 10],
             yii\widgets\LinkPager::class => yii\bootstrap4\LinkPager::class,
             kartik\grid\GridView::class => [
                 'tableOptions' => [
@@ -159,6 +159,29 @@ $config = [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'fileStorage' => [
+            'class' => 'yii2tech\filestorage\hub\Storage',
+            'storages' => [
+                [
+                    'class' => 'yii2tech\filestorage\local\Storage',
+                    'basePath' => '@webroot/files',
+                    'baseUrl' => '@web/files',
+                    'buckets' => [
+                        'temp',
+                    ]
+                ],
+            ],
+        ],
+        'spaces' => [
+            'class' => 'bilberrry\spaces\Service',
+            'credentials' => [
+                'key' => getenv('SPACES_DO_KEY'),
+                'secret' => getenv('SPACES_DO_SECRET'),
+            ],
+            'region' => 'sgp1', // currently available: nyc3, ams3, sgp1, sfo2
+            'defaultSpace' => 'files.tsurumaru.online',
+            'defaultAcl' => 'public-read',
         ],
         'formatter' => [
             'class' => 'app\components\MyFormatter',

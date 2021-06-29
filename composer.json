@@ -28,7 +28,9 @@
         "wbraganca/yii2-dynamicform": "dev-dev-dzil",
         "unclead/yii2-multiple-input": "~2.0",
         "yii2tech/spreadsheet": "1.0.1",
-        "kartik-v/yii2-mpdf": "dev-master"
+        "kartik-v/yii2-mpdf": "dev-master",
+        "yii2tech/file-storage": "^1.1",
+        "bilberrry/yii2-digitalocean-spaces": "^0.1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

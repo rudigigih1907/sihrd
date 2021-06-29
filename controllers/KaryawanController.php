@@ -20,6 +20,8 @@ use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -329,7 +331,6 @@ class KaryawanController extends Controller {
         ]);
     }
 
-
     /**
      * Manage PTKP karyawan
      * @param $id
@@ -414,7 +415,6 @@ class KaryawanController extends Controller {
 
         switch ($kriteria):
 
-
             case Karyawan::TIDAK_AKTIF:
                 $data->where([
                     "IS NOT", 'tanggal_berhenti_bekerja', NULL
@@ -461,6 +461,7 @@ class KaryawanController extends Controller {
     }
 
     /**
+     * Export data berupa file excel untuk dimasukkan ke dalam mesin absen
      * @param $statusAktif
      * @return Response
      * @throws HttpException
@@ -539,7 +540,50 @@ class KaryawanController extends Controller {
         throw new HttpException(400, $error);
     }
 
+    /**
+     * @param $id
+     * @param null $page
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionUploadPhotoIdentintasDiri($id, $page = null) {
+        $model = $this->findModel($id);
+        return $this->render('_form_upload_foto_identitas_diri', [
+            'model' => $model
+        ]);
+    }
 
+
+    /**
+     * @param null $page
+     * @return array|void
+     */
+    public function actionHandleUploadPhotoIdentintasDiri($page = null) {
+
+        if (empty($_FILES['file_data'])) {
+            echo Json::encode(['error', 'No files found for upload']);
+            return;
+        }
+        $files = $_FILES['file_data'];
+        $request = Yii::$app->request;
+        $filename = 'tresnamuda/sihrd/karyawan/' . $request->post('nik') . '-'. $request->post('nama') . '/' .
+            'photo-profile.'. pathinfo($files['name'], PATHINFO_EXTENSION);
+
+        $storage = Yii::$app->spaces;
+        $storage->commands()
+            ->upload($filename, $files['tmp_name'])
+            ->execute();
+
+        $model = $this->findModel($request->post('id'));
+        $model->photo_identitas_diri = $storage->getUrl($filename);
+        $model->save(false);
+
+        // Return as JSON
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return empty($files["error"])
+            ? ['success', $files]
+            : ['error', 'Error While uploading image, contact the system administrator' . $files["error"]];
+    }
 
     /**
      * Finds the Karyawan model based on its primary key value.

@@ -227,7 +227,7 @@ SQL;
     public static function findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal) {
 
         $sql = <<<SQL
-        SELECT base_karyawan.nama,
+    SELECT base_karyawan.nama,
        base_karyawan.dept,
        base_karyawan.nik,
        kehadiran.ketentuan_masuk,

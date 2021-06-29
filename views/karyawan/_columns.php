@@ -118,10 +118,10 @@ return [
                 : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-warning']);
         }
     ],
-    [
-        'class' => '\yii\grid\DataColumn',
-        'attribute' => 'alasan_berhenti_bekerja',
-    ],
+//    [
+//        'class' => '\yii\grid\DataColumn',
+//        'attribute' => 'alasan_berhenti_bekerja',
+//    ],
 //     [
 //     'class'=>'\yii\grid\DataColumn',
 //     'attribute'=>'created_at',
@@ -199,6 +199,11 @@ return [
                             [
                                 'label' => FAS::icon(FAS::_HANDSHAKE) .' Jabatan',
                                 'url' => ['manage-jabatan', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
+                            ],
+                            '<div class="dropdown-divider"></div>',
+                            [
+                                'label' => FAS::icon(FAS::_UPLOAD) .' Photo Identintas',
+                                'url' => ['upload-photo-identintas-diri', 'id' => $key,'page' => Yii::$app->request->getQueryParam('page', null)],
                             ],
                             '<div class="dropdown-divider"></div>',
                             [

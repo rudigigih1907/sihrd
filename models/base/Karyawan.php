@@ -32,6 +32,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $tanggal_berhenti_bekerja
  * @property integer $alasan_berhenti_bekerja
  * @property integer $jadwal_kerja_id
+ * @property string $photo_identitas_diri
  * @property string $mesin_absensi_password
  * @property string $mesin_absensi_rfid
  * @property string $mesin_absensi_previlege
@@ -41,13 +42,14 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
- * @property \app\models\KehadiranDiMesinAbsensi[] $absensis
  * @property \app\models\AlamatKaryawan[] $alamatKaryawans
  * @property \app\models\Agama $agama
  * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\StatusPerkawinan $statusPerkawinan
  * @property \app\models\KaryawanPtkp[] $karyawanPtkps
  * @property \app\models\KaryawanStrukturOrganisasi[] $karyawanStrukturOrganisasis
+ * @property \app\models\KehadiranDiInternalSistem[] $kehadiranDiInternalSistems
+ * @property \app\models\KehadiranDiMesinAbsensi[] $kehadiranDiMesinAbsensis
  * @property string $aliasModel
  */
 abstract class Karyawan extends \yii\db\ActiveRecord
@@ -100,7 +102,7 @@ abstract class Karyawan extends \yii\db\ActiveRecord
         return [
             [['nama', 'jenis_kelamin', 'agama_id', 'status_perkawinan_id', 'pendidikan_terakhir', 'jadwal_kerja_id'], 'required'],
             [['tanggal_lahir', 'tanggal_mulai_bekerja', 'tanggal_berhenti_bekerja'], 'safe'],
-            [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir'], 'string'],
+            [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir', 'photo_identitas_diri'], 'string'],
             [['agama_id', 'status_perkawinan_id', 'alasan_berhenti_bekerja', 'jadwal_kerja_id'], 'integer'],
             [['nomor_induk_karyawan', 'nama', 'nama_panggilan', 'tempat_lahir', 'nomor_kartu_tanda_penduduk', 'nomor_kartu_keluarga', 'nomor_pokok_wajib_pajak', 'nomor_kitas_atau_sejenisnya', 'nama_ayah', 'nama_ibu', 'mesin_absensi_password', 'mesin_absensi_rfid', 'mesin_absensi_previlege', 'mesin_absensi_telapak_tangan'], 'string', 'max' => 255],
             [['agama_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Agama::className(), 'targetAttribute' => ['agama_id' => 'id']],
@@ -155,23 +157,16 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             'tanggal_berhenti_bekerja' => 'Tanggal Berhenti Bekerja',
             'alasan_berhenti_bekerja' => 'Alasan Berhenti Bekerja',
             'jadwal_kerja_id' => 'Jadwal Kerja ID',
+            'photo_identitas_diri' => 'Photo Identitas Diri',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
-            'mesin_absensi_password' => 'Mesin KehadiranDiMesinAbsensi Password',
-            'mesin_absensi_rfid' => 'Mesin KehadiranDiMesinAbsensi Rfid',
-            'mesin_absensi_previlege' => 'Mesin KehadiranDiMesinAbsensi Previlege',
-            'mesin_absensi_telapak_tangan' => 'Mesin KehadiranDiMesinAbsensi Telapak Tangan',
+            'mesin_absensi_password' => 'Mesin Absensi Password',
+            'mesin_absensi_rfid' => 'Mesin Absensi Rfid',
+            'mesin_absensi_previlege' => 'Mesin Absensi Previlege',
+            'mesin_absensi_telapak_tangan' => 'Mesin Absensi Telapak Tangan',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAbsensis()
-    {
-        return $this->hasMany(\app\models\KehadiranDiMesinAbsensi::className(), ['karyawan_id' => 'id']);
     }
 
     /**
@@ -220,6 +215,22 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     public function getKaryawanStrukturOrganisasis()
     {
         return $this->hasMany(\app\models\KaryawanStrukturOrganisasi::className(), ['karyawan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKehadiranDiInternalSistems()
+    {
+        return $this->hasMany(\app\models\KehadiranDiInternalSistem::className(), ['karyawan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKehadiranDiMesinAbsensis()
+    {
+        return $this->hasMany(\app\models\KehadiranDiMesinAbsensi::className(), ['karyawan_id' => 'id']);
     }
 
 
