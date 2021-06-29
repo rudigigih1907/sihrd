@@ -76,6 +76,7 @@ services:
     volumes:
       - ./:/var/www/html
       - "./README.md:/var/www/html/README.md"
+      - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
     networks:
       - sihrd-network
     depends_on:
