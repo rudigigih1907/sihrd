@@ -8,202 +8,121 @@
 /* @var $karyawan array */
 /* @var $tanggal string */
 
+use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FAS;
-use unclead\multipleinput\TabularColumn;
-use unclead\multipleinput\TabularInput;
-use yii\bootstrap4\ActiveForm;
+use wbraganca\dynamicform\DynamicFormWidget;
 use yii\helpers\Html;
 
 $this->title = 'Preview Kehadiran Masuk Kerja : ' . Yii::$app->formatter->asDate($tanggal);
 $this->params['breadcrumbs'][] = ['label' => 'Kehadiran Di Internal Sistem', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->registerCss(".readonly { cursor: not-allowed; } ")
+$this->registerCss(".readonly { cursor: not-allowed; } ");
+$template = ['template' => '{input}{error}'];
+
+$this->registerCss('.table-responsive{ max-height: 488px }')
 ?>
 
 
     <div class="kehadiran-di-internal-sistem-index">
         <div class="card shadow">
+            <?php
+            $form = ActiveForm::begin([
+                'id' => 'dynamic-form',
 
+            ]);
+            ?>
             <div class="table-responsive">
+
                 <?php
-                $form = ActiveForm::begin([
-                    'id' => 'tabular-form',
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => false,
-                    'validateOnChange' => false,
-                    'validateOnSubmit' => true,
-                    'validateOnBlur' => false,
-                ]);
-                ?>
-                <?php
-                try {
-                    echo TabularInput::widget([
-                        'id' => 'some-id',
-                        'models' => $models,
-                        'rendererClass' => \app\components\renderers\TableRenderer::class,
-                        'removeButtonOptions' => [
-                            'class' => 'btn btn-block btn-danger',
-                            'label' => FAS::icon(FAS::_TRASH),
-                            'data' => [
-                                'confirm' => 'Anda akan menghapus data ini ?'
-                            ]
-                        ],
-                        'allowEmptyList' => true,
-                        'attributeOptions' => [
-                            'enableAjaxValidation' => true,
-                            'enableClientValidation' => false,
-                            'validateOnChange' => false,
-                            'validateOnSubmit' => true,
-                            'validateOnBlur' => false,
-                        ],
-                        'columns' => [
-                            [
-                                'name' => 'id',
-                                'title' => 'ID',
-                                'enableError' => true,
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
-                            [
-                                'name' => 'jadwal_kerja_id',
-                                'title' => 'Jadwal Kerja',
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
+                DynamicFormWidget::begin([
+                    'widgetContainer' => 'dynamicform_wrapper',
+                    'widgetBody' => '.container-items', // required: css class selector
+                    'widgetItem' => '.item', // required: css class
+                    'limit' => 999, // the maximum times, an element can be cloned (default 999)
+                    'min' => 1, // 0 or 1 (default 1)
+                    'insertButton' => '.add-item', // css class
+                    'deleteButton' => '.remove-item', // css class
+                    'model' => $models[0],
+                    'formId' => 'dynamic-form',
+                    'formFields' => ['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'tanggal', 'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id', 'aktual_masuk',
+                        'readonlyJadwalKerja',
+                        'readonlyJadwalKerjaHari',
+                        'readonlyJamKerja',
+                        'readonlyKetentuanMasuk',
+                        'readonlyKetentuanPulang',
+                        'readonlyKaryawan',
+                    ],
+                ]); ?>
+                <table class="card-table table table-bordered table-sm">
+                    <thead>
+                    <tr class="text-nowrap">
+                        <th scope="col">#</th>
+                        <th scope="col">Jadwal</th>
+                        <th scope="col">Hari</th>
+                        <th scope="col">Jam Kerja</th>
+                        <th scope="col">Ketentuan Masuk</th>
+                        <th scope="col">Ketentuan Pulang</th>
+                        <th scope="col">Karyawan</th>
+                        <th scope="col">Aktual Masuk</th>
+                        <th scope="col" style="width: 2px">Aksi</th>
+                    </tr>
+                    </thead>
 
-                            ],
-                            [
-                                'title' => 'Jdw Kerja',
-                                'name' => 'readonlyJadwalKerja',
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly text-small'
-                                ],
-                                'columnOptions' => [
-                                    'style' => 'width: 2px;',
-                                ],
-                            ],
+                    <tbody class="container-items container-items-horizontal">
 
-                            [
-                                'name' => 'jadwal_kerja_hari_id',
-                                'title' => 'Hari',
-                                'enableError' => true,
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
+                    <?php foreach ($models as $i => $modelDetail): ?>
 
-                            [
-                                'title' => 'Hari',
-                                'name' => 'readonlyJadwalKerjaHari',
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly'
-                                ],
-                                'columnOptions' => [
-                                    'style' => 'width: 90px;',
-                                ],
-                            ],
-                            [
-                                'name' => 'jam_kerja_id',
-                                'title' => 'Jam Kerja',
-                                'enableError' => true,
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
 
-                            [
-                                'name' => 'readonlyJamKerja',
-                                'title' => 'Jam Kerja',
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly'
-                                ]
-                            ],
-                            [
-                                'name' => 'tanggal',
-                                'title' => 'Tanggal',
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
-                            [
-                                'name' => 'ketentuan_masuk',
-                                'title' => 'Ketentuan Masuk',
-                                'enableError' => true,
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
-                            [
-                                'name' => 'readonlyKetentuanMasuk',
-                                'title' => 'Ketentuan Masuk',
-                                'enableError' => true,
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly ketentuan-masuk'
-                                ],
-                                'columnOptions' => [
-                                    'style' => 'width: 182px;',
-                                ],
-                            ],
-                            [
-                                'name' => 'ketentuan_pulang',
-                                'title' => 'Ketentuan Pulang',
-                                'enableError' => true,
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
-                            [
-                                'name' => 'readonlyKetentuanPulang',
-                                'title' => 'Ketentuan Pulang',
-                                'enableError' => true,
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly ketentuan-pulang'
-                                ],
-                                'columnOptions' => [
-                                    'style' => 'width: 182px;',
-                                ],
-                            ],
-                            [
-                                'name' => 'karyawan_id',
-                                'title' => 'Karyawan',
-                                'enableError' => true,
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly'
-                                ],
-                                'type' => TabularColumn::TYPE_HIDDEN_INPUT,
-                            ],
-                            [
-                                'name' => 'readonlyKaryawan',
-                                'title' => 'Karyawan',
-                                'enableError' => true,
-                                'options' => [
-                                    'readonly' => true,
-                                    'class' => 'readonly karyawan'
-                                ],
-                                'columnOptions' => [
-                                    'style' => 'width: 244px;',
-                                ],
-                            ],
-                            [
-                                'name' => 'aktual_masuk',
-                                'title' => 'Aktual Masuk',
-                                'enableError' => true,
-                                'errorOptions' => ['class' => 'help-block invalid-feedback'],
-                                'columnOptions' => [
-                                    'style' => 'width: 194px;',
-                                ],
-                                'type' => kartik\widgets\DateTimePicker::class,
-                            ],
-                        ],
-                    ]);
-                } catch (Exception $e) {
-                    echo $e->getMessage();
-                }
-                ?>
+                        <tr class="item text-nowrap">
+
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]jadwal_kerja_id"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]jadwal_kerja_hari_id"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]jam_kerja_id"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]tanggal"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]ketentuan_masuk"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]ketentuan_pulang"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]karyawan_id"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]aktual_masuk"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyJadwalKerja"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyJadwalKerjaHari"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanMasuk"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanPulang"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKaryawan", [
+                                'class' => 'karyawan'
+                            ]); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyAktualMasuk"); ?>
+
+                            <td style="width: 2px;"><?= ($i + 1) ?></td>
+                            <td><?= $modelDetail->readonlyJadwalKerja ?></td>
+                            <td><?= $modelDetail->readonlyJadwalKerjaHari ?></td>
+                            <td><?= $modelDetail->readonlyJamKerja ?></td>
+                            <td><?= $modelDetail->readonlyKetentuanMasuk ?></td>
+                            <td><?= $modelDetail->readonlyKetentuanPulang ?></td>
+                            <td><?= $modelDetail->readonlyKaryawan ?></td>
+                            <td><?= $modelDetail->readonlyAktualMasuk ?></td>
+
+                            <td class="p-0">
+                                <button type="button" class="remove-item btn btn-link btn-xs text-danger">
+                                    <i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php DynamicFormWidget::end(); ?>
+
             </div>
 
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
-                    <?= Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['index'], ['class' => 'btn btn-secondary']) ?>
-                    <?= Html::submitButton(FAS::icon(FAS::_SAVE) . ' Simpan', [
+                    <?php echo Html::a(FAS::icon(FAS::_WINDOW_CLOSE) . ' Tutup', ['index'], ['class' => 'btn btn-secondary']) ?>
+                    <?php echo Html::submitButton(FAS::icon(FAS::_SAVE) . ' Simpan', [
                         'class' => 'btn btn-primary',
-                        /*'data' => [
-                            'confirm' => 'Are you sure want to Create/Update this message?'
-                        ]*/
+                        'data' => [
+                            'confirm' => 'Yakin untuk memasukkan data-data ini?'
+                        ]
                     ]) ?>
                 </div>
             </div>
@@ -212,32 +131,14 @@ $this->registerCss(".readonly { cursor: not-allowed; } ")
         </div>
     </div>
 
-<?php
-
-$js = <<<JS
-jQuery('#tabular-form').on('afterInit', function(){
+<?php $js = <<<JS
+jQuery(".dynamicform_wrapper").on("beforeDelete", function(e, row) {
     
-}).on('beforeAddRow', function(e, row, currentIndex) {
-    
-}).on('afterAddRow', function(e, row, currentIndex) {
-    
-}).on('beforeDeleteRow', function(e, row, currentIndex){
-    
-    let children = row.children();
-    let karyawan = children.find('.karyawan').val();
-    let ketentuanMasuk = children.find('.ketentuan-masuk').val();
-    let ketentuanPulang = children.find('.ketentuan-pulang').val();
-    return confirm('Anda yakin akan menghapus record berikut: ' + 
-        '\\n' + karyawan + ', '+ 
-        ketentuanMasuk + ' => ' + 
-        ketentuanPulang  +' ?')
-        
-}).on('afterDeleteRow', function(e, row, currentIndex){
- 
-}).on('afterDropRow', function(e, item){       
-    
+   if (! confirm("Hapus " + jQuery(row).find('.karyawan').val() + " ?") ) {
+       return false;
+   }
+   return true;
 });
 JS;
 
 $this->registerJs($js);
-

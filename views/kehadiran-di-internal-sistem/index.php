@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-
             <?php echo
             ButtonToolbar::widget([
                 'options' => [
@@ -70,6 +69,24 @@ $this->params['breadcrumbs'][] = $this->title;
                                         [
                                             'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Uang Kehadiran',
                                             'url' => ['create-laporan-uang-kehadiran'],
+                                        ],
+                                    ],
+                                    'encodeLabels' => false,
+                                ],
+                            ]),
+                            ButtonDropdown::widget([
+                                'label' => FAS::icon(FAS::_FILE) . ' Utilitas',
+                                'buttonOptions' => [
+                                    'class' => ['btn btn-secondary'],
+                                    'type' => 'button',
+                                ],
+                                'encodeLabel' => false,
+                                'dropdown' => [
+                                    'items' => [
+
+                                        [
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Batalkan Data Per Tanggal',
+                                            'url' => ['form-cancel-kehadiran'],
                                         ],
                                     ],
                                     'encodeLabels' => false,

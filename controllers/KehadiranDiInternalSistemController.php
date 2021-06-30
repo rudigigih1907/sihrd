@@ -6,16 +6,13 @@ use app\models\form\ImportKehadiranDiInternalSistemAbsensi;
 use app\models\form\LaporanHarianAbsensi;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
-use kartik\mpdf\Pdf;
+use app\models\Tabular;
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
-use yii\base\Model;
-use yii\bootstrap4\ActiveForm;
 use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -158,13 +155,11 @@ class KehadiranDiInternalSistemController extends Controller {
      * @throws yii\db\Exception
      */
     public function actionPreviewImportKehadiranMasuk($tanggal) {
-
-        $absenRecords = KehadiranDiInternalSistem::findUntukImportKehadiranMasuk($tanggal);
         $request = Yii::$app->request;
-
         $models = [];
-        if ($request->isGet) {
 
+        if ($request->isGet) {
+            $absenRecords = KehadiranDiInternalSistem::findUntukImportKehadiranMasuk($tanggal);
             foreach ($absenRecords as $key => $absenRecord) {
                 $models[$key] = new KehadiranDiInternalSistem([
                     'jadwal_kerja_id' => $absenRecord['jadwal_kerja_id'],
@@ -174,32 +169,22 @@ class KehadiranDiInternalSistemController extends Controller {
                     'ketentuan_masuk' => $absenRecord['unformated_ketentuan_masuk'],
                     'ketentuan_pulang' => $absenRecord['unformated_ketentuan_pulang'],
                     'karyawan_id' => $absenRecord['karyawan_id'],
-                    'aktual_masuk' => $absenRecord['aktual_masuk'],
+                    'aktual_masuk' => $absenRecord['unformated_aktual_masuk'],
                     'readonlyJadwalKerja' => $absenRecord['kode_jadwal_kerja'],
                     'readonlyJadwalKerjaHari' => $absenRecord['nama_hari_kerja'],
                     'readonlyJamKerja' => $absenRecord['kode_jam_kerja'],
                     'readonlyKetentuanMasuk' => $absenRecord['ketentuan_masuk'],
                     'readonlyKetentuanPulang' => $absenRecord['ketentuan_pulang'],
                     'readonlyKaryawan' => $absenRecord['nama_karyawan'],
-
+                    'readonlyAktualMasuk' => $absenRecord['aktual_masuk'],
                 ]);
             }
-        } else {
-
-            $data = Yii::$app->request->post('KehadiranDiInternalSistem', []);
-            foreach (array_keys($data) as $index) {
-                $models[$index] = new KehadiranDiInternalSistem([]);
-            }
-            Model::loadMultiple($models, Yii::$app->request->post());
-
         }
 
-        if ($request->isPost && $request->post('ajax') !== null) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validateMultiple($models);
-        }
+        if ($request->isPost) {
 
-        if (Model::loadMultiple($models, $request->post())) {
+            $models = Tabular::createMultiple(KehadiranDiInternalSistem::class);
+            Tabular::loadMultiple($models, $request->post());
 
             // Cari karyawan yang duplicate
             $countValues = array_count_values(
@@ -226,9 +211,7 @@ class KehadiranDiInternalSistemController extends Controller {
                         'ketentuan_masuk' => $el['ketentuan_masuk'],
                         'ketentuan_pulang' => $el['ketentuan_pulang'],
                         'karyawan_id' => $el['karyawan_id'],
-                        'aktual_masuk' => !empty($el['aktual_masuk']) ?
-                            Yii::$app->formatter->asDatetime($el['aktual_masuk'], "php:Y-m-d H:i")
-                            : null,
+                        'aktual_masuk' => !empty($el['aktual_masuk']) ? $el['aktual_masuk'] : null,
                     ];
                 }, ArrayHelper::toArray($models));
 
@@ -237,7 +220,7 @@ class KehadiranDiInternalSistemController extends Controller {
                 $transaction = $db->beginTransaction();
                 try {
                     $db->createCommand()->batchInsert(KehadiranDiInternalSistem::tableName(),
-                        ['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'tanggal' ,'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id', 'aktual_masuk'],
+                        ['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'tanggal', 'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id', 'aktual_masuk'],
                         $modelsArray
                     )->execute();
 
@@ -254,6 +237,7 @@ class KehadiranDiInternalSistemController extends Controller {
                     FAS::icon(FAS::_THUMBS_UP) .
                     count($modelsArray) . ' record berhasil masuk ke Sistem Internal Absensi'
                 );
+
                 return $this->redirect(['index']);
             }
 
@@ -264,12 +248,50 @@ class KehadiranDiInternalSistemController extends Controller {
                 }
                 ])
             );
+
         }
 
         return $this->render('_preview_import_kehadiran_masuk', [
             'models' => $models,
             'tanggal' => $tanggal
         ]);
+    }
+
+    public function actionFormCancelKehadiran() {
+
+        $request = Yii::$app->request;
+        $model = new ImportKehadiranDiInternalSistemAbsensi();
+
+        if ($model->load($request->post()) && $model->validate()) {
+
+            $data = KehadiranDiInternalSistem::findUntukBatalkanData();
+
+            return $this->render('_preview_cancel_kehadiran', [
+                'tanggal' => $model->tanggal,
+                'data' => $data
+            ]);
+        }
+
+        return $this->render('_form_import_kehadiran', [
+            'model' => $model,
+            'title' => "Batalkan data per tanggal"
+        ]);
+    }
+
+    /**
+     * @param $tanggal
+     * @return Response
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionCancelKehadiran($tanggal) {
+        KehadiranDiInternalSistem::deleteAll([
+            'tanggal' => $tanggal
+        ]);
+        Yii::$app->session->setFlash('success', FAS::icon(FAS::_SAD_CRY)
+            . " Kehadiran DiInternal Sistem : "
+            . Yii::$app->formatter->asDate($tanggal)
+            . " berhasil dihapus.");
+        return $this->redirect(['index']);
     }
 
     /**

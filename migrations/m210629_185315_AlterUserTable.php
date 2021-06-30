@@ -15,7 +15,7 @@ class m210629_185315_AlterUserTable extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn($this->table,'karyawan_id', $this->integer());
+        $this->addColumn($this->table,'karyawan_id', $this->integer()->notNull());
         $this->createIndex('idx_karyawan_di_tabel_user', $this->table, 'karyawan_id', true);
         $this->addForeignKey('fk_karyawan_di_tabel_user',
             $this->table,
@@ -33,9 +33,9 @@ class m210629_185315_AlterUserTable extends Migration
      */
     public function safeDown()
     {
-        echo "m210629_185315_AlterUserTable cannot be reverted.\n";
-
-        return false;
+        $this->dropForeignKey('fk_karyawan_di_tabel_user', $this->table);
+        $this->dropIndex('idx_karyawan_di_tabel_user', $this->table);
+        $this->dropColumn($this->table,'karyawan_id');
     }
 
     /*

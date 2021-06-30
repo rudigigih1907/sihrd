@@ -33,6 +33,7 @@ class KehadiranDiInternalSistem extends BaseKehadiranDiInternalSistem {
     public $readonlyKetentuanMasuk;
     public $readonlyKetentuanPulang;
     public $readonlyKaryawan;
+    public $readonlyAktualMasuk;
 
     /**
      * Mencari data dari table kehadiran_di_mesin_absensi untuk jam masuk
@@ -65,6 +66,7 @@ SELECT
        g_karyawan.id                                                               AS karyawan_id,
        g_karyawan.nama                                                             AS nama_karyawan,
        g_karyawan.nik                                                              AS nik,
+       g_karyawan.masuk                                                            AS unformated_aktual_masuk,
        DATE_FORMAT(g_karyawan.masuk, '%d-%m-%Y %H:%i')                             AS aktual_masuk,
        g_karyawan.pulang                                                           AS aktual_pulang
 
@@ -124,7 +126,7 @@ FROM (
     ORDER BY jdk.id
 ) AS g_jadwal ON g_jadwal.jadwal_kerja_id = g_karyawan.jadwal_kerja_karyawan
 
-ORDER BY jadwal_kerja_id, nama_karyawan
+ORDER BY nama_karyawan
 ;
 SQL;
 
@@ -222,7 +224,6 @@ SQL;
         return self::getDb()->createCommand($sql, [':tanggal' => $tanggal])->queryAll();
 
     }
-
 
     public static function findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal) {
 
@@ -335,7 +336,9 @@ FROM (
              LEFT JOIN jam_kerja jk on kdis.jam_kerja_id = jk.id
 
     WHERE DATE(ketentuan_masuk) = :tanggal
-) AS kehadiran ON kehadiran.karyawan_id = base_karyawan.id;
+) AS kehadiran ON kehadiran.karyawan_id = base_karyawan.id
+ORDER BY base_karyawan.nama
+;
 SQL;
         return self::getDb()->createCommand($sql, [
             ':tanggal' => $tanggal,
@@ -344,6 +347,11 @@ SQL;
 
     }
 
+    public static function findUntukBatalkanData() {
+        return self::getDb()->createCommand(
+            "SELECT * FROM kehadiran_di_internal_sistem"
+        )->queryAll();
+    }
 
     public function behaviors() {
         return ArrayHelper::merge(
@@ -365,6 +373,7 @@ SQL;
                     'readonlyKetentuanMasuk',
                     'readonlyKetentuanPulang',
                     'readonlyKaryawan',
+                    'readonlyAktualMasuk',
                 ], 'safe'],
                 ['aktual_masuk', 'required', 'on' => self::SCENARIO_INPUT_KEHADIRAN_MASUK]
 
@@ -409,6 +418,7 @@ SQL;
             'readonlyKetentuanMasuk',
             'readonlyKetentuanPulang',
             'readonlyKaryawan',
+            'readonlyAktualMasuk',
         ];
         return $scenarios;
     }
