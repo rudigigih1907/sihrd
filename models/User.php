@@ -48,13 +48,19 @@ class User extends \mdm\admin\models\User {
         return ArrayHelper::merge(parent::rules(),[
             [['username', 'email'], 'required'],
             [['username', 'email', 'password_hash'], 'string', 'max' => 255],
-            [['username', 'email'], 'unique'],
+            [['username'], 'unique'],
             [['email'], 'email'],
             ['status','integer'],
+            [['old_password', 'new_password', 'repeat_password'], 'string', 'min' => 6],
+            [['repeat_password'], 'compare', 'compareAttribute' => 'new_password'],
+            [['old_password', 'new_password', 'repeat_password'], 'required', 'when' => function ($model) {
+                return (!empty($model->new_password));
+            }, 'whenClient' => "function (attribute, value) {
+                return ($('#user-new_password').val().length>0);
+            }"],
             [['karyawan_id'], 'unique'],
             [['karyawan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Karyawan::className(), 'targetAttribute' => ['karyawan_id' => 'id']]
         ]);
     }
-
 
 }

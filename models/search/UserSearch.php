@@ -45,7 +45,7 @@ class UserSearch extends \app\models\User
 	public function search($params)
 	{
 		$query = User::find()
-            ->innerJoinWith('karyawan')
+            ->joinWith('karyawan')
         ;
 
 		$dataProvider = new ActiveDataProvider([

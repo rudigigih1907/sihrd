@@ -60,14 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'status',
                     'format' => 'raw',
-                    'options' => [
-                        'class' => '80px',
+                    'contentOptions' => [
+                        'style' => ['width'=>'10px'],
                     ],
                     'value' => function ($data) {
                         if ($data->status == 10)
-                            return "<span class='label label-primary'>" . 'Active' . "</span>";
+                            return "<span class='badge badge-primary'>" . 'Active' . "</span>";
                         else
-                            return "<span class='label label-danger'>" . 'Banned' . "</span>";
+                            return "<span class='badge badge-danger'>" . 'Banned' . "</span>";
                     }
                 ],
                 /*[

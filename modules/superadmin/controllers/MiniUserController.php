@@ -106,7 +106,7 @@ class MiniUserController extends Controller {
                 $additionalModel->generate_password : '123456';
 
             $model->setPassword($password);
-            $model->status = $model->status == 1 ? 10 : 0;
+
             $model->auth_key = Yii::$app->security->generateRandomString();
 
             if ($model->save()) {
@@ -192,22 +192,23 @@ class MiniUserController extends Controller {
             'karyawan' => $model->karyawan_id
         ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
             if (!empty($model->new_password)) {
                 $model->setPassword($model->new_password);
             }
-            $model->status = $model->status == 1 ? 10 : 0;
 
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'User berhasil diupdate dengan Password : ' . $model->new_password);
+                Yii::$app->session->setFlash('success', 'User berhasil diupdate');
             } else {
                 Yii::$app->session->setFlash('error', 'User gagal diupdate');
             }
 
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $model->status = $model->status == 10 ? 1 : 0;
-            return $this->render('update', [
+
+            return
+                $this->render('update', [
                 'model' => $model,
                 'additionalModel' => $additionalModel,
             ]);

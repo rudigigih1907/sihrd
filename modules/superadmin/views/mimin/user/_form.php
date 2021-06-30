@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model hscstudio\mimin\models\User */
+/* @var $model \app\models\User */
 /* @var $additionalModel app\models\MiminAdditionalModel */
 /* @var $form yii\bootstrap4\ActiveForm */
 ?>
@@ -36,9 +36,9 @@ use yii\helpers\Html;
                 </div>
             </div>
 
-            <?php $model->status = $model->status == 1 ? 1 : 0 ?>
+
             <?php echo $form->field($model, 'status')->radioList([
-                1 => 'Active',
+                10 => 'Active',
                 0 => 'Banned'
             ], [
 
