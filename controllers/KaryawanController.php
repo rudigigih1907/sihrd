@@ -635,11 +635,24 @@ class KaryawanController extends Controller {
                     }
                     break;
 
-                case 'Pdf':
+                case 'Pdf-Rekap':
                     try {
                         $exporter = Yii::$app->pdfDenganMinimalMargin;
                         $exporter->filename ="Seluruh Data Karyawan " . time() . '.pdf';
-                        $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan', [
+                        $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_rekap', [
+                            'data' => $data,
+                        ]);
+                        return $exporter->render();
+                    } catch (NotFoundHttpException $e) {
+                        $error = $e->getMessage();
+                    }
+                    break;
+
+                case 'Pdf-Detail':
+                    try {
+                        $exporter = Yii::$app->pdfDenganMinimalMargin;
+                        $exporter->filename ="Seluruh Data Karyawan " . time() . '.pdf';
+                        $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [
                             'data' => $data,
                         ]);
                         return $exporter->render();

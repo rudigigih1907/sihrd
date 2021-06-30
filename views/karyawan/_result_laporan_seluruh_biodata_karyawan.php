@@ -35,8 +35,14 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
             ?>
 
             <?=
-            Html::a(FAS::icon(FAS::_FILE_PDF) . ' Pdf',
-                ['karyawan/export-laporan-biodata-seluruh-karyawan', 'statusAktif' => $statusAktif, 'type' => 'Pdf'],
+            Html::a(FAS::icon(FAS::_FILE_PDF) . ' Pdf Rekap',
+                ['karyawan/export-laporan-biodata-seluruh-karyawan', 'statusAktif' => $statusAktif, 'type' => 'Pdf-Rekap'],
+                ['class' => 'btn btn-success', 'target' => '_blank'])
+            ?>
+
+            <?=
+            Html::a(FAS::icon(FAS::_FILE_PDF) . ' Pdf Detail',
+                ['karyawan/export-laporan-biodata-seluruh-karyawan', 'statusAktif' => $statusAktif, 'type' => 'Pdf-Detail'],
                 ['class' => 'btn btn-success', 'target' => '_blank'])
             ?>
         </div>

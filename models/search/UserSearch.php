@@ -61,7 +61,6 @@ class UserSearch extends \app\models\User
         ];
 
         $dataProvider->sort->defaultOrder['namaKaryawan'] =SORT_ASC;
-
         $this->load($params);
 
 		if (!$this->validate()) {
