@@ -100,7 +100,7 @@ class MiniUserController extends Controller {
         $model = new User();
         $additionalModel = new MiminAdditionalModel();
 
-        if ($model->load($request->post()) && $additionalModel->load($request->post())) {
+        if ($model->load($request->post())  && $additionalModel->load($request->post()) && $model->validate()) {
             $model->karyawan_id = $additionalModel->karyawan;
             $password = $additionalModel->generate_password ?
                 $additionalModel->generate_password : '123456';
@@ -192,7 +192,7 @@ class MiniUserController extends Controller {
             'karyawan' => $model->karyawan_id
         ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post())  && $additionalModel->load(Yii::$app->request->post())  && $model->validate()) {
 
 
             $model->karyawan_id = $additionalModel->karyawan;
