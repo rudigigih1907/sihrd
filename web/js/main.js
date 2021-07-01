@@ -26,7 +26,6 @@
     // Wrap every letter in a span
     let textWrapper = document.querySelector('.ml10 .letters');
     textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-
     anime.timeline({loop: true})
         .add({
             targets: '.ml10 .letter',
@@ -39,6 +38,13 @@
         duration: 1000,
         easing: "easeOutExpo",
         delay: 1000
+    });
+
+    // Animation On Submit
+    jQuery(document).on('beforeSubmit', 'form', function (event) {
+        let buttonSubmit = jQuery(this).find('button[type=submit]');
+        buttonSubmit.html('<i class="fas fa-spinner fa-spin"></i> Memproses...');
+        buttonSubmit.attr('disabled', true).addClass('disabled');
     });
 
 })(jQuery);
