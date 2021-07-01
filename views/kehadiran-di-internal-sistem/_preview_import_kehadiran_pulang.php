@@ -6,7 +6,7 @@
 /* @var $tanggal */
 
 
-$this->title = 'Preview Kehadiran Jam Pulang : ' . Yii::$app->formatter->asDate($tanggal);
+$this->title = 'Preview Jam Pulang : ' . Yii::$app->formatter->asDate($tanggal);
 $this->params['breadcrumbs'][] = ['label' => 'Kehadiran Di Internal Sistem', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
 $this->params['breadcrumbs'][] = $this->title;
 

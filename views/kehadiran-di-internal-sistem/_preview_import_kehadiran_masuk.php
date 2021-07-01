@@ -13,7 +13,7 @@ use rmrevin\yii\fontawesome\FAS;
 use wbraganca\dynamicform\DynamicFormWidget;
 use yii\helpers\Html;
 
-$this->title = 'Preview Kehadiran Masuk Kerja : ' . Yii::$app->formatter->asDate($tanggal);
+$this->title = 'Preview Masuk Kerja : ' . Yii::$app->formatter->asDate($tanggal);
 $this->params['breadcrumbs'][] = ['label' => 'Kehadiran Di Internal Sistem', 'url' => ['index', 'page' => Yii::$app->request->getQueryParam('page', null)]];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -54,7 +54,7 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
                         'readonlyKaryawan',
                     ],
                 ]); ?>
-                <table class="card-table table table-bordered table-sm">
+                <table class="card-table table table-bordered small">
                     <thead>
                     <tr class="text-nowrap">
                         <th scope="col">#</th>

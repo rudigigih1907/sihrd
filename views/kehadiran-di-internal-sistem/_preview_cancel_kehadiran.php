@@ -19,14 +19,15 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
 ?>
 <div class="card shadow" id="crud">
 
-
     <?php try {
         echo GridView::widget([
             'dataProvider' => new ArrayDataProvider([
                 'models' => $data,
                 'pagination' => false
             ]),
-            'columns' => [],
+            'columns' => [
+
+            ],
             'layout' =>
 
                 '<div class="card-body p-0">' .
@@ -36,11 +37,11 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
                 '</div>' .
                 '<div class="card-footer pt-4 pb-2">' .
                 '<div class="d-flex justify-content-between">' . "{summary}" .
-                Html::a(FAS::icon(FAS::_TRASH) . ' Hapus ', ['kehadiran-di-internal-sistem/cancel-kehadiran', 'tanggal' => $tanggal], [
-                    'class' => 'btn btn-danger',
+                Html::a(FAS::icon(FAS::_TRASH) . ' Hapus ', ['kehadiran-di-internal-sistem/cancel-kehadiran', 'tanggal' => Yii::$app->formatter->asDate($tanggal, 'php:Y-m-d')], [
+                    'class' => 'btn btn-danger mb-3',
                     'data' => [
                         'method' => 'post',
-                        'confirm' => 'Seluruh data pada tanggal: ' . Yii::$app->formatter->asDate($tanggal) . " dihapus, yakin ?"
+                        'confirm' => 'Seluruh data pada tanggal: ' . $tanggal . " dihapus, yakin ?"
                     ]
                 ])
                 . '</div>' .

@@ -137,7 +137,9 @@ class KehadiranDiInternalSistemController extends Controller {
         $model = new ImportKehadiranDiInternalSistemAbsensi();
 
         if ($model->load($request->post()) && $model->validate()) {
-            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-masuk', 'tanggal' => $model->tanggal]);
+            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-masuk',
+                'tanggal' => Yii::$app->formatter->asDate($model->tanggal, 'php:Y-m-d')
+            ]);
         }
 
         return $this->render('_form_import_kehadiran', [
@@ -235,7 +237,7 @@ class KehadiranDiInternalSistemController extends Controller {
 
                 Yii::$app->session->setFlash('success',
                     FAS::icon(FAS::_THUMBS_UP) .
-                    count($modelsArray) . ' record berhasil masuk ke Sistem Internal Absensi'
+                    ' ' .count($modelsArray) . ' record berhasil masuk ke Sistem Internal Absensi'
                 );
 
                 return $this->redirect(['index']);
@@ -257,6 +259,10 @@ class KehadiranDiInternalSistemController extends Controller {
         ]);
     }
 
+    /**
+     * Tampilkan form untuk mencari data untuk di cancel
+     * @return string
+     */
     public function actionFormCancelKehadiran() {
 
         $request = Yii::$app->request;
@@ -375,7 +381,8 @@ class KehadiranDiInternalSistemController extends Controller {
     /**
      * Tampilkan form untuk membuat laporan harian
      * @return string
-     * @throws \yii\db\Exception
+     * @throws yii\db\Exception
+     * @throws yii\base\InvalidConfigException
      */
     public function actionCreateLaporanHarian() {
 
@@ -383,7 +390,9 @@ class KehadiranDiInternalSistemController extends Controller {
         $model = new LaporanHarianAbsensi();
 
         if($model->load($request->post())){
-            $records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($model->tanggal);
+            $records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql(
+                Yii::$app->formatter->asDate($model->tanggal, 'php:Y-m-d')
+            );
             return $this->render('_preview_laporan_harian', [
                 'records' => $records,
                 'model' => $model,

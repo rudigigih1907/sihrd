@@ -30,10 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="card-body">
                     <?= $form->field($model, 'tanggal')
-                        ->widget(kartik\datecontrol\DateControl::class, [
-                                'type' => kartik\datecontrol\DateControl::FORMAT_DATE,
-                            ]
-                        );
+                        ->widget(\kartik\date\DatePicker::class);
                     ?>
                 </div>
 

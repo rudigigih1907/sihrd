@@ -6,6 +6,7 @@ use app\models\base\KehadiranDiInternalSistem as BaseKehadiranDiInternalSistem;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -348,9 +349,28 @@ SQL;
     }
 
     public static function findUntukBatalkanData() {
-        return self::getDb()->createCommand(
-            "SELECT * FROM kehadiran_di_internal_sistem"
-        )->queryAll();
+        return KehadiranDiInternalSistem::find()
+            ->select([
+                'jadwal' => 'jadwal_kerja.nama',
+                'hari' => 'jadwal_kerja_hari.nama',
+                'jamKerja' => 'jam_kerja.kode',
+                'ketentuan_masuk' => new Expression("DATE_FORMAT( ketentuan_masuk ,'%d-%m-%Y %H:%i')"),
+                'ketentuan_pulang' => new Expression("DATE_FORMAT( ketentuan_pulang ,'%d-%m-%Y %H:%i')"),
+                'karyawan' => 'karyawan.nama',
+                'aktual_masuk' => new Expression("DATE_FORMAT( aktual_masuk ,'%d-%m-%Y %H:%i')"),
+                'aktual_pulang' => new Expression("DATE_FORMAT( aktual_pulang ,'%d-%m-%Y %H:%i')"),
+                'jenis_izin' => 'jenis_izin.nama',
+                'keterangan' => 'kehadiran_di_internal_sistem.keterangan',
+                'cuti_normatif' => 'cuti_normatif.nama'
+            ])
+            ->joinWith('jadwalKerja', false)
+            ->joinWith('jadwalKerjaHari', false)
+            ->joinWith('jamKerja', false)
+            ->joinWith('karyawan', false)
+            ->joinWith('jenisIzin', false)
+            ->joinWith('cutiNormatif', false)
+            ->asArray()
+            ->all();
     }
 
     public function behaviors() {
