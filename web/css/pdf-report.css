@@ -4,6 +4,10 @@ body {
     font-size: 10pt;
 }
 
+div {
+    page-break-inside: avoid;
+}
+
 h1 {
     color: black;
     margin: 0;
@@ -29,14 +33,19 @@ fieldset{
 }
 
 
-table{
+table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th, td{
+th, td {
     padding: 6px;
     vertical-align: top;
+}
+
+table.table-bordered-outside {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
 
 /* Begin Table Bordered */
@@ -202,7 +211,7 @@ div.person-name{
 }
 
 .text-info {
-    color : lightblue;
+    color: lightblue;
 }
 
 
@@ -213,6 +222,10 @@ div.person-name{
     padding: 5px;
 }
 
+
+
+
+
 /* Clear floats after image containers */
 .row::after {
     content: "";
@@ -220,7 +233,7 @@ div.person-name{
     display: table;
 }
 
-.info-box{
+.info-box {
     width: 100%;
     border: 1px solid black;
     padding: 5px;

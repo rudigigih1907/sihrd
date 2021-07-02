@@ -136,7 +136,9 @@ class Karyawan extends BaseKaryawan {
     public static function findDataUntukBiodataSeluruhKaryawan($statusAktif) {
 
         $query = (new \yii\db\Query())
-            ->select("k.* ")
+            ->select("k.*, agama.nama as agama, jk.nama as jadwal_bekerja")
+            ->leftJoin('hrd.agama', 'agama.id = k.agama_id',)
+            ->leftJoin('hrd.jadwal_kerja jk', 'jk.id = k.jadwal_kerja_id',)
             ->from('hrd.karyawan k')
         ;
 
@@ -157,6 +159,7 @@ class Karyawan extends BaseKaryawan {
         endswitch;
 
         return $query
+            ->indexBy('id')
             ->orderBy('hrd.k.nama')
             ->groupBy('hrd.k.id')
             ->all();

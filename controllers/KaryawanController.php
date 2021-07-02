@@ -625,7 +625,25 @@ class KaryawanController extends Controller {
                             'dataProvider' => new ArrayDataProvider([
                                 'models' => $data,
                             ]),
-                            'columns' => [],
+                            'columns' => [
+                                'nomor_induk_karyawan',
+                                'nama',
+                                'nama_panggilan',
+                                'tempat_lahir',
+                                'tanggal_lahir',
+                                'status_kewarganegaraan',
+                                'nomor_kartu_tanda_penduduk',
+                                'nomor_kartu_keluarga',
+                                'nomor_pokok_wajib_pajak',
+                                'nomor_kitas_atau_sejenisnya',
+                                'jenis_kelamin',
+                                'agama',
+                                'nama_ayah',
+                                'nama_ibu',
+                                'pendidikan_terakhir',
+                                'tanggal_mulai_bekerja',
+                                'jadwal_bekerja'
+                            ],
                         ]);
 
                         return $exporter->send("Seluruh Data Karyawan " . time() . '.xls');
@@ -649,13 +667,18 @@ class KaryawanController extends Controller {
                     break;
 
                 case 'Pdf-Detail':
+                    ini_set('max_execution_time', '-1');
                     try {
                         $exporter = Yii::$app->pdfDenganMinimalMargin;
-                        $exporter->filename ="Seluruh Data Karyawan " . time() . '.pdf';
+                        $exporter->filename = "Seluruh Data Karyawan " . time() . '.pdf';
                         $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [
                             'data' => $data,
                         ]);
                         return $exporter->render();
+
+                        /*return $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [
+                            'data' => $data,
+                        ]);*/
                     } catch (NotFoundHttpException $e) {
                         $error = $e->getMessage();
                     }
