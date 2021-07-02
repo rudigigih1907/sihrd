@@ -11,18 +11,21 @@ $formatter = Yii::$app->formatter;
 <div class="Karyawan-index">
 
     <h2>Data Karyawan</h2>
-    <p>Update Terakhir : <b><?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i')) ?></b></p>
+    <p>Update Terakhir :
+        <b><?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i')) ?></b>
+    </p>
 
-    <?php $no = 0 ?>
+    <?php $no = 1 ?>
     <?php foreach ($data as $key => $karyawan) : ?>
         <div>
-            <p style="font-weight: bold"><?= ++$no ?><?= $karyawan['nama'] ?></p>
-
-            
-
+            <p style="font-weight: bold"><?= $no ?>. <?= $karyawan['nama'] ?></p>
             <table class="table-bordered-outside">
+                <thead>
+                    <tr>
+                        <th colspan="6" style="text-align: left">Biodata</th>
+                    </tr>
+                </thead>
                 <tbody>
-
                 <tr>
                     <td>NIK</td>
                     <td class="divider">:</td>
@@ -92,6 +95,7 @@ $formatter = Yii::$app->formatter;
                 </tbody>
 
             </table>
+
         </div>
 
         <?php $no++; ?>
