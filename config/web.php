@@ -267,7 +267,8 @@ $config = [
                 'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow',
             ],
             'options' => [
-              'tableMinSizePriority' => false
+                'tableMinSizePriority' => false,
+                'use_kwt' => true
             ],
             'marginTop' => '2',
             'marginLeft' => '2',

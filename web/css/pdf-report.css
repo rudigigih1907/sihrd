@@ -43,7 +43,13 @@ th, td {
     vertical-align: top;
 }
 
+div{
+    page-break-inside: avoid;
+}
+
+
 table.table-bordered-outside {
+    page-break-inside: avoid;
     border: 1px solid black;
     border-collapse: collapse;
 }
