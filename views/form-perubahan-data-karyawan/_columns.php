@@ -12,6 +12,10 @@ return [
     // ],
     [
         'class'=>'\yii\grid\DataColumn',
+        'attribute'=>'nomor_referensi',
+    ],
+    [
+        'class'=>'\yii\grid\DataColumn',
         'attribute'=>'judul',
     ],
     [

@@ -230,6 +230,9 @@ class FormPerubahanDataKaryawanController extends Controller {
         return $this->redirect(['index', 'page' => $page]);
     }
 
+    /**
+     * @return string
+     */
     public function actionLaporanPeriode(){
         return $this->renderContent(
             Html::tag('h3', "Maaf, fitur laporan harian belum tersedia") .
@@ -238,7 +241,7 @@ class FormPerubahanDataKaryawanController extends Controller {
             ])
         );
     }
-    
+
     /**
      * Finds the FormPerubahanDataKaryawan model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -8,6 +8,7 @@ use app\models\MiminAdditionalModel;
 use hscstudio\mimin\models\AuthAssignment;
 use hscstudio\mimin\models\AuthItem;
 use hscstudio\mimin\models\User;
+use mdm\admin\models\form\ChangePassword;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -127,6 +128,7 @@ class MiniUserController extends Controller {
     /**
      * @return \yii\web\Response
      * @throws \yii\base\Exception
+     * @throws \Throwable
      */
     public function actionBatchCreate() {
 

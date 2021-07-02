@@ -19,7 +19,7 @@ class FormPerubahanDataKaryawanSearch extends FormPerubahanDataKaryawan
     {
         return [
             [['id'], 'integer'],
-            [['judul', 'deskripsi_umum', 'status', 'aksi_yang_dilakukan'], 'safe'],
+            [['nomor_referensi','judul', 'deskripsi_umum', 'status', 'aksi_yang_dilakukan'], 'safe'],
         ];
     }
 
@@ -64,7 +64,9 @@ class FormPerubahanDataKaryawanSearch extends FormPerubahanDataKaryawan
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'judul', $this->judul])
+        $query
+            ->andFilterWhere(['like', 'nomor_referensi', $this->nomor_referensi])
+            ->andFilterWhere(['like', 'judul', $this->judul])
             ->andFilterWhere(['like', 'deskripsi_umum', $this->deskripsi_umum])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'aksi_yang_dilakukan', $this->aksi_yang_dilakukan]);

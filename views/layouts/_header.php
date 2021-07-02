@@ -82,17 +82,17 @@ try {
                         'class' => 'dropdown-menu dropdown-menu-right'
                     ],
                     'items' => [
-                        [
+                        /*[
                             'label' => '<i class="fas fa-directions"></i> ' . 'User Guide',
                             'url' => ['/user-guide/index'],
                         ],
-                        '<div class="dropdown-divider"></div>',
+                        '<div class="dropdown-divider"></div>',*/
                         [
-                            'label' => '<i class="fas fa-user"></i> ' . 'Your Profile',
-                            'url' => ['/profile'],
+                            'label' => FAS::icon(FAS::_PASSPORT) . ' Ganti Password',
+                            'url' => ['/site/change-password'],
                         ],
                         [
-                            'label' => FAS::icon(FAS::_SIGN_OUT_ALT) . 'Log Out',
+                            'label' => FAS::icon(FAS::_SIGN_OUT_ALT) . ' Log Out',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']
                         ],

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\ContactForm;
+use app\models\form\ChangePassword;
 use app\models\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
@@ -18,10 +19,10 @@ class SiteController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' =>  ['logout', 'change-password'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'change-password'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -119,5 +120,24 @@ class SiteController extends Controller {
      */
     public function actionAbout() {
         return $this->render('about');
+    }
+
+    /**
+     * Reset password
+     * @return string
+     */
+    public function actionChangePassword() {
+
+        $model = new ChangePassword();
+
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
+            Yii::$app->session->setFlash('success', ' Password berhasil diganti');
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
+        ]);
+
     }
 }

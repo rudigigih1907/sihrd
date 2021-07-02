@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="card shadow">
                 <div class="card-header border-bottom">
-                    Please fill out the following fields to login:
+                    <?= \rmrevin\yii\fontawesome\FAS::icon(\rmrevin\yii\fontawesome\FAS::_SIGN_IN_ALT) ?> Silahkan isi form berikut.
                 </div>
 
                 <div class="card-body">

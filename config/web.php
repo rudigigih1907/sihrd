@@ -340,6 +340,7 @@ $config = [
                 'mini-user/update' => 'mimin/user/update',
                 'mini-user/view' => 'mimin/user/view',
                 'mini-user/delete' => 'mimin/user/delete',
+                'change-password' => 'site/change-password',
             ],
         ],
         'user' => [

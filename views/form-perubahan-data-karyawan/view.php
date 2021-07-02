@@ -1,10 +1,11 @@
 <?php
-use yii\bootstrap4\Tabs;
-use yii\widgets\DetailView;
+
 use app\widgets\Table;
-use rmrevin\yii\fontawesome\FAS;
-use yii\helpers\Html;
 use mdm\admin\components\Helper;
+use rmrevin\yii\fontawesome\FAS;
+use yii\bootstrap4\Tabs;
+use yii\helpers\Html;
+use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\FormPerubahanDataKaryawan */
@@ -62,32 +63,32 @@ $this->params['breadcrumbs'][] = $this->title;
                         'headerOptions' => [
                             'class' => 'pl-3'
                         ],
-                        'label' => FAS::icon(FAS::_YIN_YANG) . ' Form Perubahan Data Karyawan',
+                        'label' => FAS::icon(FAS::_YIN_YANG) . ' Pengajuan',
                         'content' =>
                             DetailView::widget([
                                 'model' => $model,
                                 'attributes' => [
                                     'judul',
-'deskripsi_umum:ntext',
-'status',
-'aksi_yang_dilakukan:ntext',
+                                    'deskripsi_umum:ntext',
+                                    'status',
+                                    'aksi_yang_dilakukan:ntext',
                                 ],
-                            ]) ,
+                            ]),
 
-                        ],
-                        [
-                            'label' => 'Form Perubahan Data Karyawan Detail',
-                            'content' =>
+                    ],
+                    [
+                        'label' => 'Detail Pengajuan',
+                        'content' =>
 
-                                !empty( $model->formPerubahanDataKaryawanDetails) ?
-                                    Table::widget([
-                                        'data' => $model->formPerubahanDataKaryawanDetails
-                                    ])
+                            !empty($model->formPerubahanDataKaryawanDetails) ?
+                                Table::widget([
+                                    'data' => $model->formPerubahanDataKaryawanDetails
+                                ])
                                 :
 
-                                    Html::tag("p", 'Form Perubahan Data Karyawan Detail tidak tersedia', [
-                                        'class' => 'text-warning font-weight-bold p-3'
-                                    ])
+                                Html::tag("p", 'Form Perubahan Data Karyawan Detail tidak tersedia', [
+                                    'class' => 'text-warning font-weight-bold p-3'
+                                ])
                             ,
                         ],
                     ],
