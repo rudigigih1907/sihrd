@@ -60,7 +60,6 @@ class PdfHtmlHeader extends Widget {
         ]);
         echo "<h3>Tresnamuda Group</h3>";
         echo "<p style='margin: 0'>Komplek Ruko Sunter Permai Indah Jl. Mitra Sunter Boulevard. Block B No. 12-16. Jakarta 14350. Indonesia. <br/> Phone: (021) 6522333 (Hunting). Fax: (021) 6522336/37</p>";
-        echo "<h3>Sistem Informasi Human Resource Development</h3>";
 
         echo Html::endTag('div');
         /* ======== Company =============== */

@@ -30,7 +30,9 @@
         "yii2tech/spreadsheet": "1.0.1",
         "kartik-v/yii2-mpdf": "dev-master",
         "yii2tech/file-storage": "^1.1",
-        "bilberrry/yii2-digitalocean-spaces": "^0.1.2"
+        "bilberrry/yii2-digitalocean-spaces": "^0.1.2",
+        "mdmsoft/yii2-autonumber": "~1.0",
+        "mpdf/qrcode": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

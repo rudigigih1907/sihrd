@@ -5,11 +5,11 @@ body {
 }
 
 h1 {
-    color: blue;
+    color: black;
     margin: 0;
 }
 h2 {
-    color: blue;
+    color: black;
     margin: 0;
 }
 
@@ -162,7 +162,7 @@ div.signature{
 }
 
 div.person-name{
-    color: green;
+    color: black;
 }
 
 .text-right {
