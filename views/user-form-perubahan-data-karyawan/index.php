@@ -21,13 +21,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php echo yii\widgets\ListView::widget([
         'dataProvider' => $dataProvider,
         'layout' =>
-                '
+            '
                     <div class="d-flex justify-content-start flex-wrap">{items}</div>
                     <div class="d-flex justify-content-end">{pager}</div>
                  ',
         'itemView' => '_item',
         'itemOptions' => [
             'tag' => false
+        ],
+        'emptyText' => FAS::icon(FAS::_SMILE) . " Anda Belum pernah mengajukan perubahan data",
+        'emptyTextOptions' => [
+            'class' => 'font-weight-bold'
         ]
     ]) ?>
 
