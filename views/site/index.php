@@ -40,9 +40,10 @@ $isGuest = Yii::$app->user->isGuest;
                     ]) ?>
 
                 <?php else: ?>
-                    <div class="jumbotron">
+                    <div class="jumbotron mx-3 shadow">
                         <h1>Selamat Datang!</h1>
-                        <p class="lead">Silahkan mengecek data Anda pada Link Profile Anda...</p>
+                        <p class="lead">Pastikan biodata Anda sudah sesuai, Akses pada menu <span class="font-weight-bold"> Data Pribadi >> Profile Anda </span></p>
+
                     </div>
                 <?php endif; ?>
             </div>
@@ -58,9 +59,14 @@ $isGuest = Yii::$app->user->isGuest;
 
         <?php else: ?>
 
-            <div class="jumbotron">
+            <div class="jumbotron mx-3 shadow">
                 <h1>Welcome!</h1>
                 <p class="lead">Kamu harus login dulu untuk masuk ke Sistem HRD.</p>
+                <p>
+                    <?= \yii\helpers\Html::a(FAS::icon(FAS::_SIGN_IN_ALT) ." Login", ['site/login'], [
+                        'class' => 'btn btn-lg btn-primary'
+                    ]) ?>
+                </p>
             </div>
 
         <?php endif ?>
