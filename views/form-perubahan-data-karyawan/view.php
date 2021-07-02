@@ -82,7 +82,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             !empty($model->formPerubahanDataKaryawanDetails) ?
                                 Table::widget([
-                                    'data' => $model->formPerubahanDataKaryawanDetails
+                                    'data' => $model->formPerubahanDataKaryawanDetails,
+                                    'skippedColumns' => [
+                                        'form_perubahan_data_karyawan_id'
+                                    ]
                                 ])
                                 :
 

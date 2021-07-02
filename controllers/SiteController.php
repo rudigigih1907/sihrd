@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\ContactForm;
 use app\models\form\ChangePassword;
 use app\models\LoginForm;
+use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -74,7 +75,7 @@ class SiteController extends Controller {
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            Yii::$app->session->setFlash('success', 'Login is success, Welcome ' . Yii::$app->user->identity->username . " ...");
+            Yii::$app->session->setFlash('success', FAS::icon(FAS::_THUMBS_UP) . ' Anda berhasil login. Hi ' . Yii::$app->user->identity->username . " ...");
             return $this->goBack();
         }
 

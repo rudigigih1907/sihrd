@@ -54,8 +54,8 @@ $template = ['template' => '{input}{error}'];
                         <th scope="col">#</th>
                         <th scope="col">Nama Data</th>
                         <th scope="col">Data Lama</th>
-                        <th scope="col">Aksi</th>
                         <th scope="col">Data Baru</th>
+                        <th scope="col">Aksi</th>
                         <th scope="col">Keterangan</th>
                     </tr>
                     </thead>
@@ -73,8 +73,8 @@ $template = ['template' => '{input}{error}'];
                                 <?php
                                 echo Html::activeHiddenInput($modelDetail, "[{$i}]nama_data");
                                 echo Html::activeHiddenInput($modelDetail, "[{$i}]nilai_lama");
-                                echo Html::activeHiddenInput($modelDetail, "[{$i}]aksi");
                                 echo Html::activeHiddenInput($modelDetail, "[{$i}]nilai_baru");
+                                echo Html::activeHiddenInput($modelDetail, "[{$i}]aksi");
                                 echo Html::activeHiddenInput($modelDetail, "[{$i}]keterangan");
                                 ?>
 

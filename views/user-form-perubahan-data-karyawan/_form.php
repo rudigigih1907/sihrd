@@ -53,8 +53,8 @@ $template = ['template' => '{input}{error}'];
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nama Data</th>
-                        <th scope="col">Nilai Lama</th>
-                        <th scope="col">Nilai Baru</th>
+                        <th scope="col">Data Lama</th>
+                        <th scope="col">Data Baru</th>
                         <th scope="col">Aksi</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col" style="width: 2px">Aksi</th>
