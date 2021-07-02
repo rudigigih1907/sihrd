@@ -21,7 +21,6 @@ $formatter = Yii::$app->formatter;
             <div style=" float: left; width: 3%; padding: 5px;">
                 <span style="text-align: right"><?= ($no + 1) ?>.</span>
             </div>
-
             <div style=" float: left; width: 94%; padding-top: 5px;">
                 <span style="font-weight: bold"><?= $karyawan['nama'] ?></span>
 
@@ -103,7 +102,10 @@ $formatter = Yii::$app->formatter;
                 <p>Struktur Organisasi: </p>
                 <p>PTKP: </p>
             </div>
+
         </div>
+
+
     <?php $no++; ?>
     <?php endforeach; ?>
 </div>

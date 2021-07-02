@@ -11,6 +11,7 @@ use app\models\KaryawanStrukturOrganisasi;
 use app\models\search\KaryawanSearch;
 use app\models\Tabular;
 use Exception;
+use kartik\mpdf\Pdf;
 use rmrevin\yii\fontawesome\FAS;
 use Throwable;
 use Yii;
@@ -669,6 +670,8 @@ class KaryawanController extends Controller {
                 case 'Pdf-Detail':
                     ini_set('max_execution_time', '-1');
                     try {
+
+                        /** @var Pdf $exporter */
                         $exporter = Yii::$app->pdfDenganMinimalMargin;
                         $exporter->filename = "Seluruh Data Karyawan " . time() . '.pdf';
                         $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [

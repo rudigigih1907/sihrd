@@ -264,7 +264,10 @@ $config = [
             'cssFile' => '@webroot/css/pdf-report.css',
             'methods' => [
                 'SetDisplayMode' => 'fullpage',
-                'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow'
+                'SetDisplayPreferences' => '/HideMenubar/HideToolbar/DisplayDocTitle/FitWindow',
+            ],
+            'options' => [
+              'tableMinSizePriority' => false
             ],
             'marginTop' => '2',
             'marginLeft' => '2',
