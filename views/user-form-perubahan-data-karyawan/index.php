@@ -29,9 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'itemOptions' => [
             'tag' => false
         ],
-        'emptyText' => FAS::icon(FAS::_SMILE) . " Anda Belum pernah mengajukan perubahan data",
+        'emptyText' => FAS::icon(FAS::_SMILE) . " Anda Belum pernah mengajukan perubahan data. ",
         'emptyTextOptions' => [
-            'class' => 'font-weight-bold'
+            'class' => 'font-weight-light'
         ]
     ]) ?>
 
