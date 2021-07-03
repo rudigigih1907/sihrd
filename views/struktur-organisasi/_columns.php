@@ -17,6 +17,7 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'tipe',
+        'filter' => \app\models\StrukturOrganisasi::optsTipe()
     ],
     [
         'class'=>'\yii\grid\DataColumn',

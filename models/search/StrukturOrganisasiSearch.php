@@ -47,7 +47,7 @@ class StrukturOrganisasiSearch extends StrukturOrganisasi
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC
+                    'tipe' => SORT_DESC
                 ]
             ]
         ]);

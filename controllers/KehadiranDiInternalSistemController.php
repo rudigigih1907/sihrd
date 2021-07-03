@@ -208,10 +208,10 @@ class KehadiranDiInternalSistemController extends Controller {
                     return [
                         'jadwal_kerja_id' => $el['jadwal_kerja_id'],
                         'jadwal_kerja_hari_id' => $el['jadwal_kerja_hari_id'],
-                        'jam_kerja_id' => $el['jam_kerja_id'],
+                        'jam_kerja_id' => empty($el['jam_kerja_id']) ? NULL : $el['jam_kerja_id'],
                         'tanggal' => $el['tanggal'],
-                        'ketentuan_masuk' => $el['ketentuan_masuk'],
-                        'ketentuan_pulang' => $el['ketentuan_pulang'],
+                        'ketentuan_masuk' => empty($el['ketentuan_masuk']) ? NULL : $el['ketentuan_masuk'],
+                        'ketentuan_pulang' => empty($el['ketentuan_pulang']) ? NULL : $el['ketentuan_pulang'],
                         'karyawan_id' => $el['karyawan_id'],
                         'aktual_masuk' => !empty($el['aktual_masuk']) ? $el['aktual_masuk'] : null,
                     ];
