@@ -694,9 +694,6 @@ class KaryawanController extends Controller {
                         ]);
                         return $exporter->render();
 
-                        /*return $this->render('_pdf_laporan_biodata_seluruh_karyawan_detail', [
-                            'data' => $data,
-                        ]);*/
                     } catch (NotFoundHttpException $e) {
                         $error = $e->getMessage();
                     }

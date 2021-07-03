@@ -239,7 +239,9 @@ $config = [
                 'SetFooter' => ['{PAGENO}'],
             ],
             'options' => [
-                'showWatermarkText' => true
+                'showWatermarkText' => true,
+                'useSubstitutions' => false,
+                'simpleTables' => true,
             ]
         ],
         'pdfDenganHeaderDariAplikasi' => [

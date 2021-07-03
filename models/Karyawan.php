@@ -195,9 +195,7 @@ class Karyawan extends BaseKaryawan {
         endswitch;
 
         return
-
             $query
-
                 ->orderBy('nama')
                 ->asArray()
                 ->all();

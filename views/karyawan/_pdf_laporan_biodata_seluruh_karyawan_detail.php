@@ -13,7 +13,7 @@ $formatter = Yii::$app->formatter;
     <?php $no = 1 ?>
     <?php foreach ($data as $key => $karyawan) : ?>
         <div>
-            <h3 style="font-weight: bold"><?= $no ?>. <?= $karyawan['nama'] ?></h3>
+            <h3><?= $no ?>. <?= $karyawan['nama'] ?></h3>
             <br/>
             <table class="table-bordered-outside">
                 <thead>
@@ -23,7 +23,7 @@ $formatter = Yii::$app->formatter;
                 </thead>
                 <tbody>
                 <tr>
-                    <td>NIK</td>
+                    <td class="title">NIK</td>
                     <td class="divider">:</td>
                     <td><?= $karyawan['nomor_induk_karyawan'] ?></td>
 
@@ -33,13 +33,13 @@ $formatter = Yii::$app->formatter;
                 </tr>
 
                 <tr>
-                    <td>Tempat & Tgl Lahir</td>
+                    <td class="title">Tempat & Tgl Lahir</td>
                     <td class="divider">:</td>
                     <td><?= $karyawan['tempat_lahir'] ?>,
                         <?= $formatter->asDate($karyawan['tanggal_lahir']) ?>
                     </td>
 
-                    <td>Status Kewarganegaraan</td>
+                    <td class="title">Status Kewarganegaraan</td>
                     <td class="divider">:</td>
                     <td><?= $karyawan['status_kewarganegaraan'] ?></td>
                 </tr>
@@ -77,18 +77,18 @@ $formatter = Yii::$app->formatter;
                     <td class="divider">:</td>
                     <td><?= $karyawan['nama_ibu'] ?></td>
 
-                    <td>Pendidikan Terakhir</td>
+                    <td class="title">Pendidikan Terakhir</td>
                     <td class="divider">:</td>
                     <td><?= $karyawan['pendidikan_terakhir'] ?></td>
                 </tr>
                 <tr>
-                    <td>Tanggal Mulai Bekerja</td>
+                    <td class="title">Tanggal Mulai Bekerja</td>
                     <td class="divider">:</td>
                     <td><?= $formatter->asDate($karyawan['tanggal_mulai_bekerja']) ?></td>
 
                     <td>Aturan Absensi</td>
                     <td class="divider">:</td>
-                    <td><?= $karyawan['jadwalKerja']['nama'] ?></td>
+                    <td><?= $karyawan['jadwalKerja']['kode'] ?></td>
                 </tr>
                 </tbody>
 
@@ -258,6 +258,7 @@ $formatter = Yii::$app->formatter;
             </table>
         </div>
         <?php $no++; ?>
+    <pagebreak>
     <?php endforeach; ?>
 </div>
 
