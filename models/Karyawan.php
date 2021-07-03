@@ -4,7 +4,6 @@ namespace app\models;
 
 use app\models\base\Karyawan as BaseKaryawan;
 use app\traits\TraitMapIDToNama;
-use Psr\Log\NullLogger;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
@@ -165,6 +164,45 @@ class Karyawan extends BaseKaryawan {
             ->all();
     }
 
+    public static function findDataUntukBiodataSeluruhKaryawanByActiveRecord($statusAktif) {
+
+        $query = self::find()
+            ->joinWith('agama')
+            ->joinWith('alamatKaryawans')
+            ->joinWith(['karyawanPtkps' => function($kp){
+                $kp->joinWith('hubunganPtkp');
+            }])
+            ->joinWith(['karyawanStrukturOrganisasis' => function ($kso) {
+                /** @var KaryawanStrukturOrganisasi $kso */
+                $kso->joinWith('strukturOrganisasi');
+            }])
+            ->joinWith('jadwalKerja');
+
+        switch ($statusAktif):
+            case self::AKTIF:
+                $query->where([
+                    'IS', 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            case self::TIDAK_AKTIF:
+                $query->where([
+                    'IS NOT', 'tanggal_berhenti_bekerja', NULL
+                ]);
+                break;
+            default:
+                break;
+
+        endswitch;
+
+        return
+
+            $query
+
+                ->orderBy('nama')
+                ->asArray()
+                ->all();
+    }
+
     public function behaviors() {
         return ArrayHelper::merge(
             parent::behaviors(),
@@ -212,6 +250,14 @@ class Karyawan extends BaseKaryawan {
 
     public function getStatusAktifKaryawan() {
         return !$this->tanggal_berhenti_bekerja ? self::AKTIF : self::TIDAK_AKTIF;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStrukturOrganisasi() {
+        return $this->hasOne(\app\models\StrukturOrganisasi::className(), ['id' => 'struktur_organisasi_id'])
+            ->via('karyawanStrukturOrganisasis');
     }
 
 }

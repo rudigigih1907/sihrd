@@ -610,17 +610,22 @@ class KaryawanController extends Controller {
     /**
      * @param $statusAktif
      * @param $type
-     * @return string|Response
+     * @return mixed|Response
      * @throws HttpException
+     * @throws \Mpdf\MpdfException
+     * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
+     * @throws \setasign\Fpdi\PdfParser\PdfParserException
+     * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionExportLaporanBiodataSeluruhKaryawan($statusAktif, $type) {
 
-        $data = Karyawan::findDataUntukBiodataSeluruhKaryawan($statusAktif);
-        $error = null;
-        if ($data):
-            switch ($type):
-                case 'Excel' :
 
+        $error = null;
+
+        switch ($type):
+                case 'Excel' :
+                    $data = Karyawan::findDataUntukBiodataSeluruhKaryawan($statusAktif);
                     try {
                         $exporter = new Spreadsheet([
                             'dataProvider' => new ArrayDataProvider([
@@ -655,6 +660,7 @@ class KaryawanController extends Controller {
                     break;
 
                 case 'Pdf-Rekap':
+                    $data = Karyawan::findDataUntukBiodataSeluruhKaryawan($statusAktif);
                     try {
                         $exporter = Yii::$app->pdfDenganMinimalMargin;
                         $exporter->filename ="Seluruh Data Karyawan " . time() . '.pdf';
@@ -669,17 +675,26 @@ class KaryawanController extends Controller {
 
                 case 'Pdf-Detail':
                     ini_set('max_execution_time', '-1');
+                    ini_set('pcre.backtrack_limit', '10000000');
+                    $data = Karyawan::findDataUntukBiodataSeluruhKaryawanByActiveRecord($statusAktif);
+
                     try {
 
                         /** @var Pdf $exporter */
-                        $exporter = Yii::$app->pdfDenganMinimalMargin;
+                        $exporter = Yii::$app->pdf;
+                        $exporter->methods['SetHtmlHeader'] =
+                            '<b>Data Karyawan per tanggal: ' .
+                                Yii::$app->formatter->asDatetime(date('Y-m-d H:i')) . ', ' .
+                                count($data) . ' orang '.
+                            '</b>';
+
                         $exporter->filename = "Seluruh Data Karyawan " . time() . '.pdf';
                         $exporter->content = $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [
                             'data' => $data,
                         ]);
                         return $exporter->render();
 
-                        /*return $this->renderPartial('_pdf_laporan_biodata_seluruh_karyawan_detail', [
+                        /*return $this->render('_pdf_laporan_biodata_seluruh_karyawan_detail', [
                             'data' => $data,
                         ]);*/
                     } catch (NotFoundHttpException $e) {
@@ -690,7 +705,7 @@ class KaryawanController extends Controller {
                 default:
                     break;
             endswitch;
-        endif;
+
         throw new HttpException(400, $error);
     }
 
