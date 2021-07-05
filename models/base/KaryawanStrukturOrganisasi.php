@@ -49,7 +49,7 @@ abstract class KaryawanStrukturOrganisasi extends \yii\db\ActiveRecord
     {
         return [
             [['karyawan_id', 'struktur_organisasi_id'], 'integer'],
-            [['struktur_organisasi_id', 'nomor_surat_pengangkatan', 'tanggal_aktif'], 'required'],
+            [['struktur_organisasi_id'], 'required'],
             [['jenis_jabatan'], 'string'],
             [['tanggal_aktif', 'tanggal_berakhir'], 'safe'],
             [['nomor_surat_pengangkatan', 'alasan_berakhir'], 'string', 'max' => 255],
