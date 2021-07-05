@@ -27,6 +27,11 @@ class KehadiranDiInternalSistem extends BaseKehadiranDiInternalSistem {
     const STATUS_KEHADIRAN_MASUK_KERJA = 'Hadir';
     const STATUS_TIDAK_HADIR_KERJA = 'Tidak Hadir';
     const STATUS_MASUK_KERJA_TAPI_TIDAK_ABSEN_PULANG = 'Tidak Hadir, Tidak Ada Absen Pulang';
+    const LAPORAN_PAGI_NOT_GROUPING = "PAGI_NOT_GROUPING";
+    const LAPORAN_PAGI_GROUPING_BY_JADWAL_KERJA = "PAGI_GROUPING_BY_JADWAL_KERJA";
+    const LAPORAN_PER_HARI_NOT_GROUPING = "HARIAN_NOT_GROUPING";
+    const LAPORAN_HARIAN_GROUPING_BY_JADWAL_KERJA = 'HARIAN_GROUPING_BY_JADWAL_KERJA' ;
+
 
     public $readonlyJadwalKerja;
     public $readonlyJadwalKerjaHari;
@@ -48,28 +53,38 @@ class KehadiranDiInternalSistem extends BaseKehadiranDiInternalSistem {
         $sql = <<<SQL
 SELECT
 
-       g_jadwal.jadwal_kerja_id                                                    AS jadwal_kerja_id,
-       g_jadwal.nama_jadwal_kerja                                                  AS nama_jadwal_kerja,
-       g_jadwal.kode_jadwal_kerja                                                  AS kode_jadwal_kerja,
+       g_jadwal.jadwal_kerja_id                                                                                                  AS jadwal_kerja_id,
+       g_jadwal.nama_jadwal_kerja                                                                                                AS nama_jadwal_kerja,
+       g_jadwal.kode_jadwal_kerja                                                                                                AS kode_jadwal_kerja,
 
-       g_jadwal.jadwal_kerja_hari_id                                               AS jadwal_kerja_hari_id,
-       g_jadwal.nama_hari_kerja                                                    AS nama_hari_kerja,
+       g_jadwal.jadwal_kerja_hari_id                                                                                             AS jadwal_kerja_hari_id,
+       g_jadwal.nama_hari_kerja                                                                                                  AS nama_hari_kerja,
 
-       g_jadwal.jam_kerja_id                                                       AS jam_kerja_id,
-       g_jadwal.nama_jam_kerja                                                     AS nama_jam_kerja,
-       g_jadwal.kode_jam_kerja                                                     AS kode_jam_kerja,
-       (SELECT(:tanggal))                                                            AS tanggal,
-       CONCAT(:tanggal, ' ',g_jadwal.masuk_jam_kerja) AS unformated_ketentuan_masuk,
-       CONCAT(:tanggal, ' ',g_jadwal.pulang_jam_kerja) AS unformated_ketentuan_pulang,
-       DATE_FORMAT((CONCAT(:tanggal, ' ',TIME_FORMAT(g_jadwal.masuk_jam_kerja ,'%H:%i'))),'%d-%m-%Y %H:%i')  AS ketentuan_masuk,
-       DATE_FORMAT((CONCAT(:tanggal, ' ',TIME_FORMAT(g_jadwal.pulang_jam_kerja ,'%H:%i'))),'%d-%m-%Y %H:%i') AS ketentuan_pulang,
+       g_jadwal.jam_kerja_id                                                                                                     AS jam_kerja_id,
+       g_jadwal.nama_jam_kerja                                                                                                   AS nama_jam_kerja,
+       g_jadwal.kode_jam_kerja                                                                                                   AS kode_jam_kerja,
+       (SELECT(:tanggal))                                                                                                        AS tanggal,
        
-       g_karyawan.id                                                               AS karyawan_id,
-       g_karyawan.nama                                                             AS nama_karyawan,
-       g_karyawan.nik                                                              AS nik,
-       g_karyawan.masuk                                                            AS unformated_aktual_masuk,
-       DATE_FORMAT(g_karyawan.masuk, '%d-%m-%Y %H:%i')                             AS aktual_masuk,
-       g_karyawan.pulang                                                           AS aktual_pulang
+       CONCAT(:tanggal, ' ',g_jadwal.masuk_jam_kerja)                                                                            AS unformated_ketentuan_masuk,
+       IF(g_jadwal.pindah_hari > 0,
+          DATE_ADD(CONCAT(:tanggal, ' ', g_jadwal.pulang_jam_kerja), INTERVAL 1 DAY),
+          CONCAT(:tanggal, ' ', g_jadwal.pulang_jam_kerja)
+       )                                                                                                                         AS unformated_ketentuan_pulang,
+       
+       DATE_FORMAT((CONCAT(:tanggal, ' ',TIME_FORMAT(g_jadwal.masuk_jam_kerja ,'%H:%i'))),'%d-%m-%Y %H:%i')  AS ketentuan_masuk,
+       IF(g_jadwal.pindah_hari > 0,
+          DATE_FORMAT(DATE_ADD((CONCAT(:tanggal, ' ', TIME_FORMAT(g_jadwal.pulang_jam_kerja, '%H:%i'))), INTERVAL 1
+                               DAY), '%d-%m-%Y %H:%i'),
+          DATE_FORMAT((CONCAT(:tanggal, ' ', TIME_FORMAT(g_jadwal.pulang_jam_kerja, '%H:%i'))),
+                      '%d-%m-%Y %H:%i')
+           )                                                                                                                     AS ketentuan_pulang,
+       
+       g_karyawan.id                                                                                                             AS karyawan_id,
+       g_karyawan.nama                                                                                                           AS nama_karyawan,
+       g_karyawan.nik                                                                                                            AS nik,
+       g_karyawan.masuk                                                                                                          AS unformated_aktual_masuk,
+       DATE_FORMAT(g_karyawan.masuk, '%d-%m-%Y %H:%i')                                                                           AS aktual_masuk,
+       g_karyawan.pulang                                                                                                         AS aktual_pulang
 
 FROM (
          SELECT k.jadwal_kerja_id                AS jadwal_kerja_karyawan,
@@ -99,6 +114,7 @@ FROM (
            jdk.kode                AS kode_jadwal_kerja,
 
            jkh.id                  AS jadwal_kerja_hari_id,
+           jk.pindah_hari          AS pindah_hari,
            jkh.nama                AS nama_hari_kerja,
            jkh.default_libur       AS default_libur,
 
@@ -127,7 +143,7 @@ FROM (
     ORDER BY jdk.id
 ) AS g_jadwal ON g_jadwal.jadwal_kerja_id = g_karyawan.jadwal_kerja_karyawan
 
-ORDER BY nama_karyawan
+ORDER BY kode_jadwal_kerja, nama_karyawan, unformated_ketentuan_pulang
 ;
 SQL;
 
@@ -138,100 +154,124 @@ SQL;
 
     /**
      * @param $tanggal
+     * @param int $pindahHari
      * @return array
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws \Exception
      */
-    public static function findUntukImportKehadiranPulang($tanggal) {
+    public static function findUntukImportKehadiranPulang($tanggal, $pindahHari) {
 
-        $sql =<<<SQL
-            SELECT
-                   k.id AS karyawan_id,
-                   MIN(DATE(tanggal_scan))          AS tanggal_scan,
-                   k.nama,
-                   k.nomor_induk_karyawan           as nik,
-                   MIN(absensi_harian.tanggal_scan) AS aktual_masuk,
-                   MAX(absensi_harian.tanggal_scan) AS aktual_pulang
+        switch ($pindahHari):
+            case 0 :
+                $sql = <<<SQL
+            SELECT k.id                                                     AS karyawan_id,
+                   MIN(kehadiran_internal.pindah_hari)                      AS pindah_hari,
+                   MIN(DATE(tanggal_scan))                                  AS tanggal_scan,
+                   GROUP_CONCAT(DISTINCT k.nama)                            as nama_karyawan,
+                   k.nomor_induk_karyawan                                   as nik,
+                   jk.kode                                                  AS kode_jadwal_kerja,
+                   MIN(kehadiran_mesin.tanggal_scan)                        AS aktual_masuk,
+                   MAX(kehadiran_mesin.tanggal_scan)                        AS aktual_pulang,
+                   MIN(kehadiran_internal.aktual_masuk)                     AS internal_aktual_masuk,
+                   GROUP_CONCAT(DISTINCT kehadiran_internal.nama_jam_kerja) AS nama_jam_kerja,
+                   MIN(kehadiran_internal.jam_kerja_id)                     AS jam_kerja
             
             FROM karyawan AS k
+            
+                     LEFT JOIN jadwal_kerja jk ON k.jadwal_kerja_id = jk.id
                      LEFT JOIN (SELECT a.karyawan_id, a.tanggal_scan
                                 FROM kehadiran_di_mesin_absensi a
-                                WHERE DATE(a.tanggal_scan) = :tanggal)
-                AS absensi_harian
-                               ON k.id = absensi_harian.karyawan_id
+                                WHERE DATE(a.tanggal_scan) = :tanggal) AS kehadiran_mesin
+                               ON k.id = kehadiran_mesin.karyawan_id
+                     LEFT JOIN (SELECT kdis.karyawan_id,
+                                       kdis.tanggal,
+                                       kdis.aktual_masuk,
+                                       kdis.aktual_pulang,
+                                       kdis.jam_kerja_id,
+                                       j.nama as nama_jam_kerja,
+                                       j.pindah_hari
+                                FROM kehadiran_di_internal_sistem kdis
+                                         INNER JOIN jam_kerja j on kdis.jam_kerja_id = j.id
+                                WHERE DATE(kdis.tanggal) = :tanggal
+            
+                               ) AS kehadiran_internal
+                               ON k.id = kehadiran_internal.karyawan_id
+            
+            WHERE kehadiran_internal.pindah_hari = :pindahHari
+            
             GROUP BY k.id
-            ORDER BY k.id
+            ORDER BY tanggal_scan DESC, nama_karyawan;
 SQL;
+                break;
+            case 1:
+                $sql = <<<SQL
+                    SELECT k.id                                                                          AS karyawan_id,
+                           MIN(kehadiran_internal.pindah_hari)                                           AS pindah_hari,
+                           MIN(DATE(tanggal_scan))                                                       AS tanggal_scan,
+                           GROUP_CONCAT(DISTINCT k.nama)                                                 as nama_karyawan,
+                           k.nomor_induk_karyawan                                                        as nik,
+                           jk.kode                                                                       AS kode_jadwal_kerja,
+                           MIN(kehadiran_mesin.tanggal_scan)                                             AS aktual_masuk,
+                           MIN(kehadiran_mesin_pada_hari_selanjutnya.tanggal_scan_pada_hari_selanjutnya) AS aktual_pulang,
+                           MIN(kehadiran_internal.aktual_masuk)                                          AS internal_aktual_masuk,
+                           GROUP_CONCAT(DISTINCT kehadiran_internal.nama_jam_kerja)                      AS nama_jam_kerja,
+                           MIN(kehadiran_internal.jam_kerja_id)                                          AS jam_kerja
+                    
+                    FROM karyawan AS k
+                    
+                             LEFT JOIN jadwal_kerja jk ON k.jadwal_kerja_id = jk.id
+                             LEFT JOIN (SELECT a.karyawan_id, a.tanggal_scan
+                                        FROM kehadiran_di_mesin_absensi a
+                                        WHERE DATE(a.tanggal_scan) = :tanggal) AS kehadiran_mesin
+                                       ON k.id = kehadiran_mesin.karyawan_id
+                             LEFT JOIN (SELECT a.karyawan_id, a.tanggal_scan AS tanggal_scan_pada_hari_selanjutnya
+                                        FROM kehadiran_di_mesin_absensi a
+                                        WHERE DATE(a.tanggal_scan) = DATE_ADD(:tanggal, INTERVAL 1 DAY) ) AS kehadiran_mesin_pada_hari_selanjutnya
+                                       ON k.id = kehadiran_mesin_pada_hari_selanjutnya.karyawan_id
+                             LEFT JOIN (SELECT kdis.karyawan_id,
+                                               kdis.tanggal,
+                                               kdis.aktual_masuk,
+                                               kdis.aktual_pulang,
+                                               kdis.jam_kerja_id,
+                                               j.nama as nama_jam_kerja,
+                                               j.pindah_hari
+                                        FROM kehadiran_di_internal_sistem kdis
+                                                 INNER JOIN jam_kerja j on kdis.jam_kerja_id = j.id
+                                        WHERE DATE(kdis.tanggal) = :tanggal
+                    ) AS kehadiran_internal
+                                       ON k.id = kehadiran_internal.karyawan_id
+                    
+                    WHERE kehadiran_internal.pindah_hari = 1
+                    
+                    GROUP BY k.id
+                    ORDER BY tanggal_scan DESC, nama_karyawan
+SQL;
+                break;
+            default:
+                throw new \Exception('Selisih hari tidak didukung');
+                break;
+            endswitch;
 
         return self::getDb()->createCommand($sql, [
-                ':tanggal' => Yii::$app->formatter->asDate($tanggal, "php:Y-m-d")]
+                ':tanggal' => Yii::$app->formatter->asDate($tanggal, "php:Y-m-d"),
+                ':pindahHari' => $pindahHari
+            ]
         )->queryAll();
 
     }
 
-    /**
-     * Mencari data untuk laporan harian menggunakan Raw SQL
-     * @param $tanggal
-     * @return array
-     * @throws Exception
-     */
-    public static function findUntukLaporanHarianRawSql($tanggal) {
 
-        $sql = <<<SQL
-        SELECT karyawan.nama                                               AS nama,
-               karyawan.nomor_induk_karyawan                               AS nik,
-               GROUP_CONCAT(struktur_organisasi.path)                      AS menjabat,
-               GROUP_CONCAT(struktur_organisasi.kode_path)                 AS kode_menjabat,
-               ketentuan_masuk,
-               ketentuan_pulang,
-               aktual_masuk,
-               aktual_pulang,
-               TIME_FORMAT(TIMEDIFF(aktual_pulang, aktual_masuk), '%H:%i') AS lama_waktu_bekerja,
-               CASE
-                   WHEN aktual_masuk IS NULL THEN 'Belum Ada Kabar'
-                   WHEN (aktual_masuk > ketentuan_masuk) THEN 'Terlambat'
-                   ELSE 'Sesuai' END                                       AS status_masuk_kerja,
-               jenis_izin.nama                                             AS jenis_izin,
-               cuti_normatif.nama                                          AS cuti_normatif,
-               CASE
-                   WHEN aktual_pulang IS NULL THEN 'Tidak hadir karena tidak ada absen pulang'
-                   ELSE 'Hadir, Sesuai Aturan' END                         AS status_kehadiran,
-               keterangan
-        FROM kehadiran_di_internal_sistem
-                 LEFT JOIN karyawan ON kehadiran_di_internal_sistem.karyawan_id = karyawan.id
-                 LEFT JOIN karyawan_struktur_organisasi ON karyawan.id = karyawan_struktur_organisasi.karyawan_id
-                 # LEFT JOIN struktur_organisasi ON karyawan_struktur_organisasi.struktur_organisasi_id = struktur_organisasi.id
-                 
-                LEFT JOIN (
-                     
-                    WITH RECURSIVE reporting_chain(id, nama, path, kode_path) AS (
-                        SELECT id, nama, nama, CAST(kode AS CHAR(100000))
-                        FROM struktur_organisasi
-                        WHERE parent_id IS NULL
-                        UNION ALL
-                        SELECT oc.id, oc.nama, CONCAT(rc.path, '->', oc.nama), CONCAT(rc.kode_path, '->', oc.kode)
-                        FROM reporting_chain rc
-                                 JOIN struktur_organisasi oc ON rc.id = oc.parent_id)
-                    SELECT *
-                    FROM reporting_chain
-                     
-                 ) AS struktur_organisasi
-                           ON karyawan_struktur_organisasi.struktur_organisasi_id = struktur_organisasi.id
-                 LEFT JOIN jenis_izin ON kehadiran_di_internal_sistem.jenis_izin_id = jenis_izin.id
-                 LEFT JOIN cuti_normatif ON kehadiran_di_internal_sistem.cuti_normatif_id = cuti_normatif.id
-        WHERE DATE(ketentuan_masuk) = :tanggal
-        GROUP BY kehadiran_di_internal_sistem.id
-SQL;
-        return self::getDb()->createCommand($sql, [':tanggal' => $tanggal])->queryAll();
-
-    }
 
     public static function findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal) {
 
         $sql = <<<SQL
-    SELECT base_karyawan.nama,
+SELECT 
+       base_karyawan.nama,
        base_karyawan.dept,
        base_karyawan.nik,
+       base_karyawan.jadwal_kerja_karyawan,
+       kehadiran.nama_jam_kerja,
        kehadiran.ketentuan_masuk,
        kehadiran.ketentuan_pulang,
        kehadiran.aktual_masuk,
@@ -246,64 +286,70 @@ FROM (
          SELECT k.id                   AS id,
                 k.nama                 AS nama,
                 rc.path                AS dept,
-                k.nomor_induk_karyawan AS nik
+                k.nomor_induk_karyawan AS nik,
+                jk2.nama               AS jadwal_kerja_karyawan  
          FROM karyawan k
                   LEFT JOIN (SELECT *
                              FROM karyawan_struktur_organisasi kso
                              WHERE kso.jenis_jabatan = :jenisJabatan) AS filter_kso_utama
                             ON filter_kso_utama.karyawan_id = k.id
+             
+                  LEFT JOIN jadwal_kerja jk2 ON k.jadwal_kerja_id = jk2.id
                   LEFT JOIN (
-             WITH RECURSIVE reporting_chain(id, parent_id, nama, tipe, root, path, level) AS (
-                 SELECT id,                                   #id
-                        parent_id,
-                        nama,                                 #nama
-                        tipe,                                 #tipe
-                        CAST((CONCAT('{ "tipe":"', tipe, '","kode":"', kode, '","nama":"', nama,
-                                     '"}')) AS CHAR(100000)), #root
-                        CAST((CONCAT('"0" : { "tipe":"', lower(tipe),
-                            '","kode":"', kode,
-                            '","nama":"', nama,
-                            '","singkatan":"', singkatan,
-                            '","level":"', 0,
-                                     '"}')) AS CHAR(100000)), #path
-                        1
-                 FROM struktur_organisasi so
-                 WHERE parent_id IS NULL
-                 UNION ALL
-                 SELECT so.id,                                         #id
-                        so.parent_id,
-                        so.nama,                                       #nama
-                        so.tipe,                                       #tipe
-                        rc.root,                                       #root
-                        CONCAT(rc.path, ',',
-                               (CONCAT('"', (rc.level), '": {',
-                                   '"tipe":"', lower(so.tipe),
-                                   '","kode":"', so.kode,
-                                   '","nama":"', so.nama,
-                                   '","singkatan":"', so.singkatan,
-                                   '","level":"', rc.level + 1,
-                                   '"}'
-                               ))), #path
-                        rc.level + 1
-                 FROM reporting_chain rc
-                          JOIN struktur_organisasi so ON rc.id = so.parent_id)
-             SELECT id,
-                    parent_id,
-                    nama,
-                    tipe,
-                    (root)                   AS root,
-                    (CONCAT('{', path, '}')) AS path,
-                    level
-             FROM reporting_chain
-         ) AS rc ON rc.id = filter_kso_utama.struktur_organisasi_id
+                     WITH RECURSIVE reporting_chain(id, parent_id, nama, tipe, root, path, level) AS (
+                         SELECT id,                                   #id
+                                parent_id,
+                                nama,                                 #nama
+                                tipe,                                 #tipe
+                                CAST((CONCAT('{ "tipe":"', tipe, '","kode":"', kode, '","nama":"', nama,
+                                             '"}')) AS CHAR(100000)), #root
+                                CAST((CONCAT('"0" : { "tipe":"', lower(tipe),
+                                    '","kode":"', kode,
+                                    '","nama":"', nama,
+                                    '","singkatan":"', singkatan,
+                                    '","level":"', 0,
+                                             '"}')) AS CHAR(100000)), #path
+                                1
+                         FROM struktur_organisasi so
+                         WHERE parent_id IS NULL
+                         UNION ALL
+                         SELECT so.id,                                         #id
+                                so.parent_id,
+                                so.nama,                                       #nama
+                                so.tipe,                                       #tipe
+                                rc.root,                                       #root
+                                CONCAT(rc.path, ',',
+                                       (CONCAT('"', (rc.level), '": {',
+                                           '"tipe":"', lower(so.tipe),
+                                           '","kode":"', so.kode,
+                                           '","nama":"', so.nama,
+                                           '","singkatan":"', so.singkatan,
+                                           '","level":"', rc.level + 1,
+                                           '"}'
+                                       ))), #path
+                                rc.level + 1
+                         FROM reporting_chain rc
+                                  JOIN struktur_organisasi so ON rc.id = so.parent_id)
+                     SELECT id,
+                            parent_id,
+                            nama,
+                            tipe,
+                            (root)                   AS root,
+                            (CONCAT('{', path, '}')) AS path,
+                            level
+                     FROM reporting_chain
+                  ) AS rc ON rc.id = filter_kso_utama.struktur_organisasi_id
          WHERE k.tanggal_berhenti_bekerja IS NULL
      ) AS base_karyawan
 
 
          LEFT JOIN (
     SELECT kdis.id                                                     AS id,
-           k.id                                                        as karyawan_id,
-           DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE) AS ketentuan_masuk,
+           k.id                                                        as karyawan_id,  
+       jk.nama                                                         AS nama_jam_kerja,
+           IF(toleransi_terlambat > 0, 
+                DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE),
+                ketentuan_masuk) AS ketentuan_masuk,
            ketentuan_pulang,
            aktual_masuk,
            aktual_pulang,
@@ -312,13 +358,23 @@ FROM (
                WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
                WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
                WHEN (aktual_masuk IS NULL) THEN 'Belum Ada Kabar'
-               WHEN (aktual_masuk > DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE)) THEN 'Terlambat'
+               WHEN (aktual_masuk >
+                     IF(toleransi_terlambat > 0,
+                        DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE),
+                        ketentuan_masuk
+                         )
+                   ) THEN 'Terlambat'
                ELSE 'Sesuai' END                                       AS status_masuk_kerja_pada_pagi_hari,
            CASE
                WHEN (aktual_masuk IS NULL) AND (jenis_izin_id IS NOT NULL)    THEN 'Izin Tidak Masuk'
                WHEN (aktual_masuk IS NULL) AND (cuti_normatif_id IS NOT NULL) THEN 'Cuti'
                WHEN (aktual_masuk IS NULL) AND (aktual_pulang IS NULL) THEN 'Tidak Masuk Kerja'
-               WHEN (aktual_masuk > DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE)) THEN 'Terlambat'
+               WHEN (aktual_masuk >
+                     IF(toleransi_terlambat > 0,
+                        DATE_ADD(ketentuan_masuk, INTERVAL toleransi_terlambat MINUTE),
+                        ketentuan_masuk
+                         )
+                   ) THEN 'Terlambat'
                ELSE 'Sesuai' END                                       AS status_masuk_kerja,
            ji.nama                                                     AS jenis_izin,
            CASE

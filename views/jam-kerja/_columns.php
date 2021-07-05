@@ -16,6 +16,9 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'kode',
+        'contentOptions' => [
+            'class' => 'small'
+        ],
     ],
     [
         'class'=>'\yii\grid\DataColumn',
@@ -25,12 +28,14 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'jam_mulai_istrahat',
-        'format' => 'time'
+        'format' => 'time',
+        'label' => 'Mulai Istrht'
     ],
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'jam_selesai_istrahat',
-        'format' => 'time'
+        'format' => 'time',
+        'label' => 'Selesai Istrht'
     ],
      [
          'class'=>'\yii\grid\DataColumn',
@@ -48,7 +53,13 @@ return [
      [
          'class'=>'\yii\grid\DataColumn',
          'attribute'=>'toleransi_terlambat',
+         'label' => 'Toler. Telat'
      ],
+    [
+        'class'=>'\yii\grid\DataColumn',
+        'attribute'=>'pindah_hari',
+        'label' => 'Pdh Hari'
+    ],
     // [
         // 'class'=>'\yii\grid\DataColumn',
         // 'attribute'=>'created_at',

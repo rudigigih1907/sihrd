@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'encodeLabel' => false,
                                         'dropdown' => [
                                             'items' => [
-
+                                                ' <h6 class="dropdown-header">Laporan Pagi</h6>',
                                                 [
                                                     'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Pagi',
                                                     'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-pagi-dengan-format-pdf', 'tanggal' => $model->tanggal],
@@ -60,8 +60,30 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     ]
                                                 ],
                                                 [
+                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Pagi Di Grouping By Jadwal Kerja',
+                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-pagi-dengan-format-pdf',
+                                                        'tanggal' => $model->tanggal,
+                                                        'laporanGroupBy' => KehadiranDiInternalSistem::LAPORAN_PAGI_GROUPING_BY_JADWAL_KERJA
+                                                    ],
+                                                    'linkOptions' => [
+                                                        'target' => '_blank'
+                                                    ]
+                                                ],
+                                                '<div class="dropdown-divider"></div>',
+                                                ' <h6 class="dropdown-header">Laporan Harian</h6>',
+                                                [
                                                     'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Per Hari',
                                                     'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-per-hari-dengan-format-pdf', 'tanggal' => $model->tanggal],
+                                                    'linkOptions' => [
+                                                        'target' => '_blank'
+                                                    ]
+                                                ],
+                                                [
+                                                    'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Kehadiran Per Hari Di Grouping By Jadwal Kerja',
+                                                    'url' => ['kehadiran-di-internal-sistem/export-laporan-harian-per-hari-dengan-format-pdf',
+                                                        'tanggal' => $model->tanggal,
+                                                        'laporanGroupBy' => KehadiranDiInternalSistem::LAPORAN_HARIAN_GROUPING_BY_JADWAL_KERJA
+                                                    ],
                                                     'linkOptions' => [
                                                         'target' => '_blank'
                                                     ]

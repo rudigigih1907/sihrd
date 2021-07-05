@@ -2,10 +2,11 @@
 
 
 /* @var $this \yii\web\View */
-/* @var $model \app\models\form\ImportKehadiranDiInternalSistemAbsensi */
+/* @var $model \app\models\form\ImportKehadiranDiInternalSistemAbsensiJamPulang */
 
 /* @var $form kartik\form\ActiveForm */
-/* @var $title string*/
+
+/* @var $title string */
 
 use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FAS;
@@ -30,6 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <?= $form->field($model, 'tanggal')
                         ->widget(kartik\date\DatePicker::class);
+                    ?>
+
+                    <?php $model->pindahHari = 0 ?>
+                    <?= $form->field($model, 'pindahHari')
+                        ->radioList([
+                            '0' => 'Tidak Pindah Hari',
+                            '1' => '1 Hari',
+                        ], [
+                            'inline' => true
+                        ]);
                     ?>
                 </div>
 

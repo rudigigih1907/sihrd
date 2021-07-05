@@ -36,6 +36,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function search($params) {
         $query = KehadiranDiInternalSistem::find();
@@ -50,7 +51,6 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');

@@ -32,8 +32,15 @@ return [
     ],
     [
         'class' => '\yii\grid\DataColumn',
+        'attribute' => 'jadwal_kerja_id',
+        'value' => 'jadwalKerja.kode',
+        'filter' => \app\models\JadwalKerja::mapIDToNama()
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
         'attribute' => 'jam_kerja_id',
-        'value' => 'jamKerja.kode'
+        'value' => 'jamKerja.kode',
+        'filter' => \app\models\JamKerja::mapIDToNama()
     ],
     [
         'class' => '\yii\grid\DataColumn',

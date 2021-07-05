@@ -12,7 +12,7 @@ class ImportKehadiranDiInternalSistemAbsensi extends Model {
 
     public function rules() {
         return [
-            ['tanggal', 'required']
+            ['tanggal', 'required'],
         ];
     }
 

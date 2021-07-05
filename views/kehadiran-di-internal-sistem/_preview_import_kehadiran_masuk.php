@@ -86,8 +86,15 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
                             <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]aktual_masuk"); ?>
                             <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyJadwalKerja"); ?>
                             <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyJadwalKerjaHari"); ?>
-                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanMasuk"); ?>
-                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanPulang"); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyJamKerja",[
+                                'class' => 'jam-kerja'
+                            ]); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanMasuk",[
+                                    'class' => 'ketentuan-masuk'
+                            ]); ?>
+                            <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKetentuanPulang",[
+                                'class' => 'ketentuan-pulang'
+                            ]); ?>
                             <?php echo Html::activeHiddenInput($modelDetail, "[{$i}]readonlyKaryawan", [
                                 'class' => 'karyawan'
                             ]); ?>
@@ -134,9 +141,15 @@ $this->registerCss('.table-responsive{ max-height: 488px }')
 <?php $js = <<<JS
 jQuery(".dynamicform_wrapper").on("beforeDelete", function(e, row) {
     
-   if (! confirm("Hapus " + jQuery(row).find('.karyawan').val() + " ?") ) {
+   let nama = jQuery(row).find('.karyawan').val();
+   let jamKerja  = jQuery(row).find('.jam-kerja').val();
+   let ketentuanMasuk  = jQuery(row).find('.ketentuan-masuk').val();
+   let ketentuanPulang  = jQuery(row).find('.ketentuan-pulang').val();
+
+   if (! confirm("Hapus " + nama + ", " + jamKerja  +" : "  + ketentuanMasuk + " ke " + ketentuanPulang  + " ?") ) {
        return false;
    }
+   
    return true;
 });
 JS;

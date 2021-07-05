@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).'Tambah Jadwal Kerja', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(FAS::icon(FAS::_PLUS_CIRCLE).'Tambah', ['create'], ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php try { 

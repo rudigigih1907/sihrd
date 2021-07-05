@@ -3,12 +3,17 @@
 namespace app\controllers;
 
 use app\models\form\ImportKehadiranDiInternalSistemAbsensi;
+use app\models\form\ImportKehadiranDiInternalSistemAbsensiJamPulang;
 use app\models\form\LaporanHarianAbsensi;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
 use app\models\Tabular;
+use Exception;
+use kartik\mpdf\Pdf;
 use rmrevin\yii\fontawesome\FAS;
+use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -115,7 +120,7 @@ class KehadiranDiInternalSistemController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      * @throws StaleObjectException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionDelete($id, $page = null) {
         $model = $this->findModel($id);
@@ -129,7 +134,8 @@ class KehadiranDiInternalSistemController extends Controller {
 
     /**
      * Menampilkan Form Import data kehadiran
-     * @return string|\yii\web\Response
+     * @return string|Response
+     * @throws InvalidConfigException
      */
     public function actionImportKehadiranMasuk() {
 
@@ -152,8 +158,8 @@ class KehadiranDiInternalSistemController extends Controller {
      * Preview Import data kehadiran Karyawan masuk kantor.
      * @param $tanggal
      * @return array|string|Response
-     * @throws \Throwable
-     * @throws yii\base\InvalidConfigException
+     * @throws Throwable
+     * @throws InvalidConfigException
      * @throws yii\db\Exception
      */
     public function actionPreviewImportKehadiranMasuk($tanggal) {
@@ -212,6 +218,7 @@ class KehadiranDiInternalSistemController extends Controller {
                         'tanggal' => $el['tanggal'],
                         'ketentuan_masuk' => empty($el['ketentuan_masuk']) ? NULL : $el['ketentuan_masuk'],
                         'ketentuan_pulang' => empty($el['ketentuan_pulang']) ? NULL : $el['ketentuan_pulang'],
+                        'ketentuan_pulang' => empty($el['ketentuan_pulang']) ? NULL : $el['ketentuan_pulang'],
                         'karyawan_id' => $el['karyawan_id'],
                         'aktual_masuk' => !empty($el['aktual_masuk']) ? $el['aktual_masuk'] : null,
                     ];
@@ -227,10 +234,10 @@ class KehadiranDiInternalSistemController extends Controller {
                     )->execute();
 
                     $transaction->commit();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $transaction->rollBack();
                     throw  $e;
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $transaction->rollBack();
                     throw $e;
                 }
@@ -287,7 +294,7 @@ class KehadiranDiInternalSistemController extends Controller {
     /**
      * @param $tanggal
      * @return Response
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionCancelKehadiran($tanggal) {
         KehadiranDiInternalSistem::deleteAll([
@@ -306,13 +313,16 @@ class KehadiranDiInternalSistemController extends Controller {
     public function actionImportKehadiranPulang() {
 
         $request = Yii::$app->request;
-        $model = new ImportKehadiranDiInternalSistemAbsensi();
+        $model = new ImportKehadiranDiInternalSistemAbsensiJamPulang();
 
         if ($model->load($request->post()) && $model->validate()) {
-            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-pulang', 'tanggal' => $model->tanggal]);
+            return $this->redirect(['kehadiran-di-internal-sistem/preview-import-kehadiran-pulang',
+                'tanggal' => $model->tanggal,
+                'pindahHari' => $model->pindahHari
+            ]);
         }
 
-        return $this->render('_form_import_kehadiran', [
+        return $this->render('_form_import_kehadiran_pulang', [
             'model' => $model,
             'title' => "Import Kehadiran Pulang"
         ]);
@@ -328,15 +338,18 @@ class KehadiranDiInternalSistemController extends Controller {
      *
      *
      * @param $tanggal
+     * @param int $pindahHari
      * @return array|string|Response
-     * @throws \Throwable
+     * @throws InvalidConfigException
+     * @throws \yii\db\Exception
      */
-    public function actionPreviewImportKehadiranPulang($tanggal) {
+    public function actionPreviewImportKehadiranPulang($tanggal, $pindahHari) {
 
-        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal);
+        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal, $pindahHari);
         return $this->render('_preview_import_kehadiran_pulang', [
             'models' => $models,
-            'tanggal' => $tanggal
+            'tanggal' => $tanggal,
+            'pindahHari' => intval($pindahHari),
         ]);
 
     }
@@ -345,32 +358,32 @@ class KehadiranDiInternalSistemController extends Controller {
      * Batch update jam pulang karyawan
      * @param $tanggal
      * @return Response
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
+     * @throws Throwable
+     * @throws InvalidConfigException
      * @throws \yii\db\Exception
      */
-    public function actionBatchUpdateJamPulangKaryawan($tanggal){
+    public function actionBatchUpdateJamPulangKaryawan($tanggal, $pindahHari) {
 
-        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal);
+        $models = KehadiranDiInternalSistem::findUntukImportKehadiranPulang($tanggal, $pindahHari);
         $connection = KehadiranDiInternalSistem::getDb();
         $transaction = $connection->beginTransaction();
 
         try {
             foreach ($models as $model) {
-                $connection->createCommand()->update(KehadiranDiInternalSistem::tableName(),[
+                $connection->createCommand()->update(KehadiranDiInternalSistem::tableName(), [
                     'aktual_masuk' => $model['aktual_masuk'],
                     'aktual_pulang' => $model['aktual_pulang'],
-                ],[
-                    'karyawan_id'=> $model['karyawan_id'],
+                ], [
+                    'karyawan_id' => $model['karyawan_id'],
                     'tanggal' => $model['tanggal_scan'],
                 ])->execute();
             }
 
             $transaction->commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             throw $e;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
             throw $e;
         }
@@ -382,7 +395,7 @@ class KehadiranDiInternalSistemController extends Controller {
      * Tampilkan form untuk membuat laporan harian
      * @return string
      * @throws yii\db\Exception
-     * @throws yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionCreateLaporanHarian() {
 
@@ -408,22 +421,46 @@ class KehadiranDiInternalSistemController extends Controller {
     /**
      * Laporan Harian untuk kehadiran pagi
      * @param $tanggal
+     * @param string $laporanGroupBy
      * @return string
      * @throws HttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
+     * @throws InvalidConfigException
+     * @throws \Mpdf\MpdfException
+     * @throws \setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException
+     * @throws \setasign\Fpdi\PdfParser\PdfParserException
+     * @throws \setasign\Fpdi\PdfParser\Type\PdfTypeException
      */
-    public function actionExportLaporanHarianPagiDenganFormatPdf($tanggal){
+    public function actionExportLaporanHarianPagiDenganFormatPdf($tanggal, $laporanGroupBy = KehadiranDiInternalSistem::LAPORAN_PAGI_NOT_GROUPING) {
 
-        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal)) {
+        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql(Yii::$app->formatter->asDate(
+            $tanggal, 'php:Y-m-d'
+        ))) {
 
             try {
+                /** @var Pdf $pdf */
                 $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
                 $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
-                $pdf->content = $this->renderPartial('_pdf_laporan_pagi', [
-                    'records' => $records,
-                    'tanggal' => $tanggal,
-                ]);
+
+                switch ($laporanGroupBy):
+                    case KehadiranDiInternalSistem::LAPORAN_PAGI_GROUPING_BY_JADWAL_KERJA:
+
+                        $data = ArrayHelper::index($records, null,
+                            'jadwal_kerja_karyawan'
+                        );
+                        ksort($data);
+                        $pdf->content = $this->renderPartial('_pdf_laporan_pagi_grouping_by_jadwal_kerja', [
+                            'records' => $data,
+                            'tanggal' => $tanggal,
+                        ]);
+                        break;
+                    default:
+                        $pdf->content = $this->renderPartial('_pdf_laporan_pagi', [
+                            'records' => $records,
+                            'tanggal' => $tanggal,
+                        ]);
+                        break;
+
+                endswitch;
                 return $pdf->render();
             } catch (NotFoundHttpException $e) {
                 return $e->getMessage();
@@ -432,17 +469,44 @@ class KehadiranDiInternalSistemController extends Controller {
         throw new HttpException(400, 'Model is not found');
     }
 
-    public function actionExportLaporanHarianPerHariDenganFormatPdf($tanggal){
+    /**
+     * @param $tanggal
+     * @param string $laporanGroupBy
+     * @return string
+     * @throws HttpException
+     * @throws InvalidConfigException
+     */
+    public function actionExportLaporanHarianPerHariDenganFormatPdf($tanggal, $laporanGroupBy = KehadiranDiInternalSistem::LAPORAN_PER_HARI_NOT_GROUPING) {
 
-        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql($tanggal)) {
-
+        if ($records = KehadiranDiInternalSistem::findUntukLaporanHarianHanyaJabatanUtamaSajaRawSql(Yii::$app->formatter->asDate(
+            $tanggal, 'php:Y-m-d'
+        ))) {
             try {
                 $pdf = Yii::$app->pdfDenganMinimalMarginJugaHeaderDariAplikasi;
-                $pdf->filename = 'Laporan Harian Absensi Pagi - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
-                $pdf->content = $this->renderPartial('_pdf_laporan_per_hari', [
-                    'records' => $records,
-                    'tanggal' => $tanggal,
-                ]);
+                $pdf->filename = 'Laporan Harian Absensi Harian - ' . Yii::$app->formatter->asDate($tanggal) . '.pdf';
+
+                switch ($laporanGroupBy):
+                    case KehadiranDiInternalSistem::LAPORAN_HARIAN_GROUPING_BY_JADWAL_KERJA:
+
+                        $data = ArrayHelper::index($records, null,
+                            'jadwal_kerja_karyawan'
+                        );
+
+                        ksort($data);
+                        $pdf->content = $this->renderPartial('_pdf_laporan_per_hari_group_by_jadwal_kerja', [
+                            'records' => $data,
+                            'tanggal' => $tanggal,
+                        ]);
+                        break;
+                    default:
+                        $pdf->content = $this->renderPartial('_pdf_laporan_per_hari', [
+                            'records' => $records,
+                            'tanggal' => $tanggal,
+                        ]);
+                        break;
+                endswitch;
+
+
                 return $pdf->render();
             } catch (NotFoundHttpException $e) {
                 return $e->getMessage();

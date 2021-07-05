@@ -50,7 +50,7 @@ abstract class KehadiranDiInternalSistem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'ketentuan_masuk', 'ketentuan_pulang', 'karyawan_id'], 'required'],
+            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'karyawan_id'], 'required'],
             [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id'], 'integer'],
             [['tanggal', 'ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang'], 'safe'],
             [['keterangan'], 'string'],

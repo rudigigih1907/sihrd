@@ -21,12 +21,14 @@ use yii\behaviors\TimestampBehavior;
  * @property string $durasi
  * @property integer $dihitung
  * @property integer $toleransi_terlambat
+ * @property integer $pindah_hari
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $created_by
  * @property string $updated_by
  *
  * @property \app\models\JadwalKerjaDetailDetail[] $jadwalKerjaDetailDetails
+ * @property \app\models\KehadiranDiInternalSistem[] $kehadiranDiInternalSistems
  * @property string $aliasModel
  */
 abstract class JamKerja extends \yii\db\ActiveRecord
@@ -72,7 +74,7 @@ abstract class JamKerja extends \yii\db\ActiveRecord
             [['nama', 'kode', 'jam_masuk', 'jam_pulang'], 'required'],
             [['jam_masuk', 'jam_mulai_istrahat', 'jam_selesai_istrahat', 'jam_pulang'], 'safe'],
             [['durasi'], 'string'],
-            [['dihitung', 'toleransi_terlambat'], 'integer'],
+            [['dihitung', 'toleransi_terlambat', 'pindah_hari'], 'integer'],
             [['nama'], 'string', 'max' => 255],
             [['kode'], 'string', 'max' => 50],
             [['nama'], 'unique'],
@@ -105,6 +107,7 @@ abstract class JamKerja extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'pindah_hari' => 'Pindah Hari',
         ];
     }
 
@@ -130,6 +133,14 @@ abstract class JamKerja extends \yii\db\ActiveRecord
     public function getJadwalKerjaDetailDetails()
     {
         return $this->hasMany(\app\models\JadwalKerjaDetailDetail::className(), ['jam_kerja_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKehadiranDiInternalSistems()
+    {
+        return $this->hasMany(\app\models\KehadiranDiInternalSistem::className(), ['jam_kerja_id' => 'id']);
     }
 
 

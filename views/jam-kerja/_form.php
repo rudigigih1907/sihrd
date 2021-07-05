@@ -13,24 +13,64 @@ use yii\helpers\Html;
 
     <div class="card shadow">
 
-        <?php $form = ActiveForm::begin([
-            'type' => ActiveForm::TYPE_HORIZONTAL,
-            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL]
-        ]); ?>
+        <?php $form = ActiveForm::begin([]); ?>
 
         <div class="card-body">
-            <?= $form->field($model, 'nama')->textInput([
-                'maxlength' => true,
-                'autofocus' => 'autofocus'
-            ]) ?>
-            <?= $form->field($model, 'kode')->textInput(['maxlength' => true]) ?>
-            <?= $form->field($model, 'jam_masuk')->textInput() ?>
-            <?= $form->field($model, 'jam_mulai_istrahat')->textInput() ?>
-            <?= $form->field($model, 'jam_selesai_istrahat')->textInput() ?>
-            <?= $form->field($model, 'jam_pulang')->textInput() ?>
-            <?php // $form->field($model, 'durasi')->dropDownList(['durasi_efektif' => 'Durasi efektif', 'durasi_aktual' => 'Durasi aktual',]) ?>
-            <?= $form->field($model, 'dihitung')->textInput() ?>
-            <?= $form->field($model, 'toleransi_terlambat')->textInput() ?>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'nama')->textInput([
+                        'maxlength' => true,
+                        'autofocus' => 'autofocus'
+                    ]) ?>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'kode')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'jam_masuk')->textInput() ?>
+
+                </div>
+
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'jam_mulai_istrahat')->textInput() ?>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'jam_selesai_istrahat')->textInput() ?>
+
+                </div>
+
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'jam_pulang')->textInput() ?>
+
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <?php // $form->field($model, 'durasi')->dropDownList(['durasi_efektif' => 'Durasi efektif', 'durasi_aktual' => 'Durasi aktual',]) ?>
+
+                    <?= $form->field($model, 'dihitung')->textInput() ?>
+
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'toleransi_terlambat')->textInput() ?>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <?= $form->field($model, 'pindah_hari')->textInput([
+                        'type' => 'number'
+                    ]) ?>
+                </div>
+            </div>
+
         </div>
 
         <div class="card-footer">
