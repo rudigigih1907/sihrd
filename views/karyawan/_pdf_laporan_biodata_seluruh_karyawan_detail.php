@@ -210,7 +210,10 @@ $formatter = Yii::$app->formatter;
                         </td>
                         <td>
                             <?= $ptkp['terhitung_sebagai_ptkp'] ?>
-                            <?= $ptkp['batal_ptkp_id'] ?>
+                            <?= !empty($ptkp['batal_ptkp_id']) ?
+                                "karena Tanggungan adalah ". $ptkp['batalPtkp']['nama'] :
+                                null
+                            ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

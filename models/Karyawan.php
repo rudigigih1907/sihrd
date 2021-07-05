@@ -171,6 +171,7 @@ class Karyawan extends BaseKaryawan {
             ->joinWith('alamatKaryawans')
             ->joinWith(['karyawanPtkps' => function($kp){
                 $kp->joinWith('hubunganPtkp');
+                $kp->joinWith('batalPtkp');
             }])
             ->joinWith(['karyawanStrukturOrganisasis' => function ($kso) {
                 /** @var KaryawanStrukturOrganisasi $kso */
