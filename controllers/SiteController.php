@@ -132,7 +132,9 @@ class SiteController extends Controller {
         $model = new ChangePassword();
 
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
-            Yii::$app->session->setFlash('success', ' Password berhasil diganti');
+            Yii::$app->user->logout();
+            Yii::$app->session->setFlash('success', FAS::icon(FAS::_THUMBS_UP) . ' Password berhasil diganti, Silahkan Login dengan Password Baru');
+
             return $this->redirect(['index']);
         }
 
