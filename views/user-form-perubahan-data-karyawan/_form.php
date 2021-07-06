@@ -51,36 +51,36 @@ $template = ['template' => '{input}{error}'];
                 <table class="card-table table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nama Data</th>
+                        <th>Detail Data</th>
+                       <!-- <th scope="col">Nama Data</th>
                         <th scope="col">Data Lama</th>
                         <th scope="col">Data Baru</th>
                         <th scope="col">Aksi</th>
-                        <th scope="col">Keterangan</th>
+                        <th scope="col">Keterangan</th>-->
                         <th scope="col" style="width: 2px">Aksi</th>
                     </tr>
                     </thead>
 
-                    <tbody class="container-items container-items-horizontal">
+                    <tbody class="container-items">
 
                     <?php foreach ($modelsDetail as $i => $modelDetail): ?>
                         <tr class="item">
-                            <td style="width: 2px;">
 
+
+                            <td>
                                 <?php if (!$modelDetail->isNewRecord) {
                                     echo Html::activeHiddenInput($modelDetail, "[{$i}]id");
                                 } ?>
-
-                                <i class="fa fa-adjust"></i>
-                            </td>
-
-                            <td><?php echo $form->field($modelDetail, "[{$i}]nama_data", $template); ?></td>
-                            <td><?php echo $form->field($modelDetail, "[{$i}]nilai_lama", $template); ?></td>
-                            <td><?php echo $form->field($modelDetail, "[{$i}]nilai_baru", $template); ?></td>
-                            <td><?php echo $form->field($modelDetail, "[{$i}]aksi", $template)
+                                <?php echo $form->field($modelDetail, "[{$i}]nama_data"); ?>
+                                <?php echo $form->field($modelDetail, "[{$i}]nilai_lama"); ?>
+                                <?php echo $form->field($modelDetail, "[{$i}]nilai_baru"); ?>
+                                <?php echo $form->field($modelDetail, "[{$i}]aksi")
                                     ->dropDownList(\app\models\FormPerubahanDataKaryawanDetail::optsAksi()); ?>
+                                <?php echo $form->field($modelDetail, "[{$i}]keterangan")->textarea([
+                                        'rows' => 6
+                                ]); ?>
                             </td>
-                            <td><?php echo $form->field($modelDetail, "[{$i}]keterangan", $template); ?></td>
+
                             <td>
                                 <button type="button" class="remove-item btn btn-danger btn-xs">
                                     <i class="fas fa-trash-alt"></i></button>
