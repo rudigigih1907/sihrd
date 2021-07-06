@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\components\helpers\KeputusanUangKehadiran;
+use app\models\AturanUangKehadiran;
 use app\models\form\ImportKehadiranDiInternalSistemAbsensi;
 use app\models\form\ImportKehadiranDiInternalSistemAbsensiJamPulang;
 use app\models\form\LaporanHarianAbsensi;
+use app\models\JenisIzin;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
 use app\models\Tabular;
@@ -57,11 +60,11 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-    * Displays a single KehadiranDiInternalSistem model.
-    * @param integer $id
-    * @return string
-    * @throws NotFoundHttpException
-    */
+     * Displays a single KehadiranDiInternalSistem model.
+     * @param integer $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionView($id){
         return $this->render('view', [
             'model' => $this->findModel($id)
@@ -69,10 +72,10 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-    * Creates a new KehadiranDiInternalSistem model.
-    * If creation is successful, the browser will be redirected to the 'index' page.
-    * @return mixed
-    */
+     * Creates a new KehadiranDiInternalSistem model.
+     * If creation is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
     public function actionCreate(){
         $model = new KehadiranDiInternalSistem();
         if($model->load(Yii::$app->request->post()) && $model->save()){
@@ -90,13 +93,13 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-    * Updates an existing KehadiranDiInternalSistem model.
-    * If update is successful, the browser will be redirected to the 'index' page with pagination URL
-    * @param integer $id
-    * @param null $page
-    * @return mixed
-    * @throws NotFoundHttpException if the model cannot be found
-    */
+     * Updates an existing KehadiranDiInternalSistem model.
+     * If update is successful, the browser will be redirected to the 'index' page with pagination URL
+     * @param integer $id
+     * @param null $page
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionUpdate($id, $page = null){
 
         $model = $this->findModel($id);
@@ -168,7 +171,33 @@ class KehadiranDiInternalSistemController extends Controller {
 
         if ($request->isGet) {
             $absenRecords = KehadiranDiInternalSistem::findUntukImportKehadiranMasuk($tanggal);
+
+            $optsAturanKehadiran = ArrayHelper::map(
+                AturanUangKehadiran::find()->all(), 'id', 'nama'
+            );
+
+            $jenisIzinDalamKota = JenisIzin::find()->select('id')
+                ->where([
+                    'nama' => 'Tugas Dalam Kota'
+                ])
+                ->one();
+
+            $jenisIzinLuarKota = JenisIzin::find()->select('id')
+                ->where([
+                    'nama' => 'Tugas Luar Kota'
+                ])
+                ->one();
+
             foreach ($absenRecords as $key => $absenRecord) {
+
+                $aturanUangKehadiran = new KeputusanUangKehadiran();
+                $aturanUangKehadiran->setOptionalAturanKehadiran($optsAturanKehadiran);
+                $aturanUangKehadiran->setKetentuanMasuk($absenRecord['unformated_ketentuan_masuk']);
+                $aturanUangKehadiran->setAktualMasuk($absenRecord['unformated_aktual_masuk']);
+                $aturanUangKehadiran->setPengecualianTerlambatKarenaLemburPadaHariSebelumnya($absenRecord['pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya']);
+                $aturanUangKehadiran->setJenisIzinDinasDalamKota($jenisIzinDalamKota['id']);
+                $aturanUangKehadiran->setJenisIzinDinasLuarKota($jenisIzinLuarKota['id']);
+
                 $models[$key] = new KehadiranDiInternalSistem([
                     'jadwal_kerja_id' => $absenRecord['jadwal_kerja_id'],
                     'jadwal_kerja_hari_id' => $absenRecord['jadwal_kerja_hari_id'],
@@ -185,6 +214,7 @@ class KehadiranDiInternalSistemController extends Controller {
                     'readonlyKetentuanPulang' => $absenRecord['ketentuan_pulang'],
                     'readonlyKaryawan' => $absenRecord['nama_karyawan'],
                     'readonlyAktualMasuk' => $absenRecord['aktual_masuk'],
+                    'aturan_uang_kehadiran_id' => $aturanUangKehadiran->getNilaiAkhir()
                 ]);
             }
         }

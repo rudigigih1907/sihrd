@@ -97,16 +97,23 @@ use yii\helpers\Html;
                         <?= $form->field($model, 'pendidikan_terakhir')->dropDownList(\app\models\Karyawan::optsPendidikanTerakhir()) ?>
                     </div>
                     <div class="col-sm-12 col-md-4">
-                        <?= $form->field($model, 'jadwal_kerja_id')->dropDownList(\app\models\JadwalKerja::mapIDToNama(),[
-                                'prompt' => '-'
+                        <?= $form->field($model, 'jadwal_kerja_id')->dropDownList(\app\models\JadwalKerja::mapIDToNama(), [
+                            'prompt' => '-'
                         ]) ?>
                     </div>
                     <div class="col-sm-12 col-md-4">
-                        <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+                        <?= $form->field($model, 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya')
+                            ->label('Pengecualian terlambat karena lembur')
+                            ->dropDownList(\app\models\Karyawan::optsPengecualianTerlambatKarenaLemburPadaHariSebelumnya())
+                        ?>
                     </div>
                 </div>
 
                 <div class="row">
+
+                    <div class="col-sm-12 col-md-4">
+                        <?= $form->field($model, 'tanggal_mulai_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
+                    </div>
                     <div class="col-sm-12 col-md-4">
                         <?= $form->field($model, 'tanggal_berhenti_bekerja')->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
                     </div>
@@ -114,7 +121,6 @@ use yii\helpers\Html;
                         <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
                     </div>
                 </div>
-
 
 
                 <?php

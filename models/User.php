@@ -3,6 +3,7 @@
 namespace app\models;
 
 use hscstudio\mimin\models\AuthAssignment;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -61,6 +62,11 @@ class User extends \mdm\admin\models\User {
             [['karyawan_id'], 'unique'],
             [['karyawan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Karyawan::className(), 'targetAttribute' => ['karyawan_id' => 'id']]
         ]);
+    }
+
+    public function validatePasswordWithHashUser($password, $hash)
+    {
+        return Yii::$app->security->validatePassword($password, $hash);
     }
 
 }

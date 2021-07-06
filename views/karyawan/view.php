@@ -108,6 +108,7 @@ $this->registerCss('.table-responsive{ max-height: 488px }');
                                                                 []);
                                                     }
                                                 ],
+                                                'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya',
                                                 'tanggal_mulai_bekerja:date',
                                                 'tanggal_berhenti_bekerja:date',
                                                 'alasan_berhenti_bekerja',

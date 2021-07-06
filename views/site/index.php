@@ -2,9 +2,13 @@
 
 /* @var $this yii\web\View */
 
+use app\components\helpers\LiburHelper;
 use app\widgets\InfoBox;
 use rmrevin\yii\fontawesome\FAS;
+use yii\bootstrap4\Modal;
+use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\VarDumper;
 
 $this->title = Yii::$app->name;
 $isGuest = Yii::$app->user->isGuest;
@@ -43,7 +47,7 @@ $isGuest = Yii::$app->user->isGuest;
                     <div class="jumbotron shadow">
                         <h1>Selamat Datang!</h1>
                         <p class="lead">Pastikan biodata Anda sudah sesuai, Akses pada menu <span
-                                class="font-weight-bold"> Data Pribadi >> Profile Anda </span></p>
+                                    class="font-weight-bold"> Data Pribadi >> Profile Anda </span></p>
 
                     </div>
                 <?php endif; ?>
@@ -51,7 +55,7 @@ $isGuest = Yii::$app->user->isGuest;
 
             <div class="row">
                 <div class="col col-md-6 col-lg-4">
-                    <?php \yii\helpers\Html::tag('pre', \yii\helpers\VarDumper::dumpAsString(\app\components\helpers\LiburHelper::statusLiburHariIni())) ?>
+                    <?php Html::tag('pre', VarDumper::dumpAsString(LiburHelper::statusLiburHariIni())) ?>
                 </div>
                 <div class="col col-md-6 col-lg-4">
 
@@ -64,7 +68,7 @@ $isGuest = Yii::$app->user->isGuest;
                 <h1>Selamat Datang!</h1>
                 <p class="lead">Kamu harus login dulu untuk masuk ke Sistem HRD.</p>
                 <p>
-                    <?= \yii\helpers\Html::a(FAS::icon(FAS::_SIGN_IN_ALT) ." Login", ['site/login'], [
+                    <?= Html::a(FAS::icon(FAS::_SIGN_IN_ALT) . " Login", ['site/login'], [
                         'class' => 'btn btn-lg btn-primary'
                     ]) ?>
                 </p>
@@ -73,9 +77,32 @@ $isGuest = Yii::$app->user->isGuest;
         <?php endif ?>
 
     </div>
+
 <?php
-if (!$isGuest) :
+Modal::begin([
+    'id' => 'modal-warning',
+    'title' => FAS::icon(FAS::_BULLHORN) . ' Pesan Peringatan Dari Sistem',
+    'titleOptions' => [
+      'class' => 'text-danger'
+    ],
+    'footer' =>
+        Html::a(FAS::icon(FAS::_LINK) .' Ganti Password', ['site/change-password'], [
+            'class' => 'btn btn-primary'
+        ])
+]);
+
+echo Html::tag('p',
+    "Password Masih Default 123456.<br/>Mohon Diganti, Supaya Data Kamu tetap aman.");
+
+
+Modal::end();
+?>
+
+<?php
+if (!$isGuest && Yii::$app->user->can('super-admin')) :
+
     $group = Url::to(['struktur-organisasi/find-group']);
+
     $js = <<<JS
     jQuery(document).ready(function(){
         
@@ -97,3 +124,16 @@ if (!$isGuest) :
 JS;
     $this->registerJs($js);
 endif;
+
+
+$defaultPassword = Yii::$app->session->get('_defaultPassword');
+$js2 = <<<JS
+jQuery(document).ready(function(){
+    
+    if(parseInt("$defaultPassword") === 1){
+        jQuery('#modal-warning').modal('show');
+    }
+    
+});
+JS;
+$this->registerJs($js2);

@@ -84,7 +84,8 @@ SELECT
        g_karyawan.nik                                                                                                            AS nik,
        g_karyawan.masuk                                                                                                          AS unformated_aktual_masuk,
        DATE_FORMAT(g_karyawan.masuk, '%d-%m-%Y %H:%i')                                                                           AS aktual_masuk,
-       g_karyawan.pulang                                                                                                         AS aktual_pulang
+       g_karyawan.pulang                                                                                                         AS aktual_pulang,
+       g_karyawan.pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
 
 FROM (
          SELECT k.jadwal_kerja_id                AS jadwal_kerja_karyawan,
@@ -92,7 +93,8 @@ FROM (
                 k.nama,
                 k.nomor_induk_karyawan           AS nik,
                 MIN(absensi_harian.tanggal_scan) AS masuk,
-                MAX(absensi_harian.tanggal_scan) AS pulang
+                MAX(absensi_harian.tanggal_scan) AS pulang,
+                pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
                 # TIMESTAMPDIFF(MINUTE, MIN(absensi_harian.tanggal_scan), MAX(absensi_harian.tanggal_scan) )                            AS kerja_in_menit,
                 # TIMESTAMPDIFF(HOUR, MIN(absensi_harian.tanggal_scan), MAX(absensi_harian.tanggal_scan) )                            AS kerja_in_jam
 

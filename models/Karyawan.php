@@ -235,6 +235,8 @@ class Karyawan extends BaseKaryawan {
                 'jadwal_kerja_id' => 'Jdw Kerja',
                 'tempat_lahir' => 'Tempat Lahir',
                 'tanggal_lahir' => 'Tgl Lahir',
+                'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya'
+                    => 'Pengecualian Terlambat Karena Lembur'
             ]
         );
     }

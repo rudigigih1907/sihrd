@@ -22,7 +22,9 @@ use Yii;
  * @property integer $jenis_izin_id
  * @property string $keterangan
  * @property integer $cuti_normatif_id
+ * @property integer $aturan_uang_kehadiran_id
  *
+ * @property \app\models\AturanUangKehadiran $aturanUangKehadiran
  * @property \app\models\CutiNormatif $cutiNormatif
  * @property \app\models\JadwalKerja $jadwalKerja
  * @property \app\models\JadwalKerjaHari $jadwalKerjaHari
@@ -50,10 +52,11 @@ abstract class KehadiranDiInternalSistem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'karyawan_id'], 'required'],
-            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id'], 'integer'],
+            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'karyawan_id', 'aturan_uang_kehadiran_id'], 'required'],
+            [['jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id', 'aturan_uang_kehadiran_id'], 'integer'],
             [['tanggal', 'ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang'], 'safe'],
             [['keterangan'], 'string'],
+            [['aturan_uang_kehadiran_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\AturanUangKehadiran::className(), 'targetAttribute' => ['aturan_uang_kehadiran_id' => 'id']],
             [['cuti_normatif_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\CutiNormatif::className(), 'targetAttribute' => ['cuti_normatif_id' => 'id']],
             [['jadwal_kerja_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerja::className(), 'targetAttribute' => ['jadwal_kerja_id' => 'id']],
             [['jadwal_kerja_hari_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\JadwalKerjaHari::className(), 'targetAttribute' => ['jadwal_kerja_hari_id' => 'id']],
@@ -82,7 +85,16 @@ abstract class KehadiranDiInternalSistem extends \yii\db\ActiveRecord
             'jenis_izin_id' => 'Jenis Izin ID',
             'keterangan' => 'Keterangan',
             'cuti_normatif_id' => 'Cuti Normatif ID',
+            'aturan_uang_kehadiran_id' => 'Aturan Uang Kehadiran ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAturanUangKehadiran()
+    {
+        return $this->hasOne(\app\models\AturanUangKehadiran::className(), ['id' => 'aturan_uang_kehadiran_id']);
     }
 
     /**
