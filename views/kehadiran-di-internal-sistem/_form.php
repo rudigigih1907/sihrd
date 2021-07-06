@@ -19,6 +19,9 @@ use yii\helpers\Html;
         ]); ?>
 
         <div class="card-body">
+
+            <?= $form->field($model, 'tanggal')->widget(\kartik\datecontrol\DateControl::class, [
+                    'type' => kartik\datecontrol\DateControl::FORMAT_DATE,]) ?>
             <?= $form->field($model, 'jadwal_kerja_id')->widget(\kartik\select2\Select2::class,[
                     'data' => \app\models\JadwalKerja::mapIDToNama()
             ]) ?>

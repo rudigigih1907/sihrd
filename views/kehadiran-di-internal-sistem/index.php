@@ -18,103 +18,112 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card shadow" id="crud">
 
         <div class="card-header p-3">
-            <?php echo
-            ButtonToolbar::widget([
-                'options' => [
-                    'class' => 'btn-toolbar',
-                ],
-                'buttonGroups' => [
-                    [
-                        'buttons' => [
-                            ButtonDropdown::widget([
-                                'label' => FAS::icon(FAS::_PLUS_CIRCLE) . ' Tambah',
-                                'buttonOptions' => [
-                                    'class' => ['btn btn-primary'],
-                                    'type' => 'button',
-                                ],
-                                'encodeLabel' => false,
-                                'dropdown' => [
-                                    'items' => [
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Secara Manual',
-                                            'url' => ['create'],
-                                        ],
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Masuk',
-                                            'url' => ['import-kehadiran-masuk'],
-                                        ],
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Pulang',
-                                            'url' => ['import-kehadiran-pulang'],
-                                        ],
 
+            <div class="d-flex justify-content-between">
+                <?php echo
+                ButtonToolbar::widget([
+                    'options' => [
+                        'class' => 'btn-toolbar',
+                    ],
+                    'buttonGroups' => [
+                        [
+                            'buttons' => [
+                                ButtonDropdown::widget([
+                                    'label' => FAS::icon(FAS::_PLUS_CIRCLE) . ' Tambah',
+                                    'buttonOptions' => [
+                                        'class' => ['btn btn-primary'],
+                                        'type' => 'button',
                                     ],
-                                    'encodeLabels' => false,
-                                ],
-                            ]),
-                            ButtonDropdown::widget([
-                                'label' => FAS::icon(FAS::_SWIMMER) . ' Kehadiran',
-                                'buttonOptions' => [
-                                    'class' => ['btn btn-outline-primary'],
-                                    'type' => 'button',
-                                ],
-                                'encodeLabel' => false,
-                                'dropdown' => [
-                                    'items' => [
+                                    'encodeLabel' => false,
+                                    'dropdown' => [
+                                        'items' => [
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Secara Manual',
+                                                'url' => ['create'],
+                                            ],
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Masuk',
+                                                'url' => ['import-kehadiran-masuk'],
+                                            ],
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Import Kehadiran Pulang',
+                                                'url' => ['import-kehadiran-pulang'],
+                                            ],
 
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Update Uang Kehadiran Per Hari',
-                                            'url' => ['form-batch-update-uang-kehadiran'],
                                         ],
+                                        'encodeLabels' => false,
                                     ],
-                                    'encodeLabels' => false,
-                                ],
-                            ]),
-                            ButtonDropdown::widget([
-                                'label' => FAS::icon(FAS::_FILE) . ' Laporan',
-                                'buttonOptions' => [
-                                    'class' => ['btn btn-success'],
-                                    'type' => 'button',
-                                ],
-                                'encodeLabel' => false,
-                                'dropdown' => [
-                                    'items' => [
+                                ]),
+                                ButtonDropdown::widget([
+                                    'label' => FAS::icon(FAS::_SWIMMER) . ' Kehadiran',
+                                    'buttonOptions' => [
+                                        'class' => ['btn btn-info'],
+                                        'type' => 'button',
+                                    ],
+                                    'encodeLabel' => false,
+                                    'dropdown' => [
+                                        'items' => [
 
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Harian',
-                                            'url' => ['create-laporan-harian'],
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Update Uang Kehadiran Per Hari',
+                                                'url' => ['form-batch-update-uang-kehadiran'],
+                                            ],
                                         ],
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Uang Kehadiran',
-                                            'url' => ['create-laporan-uang-kehadiran'],
-                                        ],
+                                        'encodeLabels' => false,
                                     ],
-                                    'encodeLabels' => false,
-                                ],
-                            ]),
-                            ButtonDropdown::widget([
-                                'label' => FAS::icon(FAS::_FILE) . ' Utilitas',
-                                'buttonOptions' => [
-                                    'class' => ['btn btn-secondary'],
-                                    'type' => 'button',
-                                ],
-                                'encodeLabel' => false,
-                                'dropdown' => [
-                                    'items' => [
+                                ]),
+                                ButtonDropdown::widget([
+                                    'label' => FAS::icon(FAS::_FILE) . ' Laporan',
+                                    'buttonOptions' => [
+                                        'class' => ['btn btn-success'],
+                                        'type' => 'button',
+                                    ],
+                                    'encodeLabel' => false,
+                                    'dropdown' => [
+                                        'items' => [
 
-                                        [
-                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Batalkan Data Per Tanggal',
-                                            'url' => ['form-cancel-kehadiran'],
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Harian',
+                                                'url' => ['create-laporan-harian'],
+                                            ],
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Laporan Uang Kehadiran',
+                                                'url' => ['create-laporan-uang-kehadiran'],
+                                            ],
                                         ],
+                                        'encodeLabels' => false,
                                     ],
-                                    'encodeLabels' => false,
-                                ],
-                            ]),
-                        ],
-                    ]
-                ],
-            ])
-            ?>
+                                ]),
+                                ButtonDropdown::widget([
+                                    'label' => FAS::icon(FAS::_FILE) . ' Utilitas',
+                                    'buttonOptions' => [
+                                        'class' => ['btn btn-warning'],
+                                        'type' => 'button',
+                                    ],
+                                    'encodeLabel' => false,
+                                    'dropdown' => [
+                                        'items' => [
+
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Batalkan Data Per Tanggal',
+                                                'url' => ['form-cancel-kehadiran'],
+                                            ],
+                                        ],
+                                        'encodeLabels' => false,
+                                    ],
+                                ]),
+                            ],
+                        ]
+                    ],
+                ])
+                ?>
+
+                <?= \yii\helpers\Html::a(FAS::icon(FAS::_REDO) . ' Reload', ['index'], [
+                    'class' => 'btn btn-outline-dark'
+                ]) ?>
+            </div>
+
+
         </div>
 
         <?php try {

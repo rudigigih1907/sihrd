@@ -38,6 +38,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $mesin_absensi_previlege
  * @property string $mesin_absensi_telapak_tangan
  * @property string $pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
+ * @property string $batas_jam_terlambat_karena_lembur_pada_hari_berikutnya
+ * @property string $aturan_umum_uang_kehadiran
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $created_by
@@ -75,6 +77,8 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     const PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_TIDAK_ADA = 'Tidak Ada';
     const PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2000 = '20:00';
     const PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2100 = '21:00';
+    const ATURAN_UMUM_UANG_KEHADIRAN_IKUT_ATURAN_UMUM = 'Ikut Aturan Umum';
+    const ATURAN_UMUM_UANG_KEHADIRAN_YANG_PENTING_MASUK_KANTOR = 'Yang Penting Masuk Kantor';
     var $enum_labels = false;
     /**
      * @inheritdoc
@@ -106,8 +110,8 @@ abstract class Karyawan extends \yii\db\ActiveRecord
     {
         return [
             [['nama', 'jenis_kelamin', 'agama_id', 'jadwal_kerja_id'], 'required'],
-            [['tanggal_lahir', 'tanggal_mulai_bekerja', 'tanggal_berhenti_bekerja'], 'safe'],
-            [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir', 'photo_identitas_diri', 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya'], 'string'],
+            [['tanggal_lahir', 'tanggal_mulai_bekerja', 'tanggal_berhenti_bekerja', 'batas_jam_terlambat_karena_lembur_pada_hari_berikutnya'], 'safe'],
+            [['status_kewarganegaraan', 'jenis_kelamin', 'pendidikan_terakhir', 'photo_identitas_diri', 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya', 'aturan_umum_uang_kehadiran'], 'string'],
             [['agama_id', 'status_perkawinan_id', 'alasan_berhenti_bekerja', 'jadwal_kerja_id'], 'integer'],
             [['nomor_induk_karyawan', 'nama', 'nama_panggilan', 'tempat_lahir', 'nomor_kartu_tanda_penduduk', 'nomor_kartu_keluarga', 'nomor_pokok_wajib_pajak', 'nomor_kitas_atau_sejenisnya', 'nama_ayah', 'nama_ibu', 'mesin_absensi_password', 'mesin_absensi_rfid', 'mesin_absensi_previlege', 'mesin_absensi_telapak_tangan'], 'string', 'max' => 255],
             [['agama_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Agama::className(), 'targetAttribute' => ['agama_id' => 'id']],
@@ -137,6 +141,11 @@ abstract class Karyawan extends \yii\db\ActiveRecord
                     self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_TIDAK_ADA,
                     self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2000,
                     self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2100,
+                ]
+            ],
+            ['aturan_umum_uang_kehadiran', 'in', 'range' => [
+                    self::ATURAN_UMUM_UANG_KEHADIRAN_IKUT_ATURAN_UMUM,
+                    self::ATURAN_UMUM_UANG_KEHADIRAN_YANG_PENTING_MASUK_KANTOR,
                 ]
             ]
         ];
@@ -179,6 +188,8 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             'mesin_absensi_previlege' => 'Mesin Absensi Previlege',
             'mesin_absensi_telapak_tangan' => 'Mesin Absensi Telapak Tangan',
             'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya' => 'Pengecualian Terlambat Karena Lembur Pada Hari Sebelumnya',
+            'batas_jam_terlambat_karena_lembur_pada_hari_berikutnya' => 'Batas Jam Terlambat Karena Lembur Pada Hari Berikutnya',
+            'aturan_umum_uang_kehadiran' => 'Aturan Umum Uang Kehadiran',
         ];
     }
 
@@ -361,6 +372,31 @@ abstract class Karyawan extends \yii\db\ActiveRecord
             self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_TIDAK_ADA => 'Tidak Ada',
             self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2000 => '20:00',
             self::PENGECUALIAN_TERLAMBAT_KARENA_LEMBUR_PADA_HARI_SEBELUMNYA_2100 => '21:00',
+        ];
+    }
+
+    /**
+     * get column aturan_umum_uang_kehadiran enum value label
+     * @param string $value
+     * @return string
+     */
+    public static function getAturanUmumUangKehadiranValueLabel($value){
+        $labels = self::optsAturanUmumUangKehadiran();
+        if(isset($labels[$value])){
+            return $labels[$value];
+        }
+        return $value;
+    }
+
+    /**
+     * column aturan_umum_uang_kehadiran ENUM value labels
+     * @return array
+     */
+    public static function optsAturanUmumUangKehadiran()
+    {
+        return [
+            self::ATURAN_UMUM_UANG_KEHADIRAN_IKUT_ATURAN_UMUM => 'Ikut Aturan Umum',
+            self::ATURAN_UMUM_UANG_KEHADIRAN_YANG_PENTING_MASUK_KANTOR => 'Yang Penting Masuk Kantor',
         ];
     }
 

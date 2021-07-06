@@ -58,7 +58,8 @@ return [
         'value' => 'karyawan.nama',
         'contentOptions' => [
             'class' => 'text-nowrap'
-        ]
+        ],
+        'filter' => \app\models\Karyawan::mapIDToNama()
     ],
     [
         'class' => '\yii\grid\DataColumn',
@@ -74,7 +75,7 @@ return [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'aturan_uang_kehadiran_id',
         'label' => 'Uang Kehadiran',
-        'value' => 'uangKehadiran.nama'
+        'value' => 'aturanUangKehadiran.nama'
     ],
     [
         'class' => '\yii\grid\DataColumn',

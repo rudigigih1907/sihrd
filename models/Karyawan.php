@@ -126,6 +126,7 @@ class Karyawan extends BaseKaryawan {
         endswitch;
 
         return $query
+            ->orderBy('hrd.k.nama')
             ->groupBy('hrd.k.id')
             ->all();
 

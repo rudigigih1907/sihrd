@@ -38,6 +38,7 @@ class KehadiranDiInternalSistemController extends Controller {
                 'actions' => [
                     'delete' => ['POST'],
                     'batch-update-jam-pulang-karyawan' => ['POST'],
+                    'batch-update-uang-kehadiran' => ['POST'],
                 ],
             ],
         ];
@@ -545,6 +546,11 @@ class KehadiranDiInternalSistemController extends Controller {
         throw new HttpException(400, 'Model is not found');
     }
 
+    /**
+     * Tampilkan Form untuk mencari data yang akan diupdate aturan_kehadiran_uang_id
+     * @return string|Response
+     * @throws InvalidConfigException
+     */
     public function actionFormBatchUpdateUangKehadiran() {
         $request = Yii::$app->request;
         $model = new FormBatchUpdateUangKehadiranPerHari();
@@ -562,29 +568,63 @@ class KehadiranDiInternalSistemController extends Controller {
     }
 
     /**
-     * Tampilkan data per tanggal:
-     * 1. Nama
-     * 2. Nik
-     * 3. Tanggal
-     * 4. Jam Aktual Masuk
-     * 5. Jam Pulang Kemarin
-     * 6. Pengecualian terlambat karena kemarin lembur
-     * 7. Izin
-     * 8. Uang Kehadiran
-     *
+     * Preview Data yang mau di update uang kehadirannya
      * @param $tanggal
      * @return string
+     * @throws \yii\db\Exception
      */
     public function actionPreviewBatchUpdateUangKehadiran($tanggal) {
 
         $records = KehadiranDiInternalSistem::findUntukBatchUpdateUangKehadiran($tanggal);
-        foreach ($records as $record) {
-            
+        return $this->render('_preview_batch_update_uang_kehadiran', [
+            'records' => $records,
+            'tanggal' => $tanggal,
+        ]);
+
+    }
+
+    /**
+     * Eksekusi update uang kehadiran pada internal absensi pada tangga yang direquest
+     * @param $tanggal
+     * @return string
+     * @throws Throwable
+     * @throws \yii\db\Exception
+     */
+    public function actionBatchUpdateUangKehadiran($tanggal) {
+
+        $records = KehadiranDiInternalSistem::findUntukBatchUpdateUangKehadiran($tanggal);
+        $connection = KehadiranDiInternalSistem::getDb();
+        $transaction = $connection->beginTransaction();
+
+        $count = 0;
+
+        try {
+            foreach ($records as $record) {
+
+                if ($record['id'] !== null) {
+                    $connection->createCommand()->update(KehadiranDiInternalSistem::tableName(), [
+                        'aturan_uang_kehadiran_id' => $record['aturan_uang_kehadiran_id']
+                    ], [
+                        'id' => $record['id'],
+                    ])->execute();
+
+                    $count++;
+                }
+            }
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
         }
 
-        return $this->render('_preview_batch_update_uang_kehadiran', [
-            'records' => $records
-        ]);
+        Yii::$app->session->setFlash('success', FAS::icon(FAS::_SMILE) .
+            ' Uang Kehadiran pada tanggal ' . Yii::$app->formatter->asDate($tanggal) . ' berhasil diupdate sebanyak ' . $count . ' records'
+        );
+
+        return $this->redirect(['index']);
 
     }
 
@@ -602,4 +642,5 @@ class KehadiranDiInternalSistemController extends Controller {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
 }

@@ -118,6 +118,18 @@ return [
                 : Html::tag('span', Karyawan::TIDAK_AKTIF, ['class' => 'badge badge-warning']);
         }
     ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'aturan_umum_uang_kehadiran',
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya',
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
+        'attribute' => 'aturan_umum_uang_kehadiran',
+    ],
 //    [
 //        'class' => '\yii\grid\DataColumn',
 //        'attribute' => 'alasan_berhenti_bekerja',

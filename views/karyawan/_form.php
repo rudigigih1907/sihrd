@@ -101,12 +101,7 @@ use yii\helpers\Html;
                             'prompt' => '-'
                         ]) ?>
                     </div>
-                    <div class="col-sm-12 col-md-4">
-                        <?= $form->field($model, 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya')
-                            ->label('Pengecualian terlambat karena lembur')
-                            ->dropDownList(\app\models\Karyawan::optsPengecualianTerlambatKarenaLemburPadaHariSebelumnya())
-                        ?>
-                    </div>
+
                 </div>
 
                 <div class="row">
@@ -120,6 +115,34 @@ use yii\helpers\Html;
                     <div class="col-sm-12 col-md-4">
                         <?= $form->field($model, 'alasan_berhenti_bekerja')->textInput() ?>
                     </div>
+                </div>
+
+
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya')
+                            ->dropDownList(\app\models\Karyawan::optsPengecualianTerlambatKarenaLemburPadaHariSebelumnya())
+                        ?>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <?= $form->field($model, 'batas_jam_terlambat_karena_lembur_pada_hari_berikutnya')
+                            ->widget(\kartik\datecontrol\DateControl::class, ['type' => kartik\datecontrol\DateControl::FORMAT_TIME,])
+                        ?>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <?= $form->field($model, 'aturan_umum_uang_kehadiran')
+                            ->radioList(app\models\Karyawan::optsAturanUmumUangKehadiran(), [
+                                'inline' => true
+                            ]) ?>
+                    </div>
+
                 </div>
 
 
