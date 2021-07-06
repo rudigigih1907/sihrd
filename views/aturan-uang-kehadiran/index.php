@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__.'/_columns.php'),
+                'tableOptions' => [
+                    'class' => 'card-table table table-striped small table-fixes-last-column'
+                ],
             ]);
         } catch(Exception $e){
             echo $e->getMessage();

@@ -10,6 +10,10 @@ return [
 
     [
         'class' => 'yii\grid\SerialColumn',
+        'contentOptions' => [
+            'class' => 'align-middle text-right'
+        ]
+
     ],
     // [
     // 'class'=>'\yii\grid\DataColumn',
@@ -18,15 +22,24 @@ return [
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'nomor_induk_karyawan',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ]
     ],
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'nama',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ]
     ],
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'nama_panggilan',
         'format' => 'raw',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
         'value' => function($model){
             /** @var Karyawan $model */
             return $model->nama !== $model->nama_panggilan
@@ -38,16 +51,25 @@ return [
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'tempat_lahir',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
     ],
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'tanggal_lahir',
-        'format' => 'date'
+        'format' => 'date',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
     ],
     [
         'class'=>'\yii\grid\DataColumn',
         'attribute'=>'jadwal_kerja_id',
         'format' => 'raw',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
         'value' => function ($model) {
             /** @var Karyawan $model */
             return
@@ -109,7 +131,7 @@ return [
         'label' => 'Aktif ?',
         'format' => 'raw',
         'contentOptions' => [
-            'class' => 'text-right'
+            'class' => 'text-right align-middle'
         ],
         'value' => function ($model) {
             /** @var Karyawan $model */
@@ -121,14 +143,23 @@ return [
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'aturan_umum_uang_kehadiran',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
     ],
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
     ],
     [
         'class' => '\yii\grid\DataColumn',
         'attribute' => 'aturan_umum_uang_kehadiran',
+        'contentOptions' => [
+            'class' => 'align-middle'
+        ],
     ],
 //    [
 //        'class' => '\yii\grid\DataColumn',
@@ -157,7 +188,7 @@ return [
             'class' => 'text-right'
         ],
         'contentOptions' => [
-            'class' => 'text-right'
+            'class' => 'text-right align-middle'
         ],
         'format' => 'raw',
         'value' => function ($model) {
@@ -188,10 +219,7 @@ return [
         },
         'template' => "{all}",
         'contentOptions' => [
-            'style'=> [
-                'padding' => '0'
-            ],
-            'class'=> 'text-center align-middle'
+            'class'=> 'text-center align-middle pt-1'
         ],
         'buttons' => [
             'all' => function ($url, $model, $key) {

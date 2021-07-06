@@ -70,7 +70,7 @@ $this->registerCss('.table-responsive{ min-height: 320px }')
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__ . '/_columns.php'),
                 'tableOptions' => [
-                    'class' => 'card-table table table-striped table-fixes-last-column'
+                    'class' => 'card-table table table-sm small table-striped table-fixes-last-column'
                 ],
             ]);
         } catch (Exception $e) {

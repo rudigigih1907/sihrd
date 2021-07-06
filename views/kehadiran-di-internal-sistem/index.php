@@ -68,6 +68,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Update Uang Kehadiran Per Hari',
                                                 'url' => ['form-batch-update-uang-kehadiran'],
                                             ],
+
+                                            [
+                                                'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Update Uang Kehadiran Per Karyawan',
+                                                'url' => ['form-update-uang-kehadiran-per-karyawan'],
+                                            ],
+
                                         ],
                                         'encodeLabels' => false,
                                     ],
