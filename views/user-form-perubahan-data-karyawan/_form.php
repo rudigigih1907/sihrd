@@ -75,9 +75,9 @@ $template = ['template' => '{input}{error}'];
                                 <?php echo $form->field($modelDetail, "[{$i}]nilai_lama"); ?>
                                 <?php echo $form->field($modelDetail, "[{$i}]nilai_baru"); ?>
                                 <?php echo $form->field($modelDetail, "[{$i}]aksi")
-                                    ->dropDownList(\app\models\FormPerubahanDataKaryawanDetail::optsAksi()); ?>
+                                    ->dropDownList(app\models\FormPerubahanDataKaryawanDetail::optsAksi()); ?>
                                 <?php echo $form->field($modelDetail, "[{$i}]keterangan")->textarea([
-                                        'rows' => 6
+                                    'rows' => 6
                                 ]); ?>
                             </td>
 
@@ -93,11 +93,9 @@ $template = ['template' => '{input}{error}'];
                     <tfoot>
                     <tr>
                         <td colspan="7">
-
                             <?php echo Html::button('<span class="fa fa-plus"></span> Tambah', [
                                 'class' => 'add-item btn btn-success float-right',
                             ]); ?>
-
                             <div class="clearfix"></div>
                         </td>
                     </tr>
@@ -113,6 +111,6 @@ $template = ['template' => '{input}{error}'];
                 </div>
             </div>
         </div>
-        <?php ActiveForm::end(); ?>     </div>
-
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>

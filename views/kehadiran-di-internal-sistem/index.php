@@ -1,9 +1,9 @@
 <?php
 
+use kartik\grid\GridView;
 use rmrevin\yii\fontawesome\FAS;
 use yii\bootstrap4\ButtonDropdown;
 use yii\bootstrap4\ButtonToolbar;
-use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\KehadiranDiInternalSistemSearch */
@@ -48,6 +48,24 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'url' => ['import-kehadiran-pulang'],
                                         ],
 
+                                    ],
+                                    'encodeLabels' => false,
+                                ],
+                            ]),
+                            ButtonDropdown::widget([
+                                'label' => FAS::icon(FAS::_SWIMMER) . ' Kehadiran',
+                                'buttonOptions' => [
+                                    'class' => ['btn btn-outline-primary'],
+                                    'type' => 'button',
+                                ],
+                                'encodeLabel' => false,
+                                'dropdown' => [
+                                    'items' => [
+
+                                        [
+                                            'label' => FAS::icon(FAS::_CALENDAR_PLUS) . ' Update Uang Kehadiran Per Hari',
+                                            'url' => ['form-batch-update-uang-kehadiran'],
+                                        ],
                                     ],
                                     'encodeLabels' => false,
                                 ],
@@ -105,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterModel' => $searchModel,
                 'columns' => require(__DIR__ . '/_columns.php'),
                 'tableOptions' => [
-                    'class' => 'card-table table table-striped table-fixes-last-column'
+                    'class' => 'card-table table table-striped small table-fixes-last-column'
                 ],
             ]);
         } catch (Exception $e) {

@@ -72,6 +72,12 @@ return [
     ],
     [
         'class' => '\yii\grid\DataColumn',
+        'attribute' => 'aturan_uang_kehadiran_id',
+        'label' => 'Uang Kehadiran',
+        'value' => 'uangKehadiran.nama'
+    ],
+    [
+        'class' => '\yii\grid\DataColumn',
         'attribute' => 'jenis_izin_id',
         'value' => 'jenisIzin.nama',
         'contentOptions' => [

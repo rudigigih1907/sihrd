@@ -197,10 +197,7 @@ class KaryawanController extends Controller {
                 }
 
                 if($status['code']){
-                    Yii::$app->session->setFlash('info',
-                            FAS::icon(FAS::_THUMBS_UP) .  "
-                            Karyawan : " . $model->nama . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link'])
-                    );
+                    Yii::$app->session->setFlash('info', FAS::icon(FAS::_THUMBS_UP) .  " Karyawan : " . $model->nama . " berhasil di update. ". Html::a('Klik link berikut jika ingin melihat detailnya', ['view', 'id' => $model->id], [ 'class' => 'btn btn-link']));
                     return $this->redirect(['index', 'page' => $page]);
                 }
 

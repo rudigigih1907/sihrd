@@ -2,12 +2,10 @@
 
 namespace app\controllers;
 
-use app\components\helpers\KeputusanUangKehadiran;
-use app\models\AturanUangKehadiran;
+use app\models\form\FormBatchUpdateUangKehadiranPerHari;
 use app\models\form\ImportKehadiranDiInternalSistemAbsensi;
 use app\models\form\ImportKehadiranDiInternalSistemAbsensiJamPulang;
 use app\models\form\LaporanHarianAbsensi;
-use app\models\JenisIzin;
 use app\models\KehadiranDiInternalSistem;
 use app\models\search\KehadiranDiInternalSistemSearch;
 use app\models\Tabular;
@@ -170,9 +168,10 @@ class KehadiranDiInternalSistemController extends Controller {
         $models = [];
 
         if ($request->isGet) {
+
             $absenRecords = KehadiranDiInternalSistem::findUntukImportKehadiranMasuk($tanggal);
 
-            $optsAturanKehadiran = ArrayHelper::map(
+            /*$optsAturanKehadiran = ArrayHelper::map(
                 AturanUangKehadiran::find()->all(), 'id', 'nama'
             );
 
@@ -186,17 +185,18 @@ class KehadiranDiInternalSistemController extends Controller {
                 ->where([
                     'nama' => 'Tugas Luar Kota'
                 ])
-                ->one();
+                ->one();*/
 
             foreach ($absenRecords as $key => $absenRecord) {
 
-                $aturanUangKehadiran = new KeputusanUangKehadiran();
+                /*$aturanUangKehadiran = new KeputusanUangKehadiran();
                 $aturanUangKehadiran->setOptionalAturanKehadiran($optsAturanKehadiran);
                 $aturanUangKehadiran->setKetentuanMasuk($absenRecord['unformated_ketentuan_masuk']);
                 $aturanUangKehadiran->setAktualMasuk($absenRecord['unformated_aktual_masuk']);
                 $aturanUangKehadiran->setPengecualianTerlambatKarenaLemburPadaHariSebelumnya($absenRecord['pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya']);
                 $aturanUangKehadiran->setJenisIzinDinasDalamKota($jenisIzinDalamKota['id']);
                 $aturanUangKehadiran->setJenisIzinDinasLuarKota($jenisIzinLuarKota['id']);
+                $aturanUangKehadiran->setAktualPulangKemarin($absenRecord['aktual_pulang_kemarin']);*/
 
                 $models[$key] = new KehadiranDiInternalSistem([
                     'jadwal_kerja_id' => $absenRecord['jadwal_kerja_id'],
@@ -214,7 +214,6 @@ class KehadiranDiInternalSistemController extends Controller {
                     'readonlyKetentuanPulang' => $absenRecord['ketentuan_pulang'],
                     'readonlyKaryawan' => $absenRecord['nama_karyawan'],
                     'readonlyAktualMasuk' => $absenRecord['aktual_masuk'],
-                    'aturan_uang_kehadiran_id' => $aturanUangKehadiran->getNilaiAkhir()
                 ]);
             }
         }
@@ -272,10 +271,8 @@ class KehadiranDiInternalSistemController extends Controller {
                     throw $e;
                 }
 
-                Yii::$app->session->setFlash('success',
-                    FAS::icon(FAS::_THUMBS_UP) .
-                    ' ' .count($modelsArray) . ' record berhasil masuk ke Sistem Internal Absensi'
-                );
+                Yii::$app->session->setFlash('success', FAS::icon(FAS::_THUMBS_UP) . ' ' . count($modelsArray)
+                    . ' record berhasil masuk ke Sistem Internal Absensi. Sekarang bisa meng-update data uang kehadiran, di menu ');
 
                 return $this->redirect(['index']);
             }
@@ -299,6 +296,7 @@ class KehadiranDiInternalSistemController extends Controller {
     /**
      * Tampilkan form untuk mencari data untuk di cancel
      * @return string
+     * @throws InvalidConfigException
      */
     public function actionFormCancelKehadiran() {
 
@@ -307,7 +305,9 @@ class KehadiranDiInternalSistemController extends Controller {
 
         if ($model->load($request->post()) && $model->validate()) {
 
-            $data = KehadiranDiInternalSistem::findUntukBatalkanData();
+            $data = KehadiranDiInternalSistem::findUntukBatalkanData(
+                Yii::$app->formatter->asDate($model->tanggal, 'php:Y-m-d')
+            );
 
             return $this->render('_preview_cancel_kehadiran', [
                 'tanggal' => $model->tanggal,
@@ -543,6 +543,49 @@ class KehadiranDiInternalSistemController extends Controller {
             }
         }
         throw new HttpException(400, 'Model is not found');
+    }
+
+    public function actionFormBatchUpdateUangKehadiran() {
+        $request = Yii::$app->request;
+        $model = new FormBatchUpdateUangKehadiranPerHari();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            return $this->redirect(['kehadiran-di-internal-sistem/preview-batch-update-uang-kehadiran',
+                'tanggal' => Yii::$app->formatter->asDate($model->tanggal, "php:Y-m-d")
+            ]);
+        }
+
+        return $this->render('_form_batch_update_uang_kehadiran', [
+            'model' => $model,
+            'title' => "Batch Update Uang Kehadiran Per Hari"
+        ]);
+    }
+
+    /**
+     * Tampilkan data per tanggal:
+     * 1. Nama
+     * 2. Nik
+     * 3. Tanggal
+     * 4. Jam Aktual Masuk
+     * 5. Jam Pulang Kemarin
+     * 6. Pengecualian terlambat karena kemarin lembur
+     * 7. Izin
+     * 8. Uang Kehadiran
+     *
+     * @param $tanggal
+     * @return string
+     */
+    public function actionPreviewBatchUpdateUangKehadiran($tanggal) {
+
+        $records = KehadiranDiInternalSistem::findUntukBatchUpdateUangKehadiran($tanggal);
+        foreach ($records as $record) {
+            
+        }
+
+        return $this->render('_preview_batch_update_uang_kehadiran', [
+            'records' => $records
+        ]);
+
     }
 
     /**

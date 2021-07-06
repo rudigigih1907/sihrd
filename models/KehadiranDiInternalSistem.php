@@ -85,7 +85,8 @@ SELECT
        g_karyawan.masuk                                                                                                          AS unformated_aktual_masuk,
        DATE_FORMAT(g_karyawan.masuk, '%d-%m-%Y %H:%i')                                                                           AS aktual_masuk,
        g_karyawan.pulang                                                                                                         AS aktual_pulang,
-       g_karyawan.pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
+       g_karyawan.pulang_kemarin                                                                                                 AS aktual_pulang_kemarin,
+       g_karyawan.pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya                                                      AS pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
 
 FROM (
          SELECT k.jadwal_kerja_id                AS jadwal_kerja_karyawan,
@@ -94,16 +95,26 @@ FROM (
                 k.nomor_induk_karyawan           AS nik,
                 MIN(absensi_harian.tanggal_scan) AS masuk,
                 MAX(absensi_harian.tanggal_scan) AS pulang,
+                absensi_kemarin.aktual_pulang    AS pulang_kemarin,
                 pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya
                 # TIMESTAMPDIFF(MINUTE, MIN(absensi_harian.tanggal_scan), MAX(absensi_harian.tanggal_scan) )                            AS kerja_in_menit,
                 # TIMESTAMPDIFF(HOUR, MIN(absensi_harian.tanggal_scan), MAX(absensi_harian.tanggal_scan) )                            AS kerja_in_jam
 
          FROM karyawan AS k
-                  LEFT JOIN (SELECT a.karyawan_id, a.tanggal_scan
-                             FROM kehadiran_di_mesin_absensi a
-                             WHERE DATE(a.tanggal_scan) = :tanggal)
-             AS absensi_harian
-                            ON k.id = absensi_harian.karyawan_id
+            LEFT JOIN (SELECT a.karyawan_id, a.tanggal_scan
+                        FROM kehadiran_di_mesin_absensi a
+                        WHERE DATE(a.tanggal_scan) = :tanggal)
+                       AS absensi_harian
+            ON k.id = absensi_harian.karyawan_id
+            
+            LEFT JOIN (SELECT a.karyawan_id,
+                        MAX(a.tanggal)       as tanggal,
+                        MAX(a.aktual_pulang) as aktual_pulang
+                        FROM kehadiran_di_internal_sistem a
+                        WHERE DATE(a.tanggal) = DATE_SUB(:tanggal, INTERVAL 1 DAY)
+                        GROUP BY (a.karyawan_id))
+                        AS absensi_kemarin
+            ON k.id = absensi_kemarin.karyawan_id
 
 
          GROUP BY k.id
@@ -406,7 +417,7 @@ SQL;
 
     }
 
-    public static function findUntukBatalkanData() {
+    public static function findUntukBatalkanData($tanggal) {
         return KehadiranDiInternalSistem::find()
             ->select([
                 'jadwal' => 'jadwal_kerja.nama',
@@ -427,6 +438,71 @@ SQL;
             ->joinWith('karyawan', false)
             ->joinWith('jenisIzin', false)
             ->joinWith('cutiNormatif', false)
+            ->where([
+                'tanggal' => $tanggal
+            ])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * Tampilkan data per tanggal:
+     * 1. Nama
+     * 2. Nik
+     * 3. Tanggal
+     * 4. Jam Aktual Masuk
+     * 5. Jam Pulang Kemarin
+     * 6. Pengecualian terlambat karena kemarin lembur
+     * 7. Izin
+     * 8. Uang Kehadiran
+     * @param $tanggal
+     */
+    public static function findUntukBatchUpdateUangKehadiran($tanggal) {
+
+        $optsAturanKehadiran = ArrayHelper::map(
+            AturanUangKehadiran::find()->all(), 'id', 'id'
+        );
+
+        $jenisIzinDalamKota = JenisIzin::find()->select('id')
+            ->where([
+                'nama' => 'Tugas Dalam Kota'
+            ])
+            ->one();
+
+        $jenisIzinLuarKota = JenisIzin::find()->select('id')
+            ->where([
+                'nama' => 'Tugas Luar Kota'
+            ])
+            ->one();
+
+       
+        return KehadiranDiInternalSistem::find()
+            ->select([
+                'id' => 'kehadiran_di_internal_sistem.id',
+                'jadwal_kerja' => 'jadwal_kerja.nama',
+                'hari' => 'jadwal_kerja_hari.nama',
+                'jam_kerja' => 'jam_kerja.nama',
+                'tanggal' => 'tanggal',
+                'ketentuan_masuk',
+                'ketentuan_pulang',
+                'karyawan' =>'karyawan.nama',
+                'aktual_masuk',
+                'aktual_pulang',
+                'jenisIzin' => 'jenis_izin.nama',
+                'keterangan' => 'kehadiran_di_internal_sistem.keterangan',
+                'cuti_normatif' => 'cuti_normatif.nama',
+                'aturan_uang_kehadiran_id'
+
+            ])
+            ->joinWith('jadwalKerja', false)
+            ->joinWith('jadwalKerjaHari', false)
+            ->joinWith('jamKerja', false)
+            ->joinWith('karyawan', false)
+            ->joinWith('jenisIzin', false)
+            ->joinWith('cutiNormatif', false)
+            ->where([
+                'tanggal' => $tanggal
+            ])
             ->asArray()
             ->all();
     }
@@ -464,7 +540,7 @@ SQL;
             parent::attributeLabels(),
             [
                 'id' => 'ID',
-                'jadwal_kerja_id' => 'Jadwal Kerja',
+                'jadwal_kerja_id' => 'Jdw Kerja',
                 'jadwal_kerja_hari_id' => 'Hari',
                 'jam_kerja_id' => 'Jam Kerja',
                 'ketentuan_masuk' => 'Ketentuan Masuk',

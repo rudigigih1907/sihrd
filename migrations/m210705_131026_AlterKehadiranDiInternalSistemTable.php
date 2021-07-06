@@ -28,6 +28,9 @@ class m210705_131026_AlterKehadiranDiInternalSistemTable extends Migration {
      * {@inheritdoc}
      */
     public function safeDown() {
+
+        $this->dropForeignKey('aturan_uang_kehadiran_di_internal_sistem', 'kehadiran_di_internal_sistem');
+        $this->dropIndex('aturan_uang_kehadiran_di_internal_sistem', 'kehadiran_di_internal_sistem');
         $this->dropColumn('kehadiran_di_internal_sistem', 'aturan_uang_kehadiran_id');
     }
 

@@ -17,7 +17,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
      */
     public function rules() {
         return [
-            [['id', 'jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id'], 'integer'],
+            [['id', 'jadwal_kerja_id', 'jadwal_kerja_hari_id', 'jam_kerja_id', 'karyawan_id', 'jenis_izin_id', 'cuti_normatif_id', 'aturan_uang_kehadiran_id'], 'integer'],
             [['ketentuan_masuk', 'ketentuan_pulang', 'aktual_masuk', 'aktual_pulang', 'tanggal'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class KehadiranDiInternalSistemSearch extends KehadiranDiInternalSistem
         $query->andFilterWhere([
             'id' => $this->id,
             'jadwal_kerja_id' => $this->jadwal_kerja_id,
+            'aturan_uang_kehadiran_id' => $this->aturan_uang_kehadiran_id,
             'jadwal_kerja_hari_id' => $this->jadwal_kerja_hari_id,
             'jam_kerja_id' => $this->jam_kerja_id,
             'ketentuan_masuk' => $this->ketentuan_masuk,
