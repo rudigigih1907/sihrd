@@ -171,34 +171,7 @@ class KehadiranDiInternalSistemController extends Controller {
         if ($request->isGet) {
 
             $absenRecords = KehadiranDiInternalSistem::findUntukImportKehadiranMasuk($tanggal);
-
-            /*$optsAturanKehadiran = ArrayHelper::map(
-                AturanUangKehadiran::find()->all(), 'id', 'nama'
-            );
-
-            $jenisIzinDalamKota = JenisIzin::find()->select('id')
-                ->where([
-                    'nama' => 'Tugas Dalam Kota'
-                ])
-                ->one();
-
-            $jenisIzinLuarKota = JenisIzin::find()->select('id')
-                ->where([
-                    'nama' => 'Tugas Luar Kota'
-                ])
-                ->one();*/
-
             foreach ($absenRecords as $key => $absenRecord) {
-
-                /*$aturanUangKehadiran = new KeputusanUangKehadiran();
-                $aturanUangKehadiran->setOptionalAturanKehadiran($optsAturanKehadiran);
-                $aturanUangKehadiran->setKetentuanMasuk($absenRecord['unformated_ketentuan_masuk']);
-                $aturanUangKehadiran->setAktualMasuk($absenRecord['unformated_aktual_masuk']);
-                $aturanUangKehadiran->setPengecualianTerlambatKarenaLemburPadaHariSebelumnya($absenRecord['pengecualian_terlambat_karena_lembur_pada_hari_sebelumnya']);
-                $aturanUangKehadiran->setJenisIzinDinasDalamKota($jenisIzinDalamKota['id']);
-                $aturanUangKehadiran->setJenisIzinDinasLuarKota($jenisIzinLuarKota['id']);
-                $aturanUangKehadiran->setAktualPulangKemarin($absenRecord['aktual_pulang_kemarin']);*/
-
                 $models[$key] = new KehadiranDiInternalSistem([
                     'jadwal_kerja_id' => $absenRecord['jadwal_kerja_id'],
                     'jadwal_kerja_hari_id' => $absenRecord['jadwal_kerja_hari_id'],
@@ -273,7 +246,7 @@ class KehadiranDiInternalSistemController extends Controller {
                 }
 
                 Yii::$app->session->setFlash('success', FAS::icon(FAS::_THUMBS_UP) . ' ' . count($modelsArray)
-                    . ' record berhasil masuk ke Sistem Internal Absensi. Sekarang bisa meng-update data uang kehadiran, di menu ');
+                    . ' record berhasil masuk ke Sistem Internal Absensi. Sekarang bisa meng-update data uang kehadiran, di menu kehadiran');
 
                 return $this->redirect(['index']);
             }
@@ -642,5 +615,5 @@ class KehadiranDiInternalSistemController extends Controller {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
 }
